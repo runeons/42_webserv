@@ -34,6 +34,10 @@ class Client
 
 		// reponse
 		std::string					_response;
+		std::string					_response_bin;
+		std::string					_response_header;
+		std::string					_response_header_bin;
+		std::string					_page_content;
 		std::string					_response_body;
 		std::string					_response_body_bin;
 		std::string					_full_path;
@@ -62,6 +66,10 @@ class Client
 		std::string 	generate_status_line();
 		void			construct_full_path();
 		void			read_resource();
+
+		void			get_create_body();
+
+		void			generate_response_bin();
 
 		void			generate_error_body();
 

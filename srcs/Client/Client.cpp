@@ -13,8 +13,12 @@ Client::Client(void)
 	_headers_response = init_map_headers();
 	_request_parser = NULL;
 	_response = "";
+	_response_bin = "";
 	_response_body = "";
 	_response_body_bin = "";
+	_response_header = "";
+	_response_header_bin = "";
+	_page_content = "";
 	return ;
 }
 
@@ -133,12 +137,12 @@ std::string		Client::r_header_content_type()
 
 void		Client::generate_response_header(void)
 {
-	_response = generate_status_line();
-	_response += r_header_server();
-	_response += r_header_date();
-	_response += r_header_connection();
-	_response += r_header_content_length();
-	_response += r_header_content_type();
+	_response_header = generate_status_line();
+	_response_header += r_header_server();
+	_response_header += r_header_date();
+	_response_header += r_header_connection();
+	_response_header += r_header_content_length();
+	_response_header += r_header_content_type();
 
 	return;
 }
@@ -231,7 +235,7 @@ std::string string_to_binary(std::string s)
 		std::cerr << RED << "Error oss : can't open ofstream" <<  C_RES << std::endl; // EXCEPTION A CREER
 	for (size_t i = 0; i < s.length(); ++i)
 	{
-		oss << int_to_binary(s[i]) << " ";
+		oss << int_to_binary(s[i]);
 
 		// if (i % 6 == 0 && i != 0) // controle le format d'impression
 			// oss << std::endl;
@@ -253,14 +257,14 @@ std::string binary_to_string(std::string s)
 	{
 		parsed = 0;
 		j = 0;
-		for (; s[j] != ' '; j++)
+		for (int j = 0; j < 8; j++)
 		{
 			if (s[j] == '1') {
 				parsed |= 1 << (7 - j);
 			}
 		}
 		oss << parsed;
-		s.erase(0, j + 1);
+		s.erase(0, 8);
 		i = 0;
 	}
 	return oss.str();
@@ -278,7 +282,7 @@ void Client::read_resource(void)
 	{
 		std::cerr << RED << "Error (404) : file does'nt exist" <<  C_RES << std::endl;
 		_status_code = 404;
-		_response_body = _error_body[404];
+		_page_content = _error_body[404];
 	}
 	else if (!oss) // EXCEPTION A CREER
 	{
@@ -290,16 +294,30 @@ void Client::read_resource(void)
 		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
 		_status_code = 200;
 		oss << ifs.rdbuf();
-		_response_body = oss.str();
+		_page_content = oss.str();
 	}
 	if (ifs)
 		ifs.close();
 
-	_response_body_bin = string_to_binary(_response_body);
-	// std::cout << "_response_body_bin : " << _response_body_bin << std::endl;
-	// std::cout << RED_B << "bin_str_final : " << binary_to_string(_response_body_bin) << std::endl << C_RES;
 	return ;
 }
+
+void	Client::get_create_body(void)
+{
+	_response_body = _page_content;
+	_response_body_bin = string_to_binary(_response_body);
+	// std::cout << "_response_body_bin : " << _response_body_bin << std::endl;
+	// std::cout << RED_B << " binary_to_string(_response_body_bin) : " << binary_to_string(_response_body_bin) << std::endl << C_RES;
+
+}
+
+void	Client::generate_response_bin()
+{
+	_response = _response_header + PAT_CRLF + _response_body;
+	_response_bin = string_to_binary(_response);
+
+}
+
 
 void Client::treat_client(void)
 {
@@ -307,7 +325,10 @@ void Client::treat_client(void)
 	receive_request();
 	check_request();
 	read_resource();
+	get_create_body(); // depending on METHOD
 	generate_response_header();
+	generate_response_bin();
+
 	// for GET
 	std::cout << _response << std::endl;
 
