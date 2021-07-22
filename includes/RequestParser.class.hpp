@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/22 14:28:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/22 17:39:41 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,19 @@ std::ostream	&operator<<(std::ostream &o, const RequestParser &i);
 ** Referer
 ** Unless
 ** User-Agent
+**
+**
+** **************** Response-Header ***************
+* Accept-Ranges
+* Age
+* ETag
+** Location
+** Proxy-Authenticate
+** Public
+** Retry-After
+** Server
+* Vary
+** WWW-Authenticate
 **
 ** ***************** Entity-Header ***************
 ** Allow
