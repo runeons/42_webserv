@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/22 17:39:41 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/22 19:05:00 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ std::ostream	&operator<<(std::ostream &o, const RequestParser &i);
 **
 ** ******************* HEADERS *******************
 **
+
 ** **************** General-Header ***************
 ** Cache-Control
 ** Connection
@@ -258,4 +259,19 @@ std::ostream	&operator<<(std::ostream &o, const RequestParser &i);
 ** Transfer-Encoding
 ** URI-header
 ** ***********************************************
+*/
+
+
+/*
+___________________________________ GENERAL ___________________________________ 
+Cache-Control            ; Section 14.9
+Connection               ; Section 14.10
+Date                     ; Section 14.18
+Pragma                   ; Section 14.32
+Trailer                  ; Section 14.40
+Transfer-Encoding        ; Section 14.41
+Upgrade                  ; Section 14.42
+Via                      ; Section 14.45
+Warning
+
 */

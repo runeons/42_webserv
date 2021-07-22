@@ -3,15 +3,18 @@
 
 # include <iostream>
 # include <sstream>
+# include <fstream>
 # include <string>
 # include "color.hpp"
 # include <netinet/ip.h>
 # include <sys/socket.h>
 # include <arpa/inet.h>
+# include <fcntl.h>
 # include <unistd.h>
 # include <cstdlib>
 # include <ctime>
 # include <map>
+# include <bitset>
 
 typedef int SOCKET;
 # define MAX_RCV	4096

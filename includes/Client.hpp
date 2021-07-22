@@ -33,6 +33,9 @@ class Client
 		RequestParser				*_request_parser;
 
 		// reponse
+		std::string					_response;
+		std::string					_response_body;
+		std::string					_response_body_bin;
 		std::string					_full_path;
 		std::map<int, std::string>	_headers_response;
 
@@ -42,25 +45,25 @@ class Client
 		Client(const Client & src);
 		virtual ~Client();
 
-		SOCKET		getSocket(void) const;
-		void		setSocket(const SOCKET client_socket);
-		std::string	getRequest(void) const;
-		void		setRequest(const std::string request);
-
-		void		treat_client(void);
-		void		receive_request(void);
-		void		check_request(void);
-
-		std::string	get_response_field_name(enum e_resp_fields field);
-		std::string generate_status_line(void);
-		void		generate_response_header(void);
-
-		void		generate_error_body(void);
-		void		construct_full_path(void);
+		SOCKET			getSocket(void) const;
+		void			setSocket(const SOCKET client_socket);
+		std::string		getRequest(void) const;
+		void			setRequest(const std::string request);
 
 		std::map<int, std::string>	init_map_msg();
 		std::map<int, std::string>	init_map_body();
 		std::map<int, std::string>	init_map_headers();
+		std::string		get_response_field_name(enum e_resp_fields field);
+
+		void			treat_client();
+		void			receive_request();
+		void			check_request();
+		void			generate_response_header();
+		std::string 	generate_status_line();
+		void			construct_full_path();
+		void			read_resource();
+
+		void			generate_error_body();
 
 		std::string		formatted_header_response(enum e_resp_fields field);
 		std::string		r_header_server();
