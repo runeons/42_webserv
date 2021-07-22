@@ -1,0 +1,171 @@
+# include "Server.hpp"
+
+
+/*
+struct sockaddr_in {
+    sa_family_t    sin_family; // famille d'adresses : AF_INET
+    uint16_t       sin_port;   // port dans l'ordre d'octets réseau
+    struct in_addr sin_addr;   // adresse Internet, adresse IP de l'hôte
+};
+
+// Adresse Internet
+struct in_addr {
+    uint32_t       s_addr;     // Adresse dans l'ordre d'octets réseau
+};
+*/
+
+
+// Default constructor
+Server::Server(void)
+{
+	std::cout << GREY << "Server creation..." << C_RES << std::endl;
+	_config = new Config;
+	_address.sin_family = AF_INET;
+	try
+	{
+		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0)
+			throw Exceptions::InvalidAddress();
+		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
+	}
+	catch (Exceptions::InvalidAddress & e)
+	{
+		std::cerr << RED << e.what() <<  C_RES << std::endl;
+		// exit();
+	}
+	_address.sin_port = htons(_config->getPort());
+	_server_socket = 0;
+	_client_socket = 0;
+	return ;
+}
+
+// Copy constructor
+Server::Server(const Server& src)
+{
+	std::cout << GREY << "Server creation..." << C_RES << std::endl;
+	*this = src;
+	return;
+}
+
+// Destructor
+Server::~Server(void)
+{
+	delete _config;
+	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
+	return;
+}
+
+// Assignation operator
+Server &	Server::operator=(const Server& rhs)
+{
+	std::cout << GREY << "Server Assignation operator called" << C_RES << std::endl;
+	if (this != &rhs)
+	{
+		_config = rhs.getConfig();
+		_server_socket = rhs.getServerSocket();
+	}
+	return (*this);
+}
+
+// getters and setters (non static attributes)
+Config * Server::getConfig(void) const
+{
+	return (_config);
+}
+
+void Server::setConfig(Config * config)
+{
+	_config = config;
+	return ;
+}
+
+SOCKET Server::getServerSocket(void) const
+{
+	return (_server_socket);
+}
+
+void Server::setServerSocket(const SOCKET server_socket)
+{
+	_server_socket = server_socket;
+	return ;
+}
+
+SOCKET Server::getClientSocket(void) const
+{
+	return (_client_socket);
+}
+
+void Server::setClientSocket(const SOCKET client_socket)
+{
+	_client_socket = client_socket;
+	return ;
+}
+
+void Server::listen(void)
+{
+	socklen_t addrlen = sizeof(_address);
+
+	if (::listen(_server_socket, 50) == -1)
+		throw Exceptions::ServerListen();
+	std::cout << GREEN << "Server ready to listen !" <<  C_RES << std::endl;
+	while (1)
+	{
+		_client_socket = ::accept(_server_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>(&addrlen));
+		// accept() ne renvoie pas d'exception car renvoie -1 en continu
+		if (_client_socket >= 0)
+		{
+			std::cout << GREEN_B << "Connexion received from " << _client_socket << C_RES << std::endl;
+			break ;
+		}
+	}
+	return ;
+}
+
+void Server::print_config(void)
+{
+	std::cout	<< ORANGE
+				<< "[Host : " <<  _config->getHost() << "] "
+				<< "[Port : " <<  _config->getPort() << "] "
+				<< "[Dir  : " <<  _config->getRootDir() << "]"
+				<< C_RES << std::endl;
+	return ;
+}
+
+void		Server::create_server_socket()
+{
+	_server_socket = ::socket(AF_INET, SOCK_STREAM, 0);
+	_server_socket = -1;
+	if (_server_socket == -1)
+		throw Exceptions::ServerSocket();
+	std::cout << GREEN << "Server socket created !" <<  C_RES << std::endl;
+}
+
+void		Server::bind_address_and_port()
+{
+	if (::bind(_server_socket, reinterpret_cast<const struct sockaddr *>(&_address), sizeof(_address)) == -1)
+		throw Exceptions::BindServer();
+	std::cout << GREEN << "Address and port bound !" <<  C_RES << std::endl;
+}
+
+void		Server::stop_server()
+{
+	std::cerr << GREY << "Server shut down" <<  C_RES << std::endl;
+	close(_server_socket); // pas besoin de protéger le close parce qu'on va quitter le programme
+}
+
+int		Server::launch(void)
+{
+	try
+	{
+		this->print_config();
+		this->create_server_socket();
+		this->bind_address_and_port();
+		this->listen();
+	}
+	catch (std::exception & e)
+	{
+		std::cerr << RED << e.what() <<  C_RES << std::endl;
+		this->stop_server();
+		return (1);
+	}
+	return (0);
+}
