@@ -9,6 +9,7 @@
 # include <arpa/inet.h>
 # include <unistd.h>
 # include <cstdlib>
+# include <map>
 
 typedef int SOCKET;
 # define MAX_RCV 4096

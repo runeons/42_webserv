@@ -22,6 +22,7 @@ Server::Server(void)
 	_config = new Config;
 	_client = new Client;
 	_address.sin_family = AF_INET;
+	_address.sin_family = INADDR_ANY;
 	try
 	{
 		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0)
