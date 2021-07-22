@@ -34,6 +34,13 @@ class Exceptions
 				virtual const char *what() const throw()
 				{ return ("Invalid address - not supported"); }
 		};
+
+		class RecvFailure : public std::exception
+		{
+			public:
+				virtual const char *what() const throw()
+				{ return ("Failed to receive request"); }
+		};
 };
 
 #endif

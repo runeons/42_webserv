@@ -11,11 +11,11 @@
 # include <cstdlib>
 
 typedef int SOCKET;
-
+# define MAX_RCV 4096
 
 # include "Config.hpp"
+# include "Client.hpp"
 # include "Server.hpp"
 # include "Exceptions.hpp"
-
 
 #endif

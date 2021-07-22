@@ -8,6 +8,7 @@ CFLAGS		= 	-Wall -Wextra -Werror -std=c++98 -g3
 SRCS		=	main.cpp \
 				Server.cpp \
 				Config.cpp \
+				Client.cpp \
 
 OBJS		=	$(SRCS:.cpp=.o)
 

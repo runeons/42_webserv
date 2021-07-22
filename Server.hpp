@@ -8,13 +8,14 @@
 # include "Config.hpp"
 
 class Config;
+class Client;
 
 class Server
 {
 	private:
 		Config *			_config;
-		SOCKET				_server_socket;
-		SOCKET				_client_socket;
+		Client *			_client;
+		SOCKET				_socket;
 		struct sockaddr_in	_address;
 
 	public:
@@ -24,10 +25,10 @@ class Server
 
 		Config *	getConfig(void) const;
 		void		setConfig(Config * config);
-		SOCKET		getServerSocket(void) const;
-		void		setServerSocket(const SOCKET server_socket);
-		SOCKET		getClientSocket(void) const;
-		void		setClientSocket(const SOCKET client_socket);
+		Client *	getClient(void) const;
+		void		setClient(Client * client);
+		SOCKET		getSocket(void) const;
+		void		setSocket(const SOCKET server_socket);
 
 		void		create_server_socket();
 		void		bind_address_and_port();

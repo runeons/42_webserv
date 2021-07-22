@@ -20,6 +20,7 @@ Server::Server(void)
 {
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	_config = new Config;
+	_client = new Client;
 	_address.sin_family = AF_INET;
 	try
 	{
@@ -30,11 +31,9 @@ Server::Server(void)
 	catch (Exceptions::InvalidAddress & e)
 	{
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
-		// exit();
 	}
 	_address.sin_port = htons(_config->getPort());
-	_server_socket = 0;
-	_client_socket = 0;
+	_socket = 0;
 	return ;
 }
 
@@ -50,6 +49,7 @@ Server::Server(const Server& src)
 Server::~Server(void)
 {
 	delete _config;
+	delete _client;
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;
 }
@@ -61,7 +61,7 @@ Server &	Server::operator=(const Server& rhs)
 	if (this != &rhs)
 	{
 		_config = rhs.getConfig();
-		_server_socket = rhs.getServerSocket();
+		_socket = rhs.getSocket();
 	}
 	return (*this);
 }
@@ -78,25 +78,25 @@ void Server::setConfig(Config * config)
 	return ;
 }
 
-SOCKET Server::getServerSocket(void) const
+Client * Server::getClient(void) const
 {
-	return (_server_socket);
+	return (_client);
 }
 
-void Server::setServerSocket(const SOCKET server_socket)
+void Server::setClient(Client * client)
 {
-	_server_socket = server_socket;
+	_client = client;
 	return ;
 }
 
-SOCKET Server::getClientSocket(void) const
+SOCKET Server::getSocket(void) const
 {
-	return (_client_socket);
+	return (_socket);
 }
 
-void Server::setClientSocket(const SOCKET client_socket)
+void Server::setSocket(const SOCKET server_socket)
 {
-	_client_socket = client_socket;
+	_socket = server_socket;
 	return ;
 }
 
@@ -104,16 +104,17 @@ void Server::listen(void)
 {
 	socklen_t addrlen = sizeof(_address);
 
-	if (::listen(_server_socket, 50) == -1)
+	if (::listen(_socket, 50) == -1)
 		throw Exceptions::ServerListen();
 	std::cout << GREEN << "Server ready to listen !" <<  C_RES << std::endl;
 	while (1)
 	{
-		_client_socket = ::accept(_server_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>(&addrlen));
+		_client->setSocket(::accept(_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>(&addrlen)));
 		// accept() ne renvoie pas d'exception car renvoie -1 en continu
-		if (_client_socket >= 0)
+		if (_client->getSocket() >= 0)
 		{
-			std::cout << GREEN_B << "Connexion received from " << _client_socket << C_RES << std::endl;
+			std::cout << GREEN_B << "Connexion received from " << _client->getSocket() << C_RES << std::endl;
+			_client->treat_client();
 			break ;
 		}
 	}
@@ -132,16 +133,16 @@ void Server::print_config(void)
 
 void		Server::create_server_socket()
 {
-	_server_socket = ::socket(AF_INET, SOCK_STREAM, 0);
-	_server_socket = -1;
-	if (_server_socket == -1)
+	_socket = ::socket(AF_INET, SOCK_STREAM, 0);
+	// _socket = -1;
+	if (_socket == -1)
 		throw Exceptions::ServerSocket();
 	std::cout << GREEN << "Server socket created !" <<  C_RES << std::endl;
 }
 
 void		Server::bind_address_and_port()
 {
-	if (::bind(_server_socket, reinterpret_cast<const struct sockaddr *>(&_address), sizeof(_address)) == -1)
+	if (::bind(_socket, reinterpret_cast<const struct sockaddr *>(&_address), sizeof(_address)) == -1)
 		throw Exceptions::BindServer();
 	std::cout << GREEN << "Address and port bound !" <<  C_RES << std::endl;
 }
@@ -149,7 +150,7 @@ void		Server::bind_address_and_port()
 void		Server::stop_server()
 {
 	std::cerr << GREY << "Server shut down" <<  C_RES << std::endl;
-	close(_server_socket); // pas besoin de protéger le close parce qu'on va quitter le programme
+	close(_socket); // pas besoin de protéger le close parce qu'on va quitter le programme
 }
 
 int		Server::launch(void)

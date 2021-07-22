@@ -6,7 +6,7 @@
 #    By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/16 21:13:33 by tsantoni          #+#    #+#              #
-#    Updated: 2021/07/21 11:54:27 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/22 09:19:27 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #!/bin/bash
@@ -17,7 +17,7 @@
 TAB_SIZE=4
 
 #___________________________ CLASS_NAME __________________________#
-CLASS_NAME="Server"
+CLASS_NAME="Client"
 INHERIT_FROM=""
 
 #___________________________ FILES TO INCLUDE __________________________#
@@ -32,7 +32,7 @@ COLOR=0
 #___________________________ FUNCTIONS TO INCLUDE __________________________#
 GETTERS=1
 SETTERS=1
-OVERLOAD_OSTREAM=1
+OVERLOAD_OSTREAM=0
 VIRTUAL_DESTRUCT=1
 
 #___________________________ OTHER CLASSES TO INCLUDE TO MAKEFILE __________________________#
@@ -44,9 +44,8 @@ ALL_GREY=1
 #_____________________ INPUT ATTRIBUTES _____________________#
 # "Type"	"Name"	"Value" (Value : " " si pas de value)
 
-ATT_1=("Config *"		"config"	" ")
-ATT_2=("SOCKET"			"server_socket"	" ")
-ATT_3=("std::string"	"rootDir"	" ")
+ATT_1=("SOCKET"			"client_socket"	" ")
+ATT_2=("std::string"	"address"	" ")
 # ATT_3=("const int"	"gradeToSign"	" ")
 # ATT_4=("const int"	"gradeToExecute"	" ")
 # ATT_5=(""	""	" ")
@@ -80,9 +79,9 @@ OSTREAM="${ATT_1[1]}"
 # PRIV_FUNC_3=("" "" "" " ")
 # PRIV_FUNC_4=("" "" "" " ")
 
-PUB_FUNC_1=("void" "server_stop" "SOCKET" " ")
-PUB_FUNC_2=("void" "listen" "SOCKET" " ")
-# PUB_FUNC_3=("value_type &" "top" "void" " ")
+PUB_FUNC_1=("void" "treat_client" "void" " ")
+PUB_FUNC_2=("void" "receive_request" "void" " ")
+PUB_FUNC_3=("void" "check_request" "void" " ")
 # PUB_FUNC_4=("const value_type &" "top" "void" " ")
 # PUB_FUNC_5=("void" "push" "const value_type&" "val")
 # PUB_FUNC_6=("void" "emplace" "Args&&..." "args")
