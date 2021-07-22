@@ -10,26 +10,90 @@ Client::Client(void)
 	_ressource = "";
 	_version = "";
 	_full_path = "";
-	_error_msg = create_map_error_msg();
-	_error_body = create_map_error_body();
+	_error_msg = create_map_msg();
+	_error_body = create_map_body();
 	return ;
 }
 
-std::map<int, std::string>	Client::create_map_error_msg()
+std::map<int, std::string>	Client::create_map_msg()
 {
 	std::map<int, std::string> m;
 
+	// m[100] = "Continue";
+	// m[101] = "Switching Protocols";
 	m[200] = "OK";
-	m[404] = "OK";
+	// m[201] = "Created";
+	// m[202] = "Accepted";
+	// m[203] = "Non-Authoritative Information";
+	// m[204] = "No Content";
+	// m[205] = "Reset Content";
+	// m[206] = "Partial Content";
+	// m[300] = "Multiple Choices";
+	// m[301] = "Moved Permanently";
+	// m[302] = "Moved Temporarily";
+	// m[303] = "See Other";
+	// m[304] = "Not Modified";
+	// m[305] = "Use Proxy";
+	// m[400] = "Bad Request";
+	// m[401] = "Unauthorized";
+	// m[402] = "Payment Required";
+	// m[403] = "Forbidden";
+	m[404] = "Not Found";
+	// m[405] = "Method Not Allowed";
+	// m[406] = "None Acceptable";
+	// m[407] = "Proxy Authentication Required";
+	// m[408] = "Request Timeout";
+	// m[409] = "Conflict";
+	// m[410] = "Gone";
+	// m[411] = "Length Required";
+	// m[412] = "Unless True";
+	// m[500] = "Internal Server Error";
+	// m[501] = "Not Implemented";
+	// m[502] = "Bad Gateway";
+	// m[503] = "Service Unavailable";
+	// m[504] = "Gateway Timeout";
+
 	return m;
 }
 
-std::map<int, std::string>	Client::create_map_error_body()
+std::map<int, std::string>	Client::create_map_body()
 {
 	std::map<int, std::string> m;
 
-	m[200] = "OK";
-	m[404] = "OK";
+	// m[100] = "Continue";
+	// m[101] = "Switching Protocols";
+	// m[200] = "OK";
+	// m[201] = "Created";
+	// m[202] = "Accepted";
+	// m[203] = "Non-Authoritative Information";
+	// m[204] = "No Content";
+	// m[205] = "Reset Content";
+	// m[206] = "Partial Content";
+	// m[300] = "Multiple Choices";
+	// m[301] = "Moved Permanently";
+	// m[302] = "Moved Temporarily";
+	// m[303] = "See Other";
+	// m[304] = "Not Modified";
+	// m[305] = "Use Proxy";
+	// m[400] = "Bad Request";
+	// m[401] = "Unauthorized";
+	// m[402] = "Payment Required";
+	// m[403] = "Forbidden";
+	m[404] = "<html><body><center><h1>Error 404: Not found</h1></center><p>Head back to <a href=\"/\">home page</a>.</p></body></html>";
+	// m[405] = "Method Not Allowed";
+	// m[406] = "None Acceptable";
+	// m[407] = "Proxy Authentication Required";
+	// m[408] = "Request Timeout";
+	// m[409] = "Conflict";
+	// m[410] = "Gone";
+	// m[411] = "Length Required";
+	// m[412] = "Unless True";
+	// m[500] = "Internal Server Error";
+	// m[501] = "Not Implemented";
+	// m[502] = "Bad Gateway";
+	// m[503] = "Service Unavailable";
+	// m[504] = "Gateway Timeout";
+
 	return m;
 }
 

@@ -38,8 +38,8 @@ class Client
 		void		generate_error_body(int);
 		void		construct_full_path(void);
 
-		std::map<int, std::string>	create_map_error_msg();
-		std::map<int, std::string>	create_map_error_body();
+		std::map<int, std::string>	create_map_msg();
+		std::map<int, std::string>	create_map_body();
 
 		Client		&operator=(const Client & src);
 };
