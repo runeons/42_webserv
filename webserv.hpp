@@ -12,9 +12,12 @@
 # include <map>
 
 typedef int SOCKET;
-# define MAX_RCV 4096
+# define MAX_RCV	4096
+# define SUCCESS	0
+# define FAILURE	-1
 
 # include "Config.hpp"
+# include "RequestParser.class.hpp"
 # include "Client.hpp"
 # include "Server.hpp"
 # include "Exceptions.hpp"

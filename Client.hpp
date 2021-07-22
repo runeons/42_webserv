@@ -3,6 +3,8 @@
 
 # include "webserv.hpp"
 
+class RequestParser;
+
 class Client
 {
 	private:
@@ -14,9 +16,7 @@ class Client
 
 		// requete
 		std::string	_request; // full request
-		std::string	_method;
-		std::string	_ressource;
-		std::string	_version;
+		RequestParser		*_request_parser;
 
 		// reponse
 		std::string	_full_path;
