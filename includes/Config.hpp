@@ -3,6 +3,9 @@
 
 # include "webserv.hpp"
 
+# define ROOT_DIR	"./html"
+# define PORT		8000
+
 class Config
 {
 	private:

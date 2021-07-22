@@ -6,11 +6,11 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/22 11:48:45 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/22 12:37:09 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../webserv.hpp"
+#include <webserv.hpp>
 
 // PROTECTED MEMBERS FUNCTION : PROMF
 

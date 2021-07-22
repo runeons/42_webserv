@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../webserv.hpp"
+#include <webserv.hpp>
 
 RequestParser		&RequestParser::operator=(RequestParser const &rhs)
 {
