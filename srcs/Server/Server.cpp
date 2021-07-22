@@ -21,8 +21,10 @@ Server::Server(void)
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	_config = new Config;
 	_client = new Client;
+	memset(&_address, 0, sizeof(_address));
+	memset(&_address.sin_addr, 0, sizeof(_address.sin_addr));
 	_address.sin_family = AF_INET;
-	_address.sin_family = INADDR_ANY;
+	_address.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
 		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0)

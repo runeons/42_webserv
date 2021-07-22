@@ -3,59 +3,121 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+         #
+#    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/07/22 12:04:08 by tsantoni          #+#    #+#              #
-#    Updated: 2021/07/22 12:39:22 by tharchen         ###   ########.fr        #
+#    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
+#    Updated: 2021/07/22 13:59:59 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= 	webserv
+# **************************************************************************** #
+#                                                                              #
+#    Makefile project webserv by tharchen and tsantoni                         #
+#                                                                              #
+#    rules:                                                                    #
+#                                                                              #
+#    make           : make the project                                         #
+#    make all       : make the project                                         #
+#    make webserv   : make the project                                         #
+#    make clean     : clean object files (.o)                                  #
+#    make fclean    : clean object files (.o) and remove webserv bin           #
+#    make re        : run rules fclean then all                                #
+#    make run       : run re then run ./$(NAME)                                #
+#                                                                              #
+# *** NAME - CC - FLAGS ****************************************************** #
 
-CC			= 	clang++
+NAME					=	webserv
 
-CFLAGS		= 	-Wall -Wextra -Werror -std=c++98 -g3
+CC						=	clang++
 
-SRCS_DIR	=	./srcs
+FLAGS					=	-Wall -Wextra -Werror -std=c++98
+FLAGSSAN				=	-fsanitize=address -g3
 
-INCLUDES_DIR	=	./includes
+# *** PROJECT HEADER ********************************************************* #
 
-SRCS_REQUESTPARSER	=	\
-					$(SRCS_DIR)/RequestParser/RequestParser.class.cpp \
-					$(SRCS_DIR)/RequestParser/RequestParser.cd.class.cpp \
-					$(SRCS_DIR)/RequestParser/RequestParser.gs.class.cpp \
-					$(SRCS_DIR)/RequestParser/RequestParser.ovop.class.cpp \
+HDIR					=	$(addprefix -I, $(HEADER_DIR))
 
-SRCS		=	$(SRCS_DIR)/main.cpp \
-				$(SRCS_DIR)/Server/Server.cpp \
-				$(SRCS_DIR)/Config/Config.cpp \
-				$(SRCS_DIR)/Client/Client.cpp \
-				$(SRCS_REQUESTPARSER) \
+HEAD					=	$(addprefix $(HEADER_DIR), $(HEADER))
 
-OBJS		=	$(SRCS:.cpp=.o)
+HEADER_DIR				=	\
+							./includes/
 
-.cpp.o:
-			$(CC) $(CFLAGS) -I $(INCLUDES_DIR) -c $< -o $(<:.cpp=.o)
+HEADER					=	\
+							Client.hpp \
+							Config.hpp \
+							Exceptions.hpp \
+							RequestParser.class.hpp \
+							Server.hpp \
+							color.hpp \
+							webserv.hpp \
 
-$(NAME): $(OBJS)
-			$(CC) $(CFLAGS) -I $(INCLUDES_DIR) $(OBJS) -o $(NAME)
+# *** SRCS ******************************************************************* #
 
-all: $(NAME)
+SRCS_DIR				=	./srcs/
 
-clean:
-	@	rm -rf $(OBJS)
+SRCS_REQUESTPARSER		=	\
+							RequestParser/RequestParser.class.cpp \
+							RequestParser/RequestParser.cd.class.cpp \
+							RequestParser/RequestParser.gs.class.cpp \
+							RequestParser/RequestParser.ovop.class.cpp \
 
-fclean:	clean
-	@	rm -rf $(NAME)
-	@	rm -rf $(NAME).dSYM
+SRCS_SERVER				=	\
+							Server/Server.cpp \
 
-re: fclean
-	make -j
+SRCS_CONFIG				=	\
+							Config/Config.cpp \
 
-fsan: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -fsanitize=address -g3 -o $(NAME)
+SRCS_CLIENT				=	\
+							Client/Client.cpp \
 
-ffsan: fclean
-	make fsan -j
+SRCS_LIST				=	\
+							main.cpp \
+							$(SRCS_REQUESTPARSER) \
+							$(SRCS_SERVER) \
+							$(SRCS_CONFIG) \
+							$(SRCS_CLIENT) \
+
+
+SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
+
+# *** OBJS ******************************************************************* #
+
+OBJS_DIR				=	./objs/
+
+OBJS_LIST				=	$(patsubst %.cpp, %.o, $(SRCS_LIST))
+
+OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
+
+# *** RULES ****************************************************************** #
 
 .PHONY: all clean fclean re fsan ffsan
+
+all: $(OBJS) $(SRCS) $(NAME)
+	@ printf "\033[31m Program \033[32m%s : \033[34;01;03mCompilation \033[36m%-50s\033[0m\n" $(NAME) "done !"
+
+$(NAME): $(OBJS) $(SRCS)
+	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $(NAME)
+
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
+	@ mkdir -p $(dir $@)
+	@ $(CC) $(FLAGS) $(HDIR) -c -o $@ $<
+	@ printf "\033[31m Program \033[32m%s : \033[34;01;03mCompilation of \033[36m%-50s\033[0m\r" $(NAME) $(notdir $<)
+
+clean:
+	@ rm -rf $(OBJS_DIR)
+
+fclean: clean
+	@ rm -f $(NAME)
+	@ rm -f $(NAME).dSYM
+
+re: fclean
+	@ make -j
+
+fsan: $(OBJS) $(SRCS) $(NAME)
+	@ $(CC) $(FLAGS) $(FLAGSSAN) $(HDIR) $(OBJS) -o $(NAME)
+	@ printf "\033[31m Program \033[32m%s :\033[34;01;03m Compilation\033[33m in sanitizer mode \033[36m%-50s\033[0m\n" $(NAME) "done !"
+
+ffsan: fclean
+	@ make fsan -j
+
+# **************************************************************************** #
