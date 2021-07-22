@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/22 12:25:58 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/22 14:28:07 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,13 +164,16 @@ class RequestParser
 		virtual ~RequestParser(void); // destructor
 		// OVERLOADED OPERATORS : OVOP
 		RequestParser	&operator=(const RequestParser &rhs);
-		void		print_request_info(void);
-		std::string	get_method_name(void);
 		// GETTERS / SETTERS : GS
+		enum e_methods	get__method(void) const;
+		std::string		get__resource(void) const;
+		std::string		get__http_version(void) const;
+		std::string		get__body(void) const;
 		// PUBLIC MEMBERS ATRIBUTE : PUMA
 
 		// PUBLIC MEMBERS FUNCTION : PUMF
-
+		void		print_request_info(void);
+		std::string	get_method_name(void);
 };
 
 std::ostream	&operator<<(std::ostream &o, const RequestParser &i);

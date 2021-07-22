@@ -21,8 +21,6 @@ Server::Server(void)
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	_config = new Config;
 	_client = new Client;
-	memset(&_address, 0, sizeof(_address));
-	memset(&_address.sin_addr, 0, sizeof(_address.sin_addr));
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
@@ -136,7 +134,10 @@ void Server::print_config(void)
 
 void		Server::create_server_socket()
 {
+	int option = 1;
+
 	_socket = ::socket(AF_INET, SOCK_STREAM, 0);
+	::setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 	// _socket = -1;
 	if (_socket == -1)
 		throw Exceptions::ServerSocket();
@@ -146,7 +147,10 @@ void		Server::create_server_socket()
 void		Server::bind_address_and_port()
 {
 	if (::bind(_socket, reinterpret_cast<const struct sockaddr *>(&_address), sizeof(_address)) == -1)
+	{
+		perror("bind");
 		throw Exceptions::BindServer();
+	}
 	std::cout << GREEN << "Address and port bound !" <<  C_RES << std::endl;
 }
 
