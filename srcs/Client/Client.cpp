@@ -318,6 +318,25 @@ void	Client::generate_response_bin()
 
 }
 
+void Client::send_response()
+{
+	int	bytes_sent = 0;
+	int len = _response_bin.length() + 1;
+
+	char response_array[len];
+	strcpy(response_array, _response_bin.c_str());
+	try
+	{
+		bytes_sent = ::send(_socket, response_array, len, 0);
+		if (bytes_sent == -1)
+			throw Exceptions::SendFailure();
+		std::cout << GREEN << "Response of size " << bytes_sent << " sent !" <<  C_RES << std::endl;
+	}
+	catch (Exceptions::SendFailure & e)
+	{
+		std::cerr << RED << e.what() <<  C_RES << std::endl;
+	}
+}
 
 void Client::treat_client(void)
 {
@@ -328,6 +347,7 @@ void Client::treat_client(void)
 	get_create_body(); // depending on METHOD
 	generate_response_header();
 	generate_response_bin();
+	send_response();
 
 	// for GET
 	std::cout << _response << std::endl;

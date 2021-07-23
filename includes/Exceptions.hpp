@@ -41,6 +41,13 @@ class Exceptions
 				virtual const char *what() const throw()
 				{ return ("Failed to receive request"); }
 		};
+
+		class SendFailure : public std::exception
+		{
+			public:
+				virtual const char *what() const throw()
+				{ return ("Failed to send response"); }
+		};
 };
 
 #endif

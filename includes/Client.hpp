@@ -66,6 +66,7 @@ class Client
 		std::string 	generate_status_line();
 		void			construct_full_path();
 		void			read_resource();
+		void			send_response();
 
 		void			get_create_body();
 
