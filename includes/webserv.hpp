@@ -5,7 +5,6 @@
 # include <sstream>
 # include <fstream>
 # include <string>
-# include "color.hpp"
 # include <netinet/ip.h>
 # include <sys/socket.h>
 # include <arpa/inet.h>
@@ -14,7 +13,7 @@
 # include <cstdlib>
 # include <ctime>
 # include <map>
-# include <bitset>
+# include "color.hpp"
 
 typedef int SOCKET;
 # define MAX_RCV	4096
@@ -22,8 +21,10 @@ typedef int SOCKET;
 # define SUCCESS	0
 # define FAILURE	-1
 
+# include "utils.hpp"
 # include "Config.hpp"
 # include "RequestParser.class.hpp"
+# include "Response.hpp"
 # include "Client.hpp"
 # include "Server.hpp"
 # include "Exceptions.hpp"

@@ -1,0 +1,11 @@
+#ifndef UTILS_HPP
+# define UTILS_HPP
+
+// ********************************************* binary conversion *********************************************
+
+std::string itos(int nb);
+std::string int_to_binary(int n);
+std::string string_to_binary(std::string s);
+std::string binary_to_string(std::string s);
+
+#endif

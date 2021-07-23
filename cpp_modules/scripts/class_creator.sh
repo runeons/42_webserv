@@ -6,7 +6,7 @@
 #    By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/16 21:13:33 by tsantoni          #+#    #+#              #
-#    Updated: 2021/07/23 10:55:23 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/23 11:04:00 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #!/bin/bash
@@ -44,16 +44,16 @@ ALL_GREY=1
 #_____________________ INPUT ATTRIBUTES _____________________#
 # "Type"	"Name"	"Value" (Value : " " si pas de value)
 
-ATT_1=("int"			"status_code"	" ")
-ATT_2=("std::string"	"full_path"	" ")
-ATT_3=("std::string"	"response"	" ")
-ATT_4=("std::string"	"response_header"	" ")
-ATT_5=("std::string"	"response_body"	" ")
-ATT_6=("std::string"	"response_bin"	" ")
-ATT_7=("std::string"	"response_header_bin"	" ")
-ATT_8=("std::string"	"response_body_bin"	" ")
-ATT_9=("std::map<int, std::string>"	"error_msg"	" ")
-ATT_10=("std::map<int, std::string>"	"error_body"	" ")
+ATT_1=("std::map<int, std::string>"			"headers_response"	" ")
+ATT_2=("std::string"	"page_content"	" ")
+# ATT_3=("std::string"	"response"	" ")
+# ATT_4=("std::string"	"response_header"	" ")
+# ATT_5=("std::string"	"response_body"	" ")
+# ATT_6=("std::string"	"response_bin"	" ")
+# ATT_7=("std::string"	"response_header_bin"	" ")
+# ATT_8=("std::string"	"response_body_bin"	" ")
+# ATT_9=("std::map<int, std::string>"	"error_msg"	" ")
+# ATT_10=("std::map<int, std::string>"	"error_body"	" ")
 # ATT_3=("const int"	"gradeToSign"	" ")
 # ATT_4=("const int"	"gradeToExecute"	" ")
 # ATT_5=(""	""	" ")

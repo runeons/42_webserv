@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/22 15:16:13 by tharchen         ###   ########.fr        #
+#    Updated: 2021/07/23 11:48:49 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,11 +58,13 @@ HEADER_DIR				=	\
 
 HEADER					=	\
 							Client.hpp \
+							Response.hpp \
 							Config.hpp \
 							Exceptions.hpp \
 							RequestParser.class.hpp \
 							Server.hpp \
 							color.hpp \
+							utils.hpp \
 							webserv.hpp \
 
 # *** SRCS ******************************************************************* #
@@ -84,12 +86,23 @@ SRCS_CONFIG				=	\
 SRCS_CLIENT				=	\
 							Client/Client.cpp \
 
+SRCS_RESPONSE			=	\
+							Response/Response_basics.cpp \
+							Response/Response_class.cpp \
+							Response/Response_headers.cpp \
+							Response/Response_init_maps.cpp \
+
+SRCS_UTILS			=	\
+							utils/utils.cpp \
+
 SRCS_LIST				=	\
 							main.cpp \
 							$(SRCS_REQUESTPARSER) \
 							$(SRCS_SERVER) \
 							$(SRCS_CONFIG) \
 							$(SRCS_CLIENT) \
+							$(SRCS_RESPONSE) \
+							$(SRCS_UTILS) \
 
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
