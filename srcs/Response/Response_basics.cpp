@@ -1,10 +1,10 @@
 # include "Response.hpp"
 
 // Default constructor
-Response::Response(int status_code, std::string page_content) : _status_code(status_code), _page_content(page_content)
+Response::Response(int status_code, std::string page_content, std::string full_path) : _status_code(status_code), _page_content(page_content), _full_path(full_path)
 {
 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
-	_full_path = "";
+	// _full_path = "";
 	_response = "";
 	_response_header = "";
 	_response_body = "";
@@ -14,6 +14,7 @@ Response::Response(int status_code, std::string page_content) : _status_code(sta
 	_headers_response = init_map_headers();
 	_error_msg = init_map_msg();
 	_error_content = init_map_body();
+	_mime_types = init_map_mimes();
 	return ;
 }
 

@@ -50,9 +50,30 @@ std::string		Response::r_header_content_length()
 	return (formatted_header_response(R_CONTENT_LENGTH));
 }
 
+std::string		Response::get_extension(std::string path)
+{
+	size_t pos;
+	std::string sub;
+	pos = path.rfind("/");
+	sub = path.substr(pos + 1, path.length() - (pos + 1));
+	pos = sub.rfind(".");
+	if (pos == std::string::npos)
+		return ("");
+	else
+		return (sub.substr(pos + 1, sub.length() - (pos + 1)));
+}
+
+std::string		Response::get_mime_type(std::string path)
+{
+	if (_mime_types[get_extension(path)] == "")
+		return _mime_types["html"];
+	return _mime_types[get_extension(path)];
+}
+
 std::string		Response::r_header_content_type()
 {
-	_headers_response[R_CONTENT_TYPE] = "text/html; charset=utf-8";
+	_headers_response[R_CONTENT_TYPE] = get_mime_type(_full_path) + "; charset=utf-8";
+	// _headers_response[R_CONTENT_TYPE] = get_mime_type(_full_path);
 	return (formatted_header_response(R_CONTENT_TYPE));
 }
 
@@ -65,5 +86,5 @@ void		Response::generate_response_header(void)
 	_response_header += r_header_content_length();
 	_response_header += r_header_content_type();
 
-	return;
+	return ;
 }

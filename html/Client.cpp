@@ -97,14 +97,14 @@ void Client::receive_request(void)
 
 void Client::check_request(void)
 {
-	// _request_parser = new RequestParser(_request); // create parser request
-	// _request_parser->print_request_info();
+	_request_parser = new RequestParser(_request); // create parser request
+	_request_parser->print_request_info();
 	return ;
 }
 
 void Client::read_resource(void)
 {
-	_full_path = "./html/404.html";
+	_full_path = "./html/forty-two";
 
 	std::ifstream ifs(_full_path);
 	std::ostringstream oss;
@@ -133,50 +133,20 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	_response = new Response(_status_code, _page_content, _full_path);
+	_response = new Response(_status_code, _page_content);
 	_response->generate();
 }
-
-// void Client::send_response(void)
-// {
-// 	int	bytes_sent = 0;
-// 	// int len = _response->getResponse().length() + 1;
-// 	std::cout << RED_B << "SEND_RESPONSE" << C_RES << std::endl;
-// 	size_t len = 10000000;
-// 	char *buffer = new char[len];
-//
-// 	for (size_t i = 0; i < _response->getResponseHeader().length(); i++)
-// 	{
-// 		buffer[i] = _response->getResponseHeader()[i];
-// 	}
-// 	for (size_t i = _response->getResponseHeader().length(); (i < (_response->getResponseHeader().length() + _response->getResponseBody().length())) && (i < len); i++)
-// 	{
-// 		buffer[i] = _response->getResponseBody()[i];
-// 	}
-// 	try
-// 	{
-// 		bytes_sent = ::send(_socket, buffer, len, 0);
-// 		if (bytes_sent == -1)
-// 			throw Exceptions::SendFailure();
-// 		std::cout << GREEN << "Response of size " << bytes_sent << " sent !" <<  C_RES << std::endl;
-// 	}
-// 	catch (Exceptions::SendFailure & e)
-// 	{
-// 		std::cerr << RED << e.what() <<  C_RES << std::endl;
-// 	}
-// }
 
 void Client::send_response(void)
 {
 	int	bytes_sent = 0;
 	int len = _response->getResponse().length() + 1;
-	// size_t len = std::string::npos;
 
-	char buffer[len];
-	strcpy(buffer, _response->getResponse().c_str());
+	char response_array[len];
+	strcpy(response_array, _response->getResponse().c_str());
 	try
 	{
-		bytes_sent = ::send(_socket, buffer, len, 0);
+		bytes_sent = ::send(_socket, response_array, len, 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
 		std::cout << GREEN << "Response of size " << bytes_sent << " sent !" <<  C_RES << std::endl;

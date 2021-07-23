@@ -24,7 +24,6 @@ void	Response::concatenate_response()
 {
 	_response = _response_header + PAT_CRLF + _response_body;
 	_response_bin = string_to_binary(_response);
-
 }
 
 // ********************************************* main - generate *********************************************

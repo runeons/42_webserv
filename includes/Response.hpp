@@ -30,10 +30,11 @@ class Response
 		std::map<int, std::string>	_headers_response;
 		std::map<int, std::string>	_error_msg;
 		std::map<int, std::string>	_error_content;
+		std::map<std::string, std::string>	_mime_types;
 
 	public:
 		// Response_basics
-		Response(int status_code, std::string page_content);
+		Response(int status_code, std::string page_content, std::string full_path);
 		Response(const Response & src);
 		virtual ~Response();
 
@@ -68,6 +69,7 @@ class Response
 		std::map<int, std::string>	init_map_msg();
 		std::map<int, std::string>	init_map_body();
 		std::map<int, std::string>	init_map_headers();
+		std::map<std::string, std::string>	init_map_mimes();
 		std::string		get_response_field_name(enum e_resp_fields field);
 
 
@@ -79,8 +81,26 @@ class Response
 		std::string		r_header_connection();
 		std::string		r_header_content_length();
 		std::string		r_header_content_type();
+		std::string		get_extension(std::string path);
+		std::string		get_mime_type(std::string extension);
 		void			generate_response_header();
 
+		// date
+		// last Modified
+		// locattion
+		// retry-after
+		// transfer encoding
+
+		// accept_charsets
+		// accept_language
+		// host
+		// referer
+		// user_agent
+		// clientIP
+		// query
+		// content
+		// contentLength
+		// contentType
 		// Response_class
 		void	generate_error_content();
 		void	GET_create_body();
