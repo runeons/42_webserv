@@ -30,14 +30,9 @@ std::string string_to_binary(std::string s)
 	std::ostringstream oss;
 
 	if (!oss)
-		std::cerr << RED << "Error oss : can't open ofstream" <<  C_RES << std::endl; // EXCEPTION A CREER
+		return "";
 	for (size_t i = 0; i < s.length(); ++i)
-	{
 		oss << int_to_binary(s[i]);
-
-		// if (i % 6 == 0 && i != 0) // controle le format d'impression
-			// oss << std::endl;
-	}
 	return oss.str();
 }
 
@@ -49,7 +44,7 @@ std::string binary_to_string(std::string s)
 	int		j = 0;
 
 	if (!oss)
-		std::cerr << RED << "Error oss : can't open ofstream" <<  C_RES << std::endl; // EXCEPTION A CREER
+		return "";
 	for (size_t i = 0; i < s.length(); ++i)
 	{
 		parsed = 0;
@@ -86,15 +81,9 @@ std::string get_file_content(std::string filename)
 	std::ostringstream oss;
 
 	if (!ifs)
-	{
-		std::cerr << RED << "Error get content : file does'nt exist" <<  C_RES << std::endl;
 		return "";
-	}
-	else if (!oss) // EXCEPTION A CREER
-	{
-		std::cerr << RED << "Error get content : can't open osstream" <<  C_RES << std::endl;
+	else if (!oss)
 		return "";
-	}
 	else
 	{
 		std::cerr << GREEN_B << "OK get content : file found" <<  C_RES << std::endl;

@@ -123,7 +123,6 @@ void Client::read_resource(void)
 	else
 	{
 		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
-		_status_code = 200;
 		while (ifs >> std::noskipws >> c)
 			_page_content += c;
 	}
@@ -163,7 +162,8 @@ void Client::treat_client(void)
 	std::cout << GREEN_B << "Treating client " << _socket << C_RES << std::endl;
 	receive_request();
 	check_request();
-	read_resource();
+	if (_status_code == 200)
+		read_resource();
 	generate_response();
 	send_response();
 
