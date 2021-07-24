@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
+/*   Updated: 2021/07/24 18:42:36 by tsantoni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
@@ -15,7 +27,7 @@ class Client
 		// requete
 		std::string					_request; // full request
 		RequestParser				*_request_parser;
-		
+
 		std::string					_full_path;
 
 		// response
