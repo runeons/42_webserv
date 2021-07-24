@@ -105,10 +105,10 @@ void Client::check_request(void)
 void Client::read_resource(void)
 {
 	// _full_path = "./html/forty-two";
-	_full_path = "./html/five_thousands";
+	// _full_path = "./html/five_thousands";
 	// _full_path = "./html/images/mini_img.png";
 	// _full_path = "./html/images/orange.jpeg";
-	// _full_path = "./html/images/to_include.png";
+	_full_path = "./html/images/to_include.png";
 
 	std::ifstream ifs(_full_path);
 	char c;

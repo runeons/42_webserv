@@ -66,3 +66,16 @@ std::string binary_to_string(std::string s)
 	}
 	return oss.str();
 }
+
+std::string		get_extension(std::string path)
+{
+	size_t pos;
+	std::string sub;
+	pos = path.rfind("/");
+	sub = path.substr(pos + 1, path.length() - (pos + 1));
+	pos = sub.rfind(".");
+	if (pos == std::string::npos)
+		return ("");
+	else
+		return (sub.substr(pos + 1, sub.length() - (pos + 1)));
+}

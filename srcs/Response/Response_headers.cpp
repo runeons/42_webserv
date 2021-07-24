@@ -50,26 +50,12 @@ std::string		Response::r_header_content_length()
 	return (formatted_header_response(R_CONTENT_LENGTH));
 }
 
-std::string		Response::get_extension(std::string path)
-{
-	size_t pos;
-	std::string sub;
-	pos = path.rfind("/");
-	sub = path.substr(pos + 1, path.length() - (pos + 1));
-	pos = sub.rfind(".");
-	if (pos == std::string::npos)
-		return ("");
-	else
-		return (sub.substr(pos + 1, sub.length() - (pos + 1)));
-}
-
 std::string		Response::exec_cmd(std::string cmd)
 {
 	std::ostringstream oss;
 
-
 	if (!oss) // EXCEPTION A CREER
-		std::cerr << RED << "Error : can't open ofstream" <<  C_RES << std::endl;
+		std::cerr << RED << "Error : can't open osstream" <<  C_RES << std::endl;
 	int status = std::system(cmd.c_str());
 	if (WEXITSTATUS(status) != 0)
 		std::cerr << RED << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
@@ -82,7 +68,7 @@ void		Response::retrieve_type_mime_charset(std::string str)
 	unsigned first = str.find(":") + 2;
 	unsigned last = str.find(";");
 
-	if (_status_code == 404 || last > str.length()) // si "cannot open file"
+	if (last > str.length()) // si "cannot open file"
 	{
 		_type_mime = "text/html";
 		_charset = "utf-8";

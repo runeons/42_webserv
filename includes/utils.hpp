@@ -8,4 +8,8 @@ std::string int_to_binary(int n);
 std::string string_to_binary(std::string s);
 std::string binary_to_string(std::string s);
 
+// ********************************************* extension *********************************************
+
+std::string	get_extension(std::string path);
+
 #endif

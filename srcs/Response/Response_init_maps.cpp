@@ -88,7 +88,7 @@ std::string get_file_content(std::string filename)
 	}
 	else if (!oss) // EXCEPTION A CREER
 	{
-		std::cerr << RED << "Error get content : can't open ofstream" <<  C_RES << std::endl;
+		std::cerr << RED << "Error get content : can't open osstream" <<  C_RES << std::endl;
 		return "";
 	}
 	else

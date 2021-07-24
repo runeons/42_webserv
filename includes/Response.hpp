@@ -74,7 +74,6 @@ class Response
 		std::string		r_header_connection();
 		std::string		r_header_content_length();
 		std::string		r_header_content_type();
-		std::string		get_extension(std::string path);
 		std::string		get_mime_type(std::string extension);
 		void			generate_response_header();
 		void			retrieve_type_mime_charset(std::string res);
