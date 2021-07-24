@@ -79,3 +79,27 @@ std::string		get_extension(std::string path)
 	else
 		return (sub.substr(pos + 1, sub.length() - (pos + 1)));
 }
+
+std::string get_file_content(std::string filename)
+{
+	std::ifstream ifs(filename);
+	std::ostringstream oss;
+
+	if (!ifs)
+	{
+		std::cerr << RED << "Error get content : file does'nt exist" <<  C_RES << std::endl;
+		return "";
+	}
+	else if (!oss) // EXCEPTION A CREER
+	{
+		std::cerr << RED << "Error get content : can't open osstream" <<  C_RES << std::endl;
+		return "";
+	}
+	else
+	{
+		std::cerr << GREEN_B << "OK get content : file found" <<  C_RES << std::endl;
+		oss << ifs.rdbuf();
+		ifs.close();
+		return (oss.str());
+	}
+}

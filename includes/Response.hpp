@@ -5,6 +5,7 @@
 
 # define SERVER_NAME "webserv"
 # define PATH_CMD_RES "./srcs/utils/cmd_res"
+# define DIR_ERROR_PAGES "./html/error_pages/"
 
 typedef enum		e_resp_fields
 {
@@ -64,6 +65,7 @@ class Response
 		std::map<int, std::string>	init_map_body();
 		std::map<int, std::string>	init_map_headers();
 		std::string		get_response_field_name(enum e_resp_fields field);
+		std::string 	generate_error_page_content(int code);
 
 
 		// Response_headers
@@ -79,23 +81,7 @@ class Response
 		void			retrieve_type_mime_charset(std::string res);
 		std::string		exec_cmd(std::string cmd);
 
-		// date
-		// last Modified
-		// location
-		// retry-after
-		// transfer encoding
 
-		// accept_charsets
-		// accept_language
-		// host
-		// referer
-		// user_agent
-		// clientIP
-		// query
-		// content
-		// contentLength
-		// contentType
-		// Response_class
 		void	generate_error_content();
 		void	GET_create_body();
 		void	concatenate_response();

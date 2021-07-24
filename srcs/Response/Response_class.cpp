@@ -6,6 +6,7 @@ void	Response::generate_error_content(void)
 {
 	if (_status_code != 200)
 		_page_content = _error_content[_status_code];
+	// std::cout << _page_content << std::endl;
 }
 
 // ********************************************* create body *********************************************

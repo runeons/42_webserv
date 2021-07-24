@@ -109,6 +109,8 @@ void Client::read_resource(void)
 	// _full_path = "./html/images/mini_img.png";
 	// _full_path = "./html/images/orange.jpeg";
 	_full_path = "./html/images/to_include.png";
+	// _full_path = "./html/error_pages/500.html";
+	// _full_path = "./html/error_dne";
 
 	std::ifstream ifs(_full_path);
 	char c;
