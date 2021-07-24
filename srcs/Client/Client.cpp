@@ -105,19 +105,19 @@ void Client::check_request(void)
 void Client::read_resource(void)
 {
 	// _full_path = "./html/forty-two";
-	_full_path = "./html/five_thousands";
+	// _full_path = "./html/five_thousands";
 	// _full_path = "./html/images/mini_img.png";
 	// _full_path = "./html/images/orange.jpeg";
 	// _full_path = "./html/images/to_include.png";
 	// _full_path = "./html/error_pages/500.html";
-	// _full_path = "./html/error_dne";
+	_full_path = "./html/error_dne";
 
 	std::ifstream ifs(_full_path);
 	char c;
 
 	if (!ifs)
 	{
-		std::cerr << RED << "Error (404) : file does'nt exist" <<  C_RES << std::endl;
+		std::cerr << RED << "Error (404) : file doesn't exist" <<  C_RES << std::endl;
 		_status_code = 404;
 	}
 	else

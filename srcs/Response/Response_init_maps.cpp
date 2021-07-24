@@ -30,7 +30,7 @@ std::map<int, std::string>	Response::init_map_msg()
 {
 	std::map<int, std::string> m;
 
-	m[200] = "OK"; 							// BOTH
+	m[200] = "OK"; 						// BOTH
 	m[204] = "No Content"; 						// RESP
 	m[301] = "Moved Permanently"; 				// RESP
 	m[307] = "Temporary Redirect"; 				// RESP
@@ -43,7 +43,7 @@ std::map<int, std::string>	Response::init_map_msg()
 	m[413] = "Payload Too Large"; 			// REQ
 	m[414] = "URI Too Long"; 				// REQ
 	m[415] = "Unsupported Media Type";			// RESP
-	m[500] = "Internal Server Error";		// BOTH
+	m[500] = "Internal Server Error";	// BOTH
 	m[501] = "Not Implemented";				// REQ
 	m[505] = "HTTP Version Not Supported";	// REQ
 
@@ -63,13 +63,13 @@ std::string Response::generate_error_page_content(int code)
 			<meta name=\"robots\" content=\"noindex\">\
 			<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css\">\
 			<style>\
-	    	h1.error {\
+			h1.error {\
 				margin-top: 1em;\
 				font-size: 7em;\
 				font-weight: 500;\
-	    	}\
-		  </style>\
-		  <script src=\"https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js\"></script>\
+			}\
+		</style>\
+		<script src=\"https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js\"></script>\
 		</head>\
 		<body>\
 			<div class=\"container\">\
