@@ -104,27 +104,32 @@ void Client::check_request(void)
 
 void Client::read_resource(void)
 {
-	_full_path = "./html/404.html";
+	// _full_path = "./html/forty-two";
+	// _full_path = "./html/images/mini_img.png";
+	// _full_path = "./html/images/orange.jpeg";
+	_full_path = "./html/images/to_include.png";
 
 	std::ifstream ifs(_full_path);
-	std::ostringstream oss;
+	std::ofstream ofs("./html/images/test_bin");
+	char c;
 
 	if (!ifs)
 	{
 		std::cerr << RED << "Error (404) : file does'nt exist" <<  C_RES << std::endl;
 		_status_code = 404;
 	}
-	else if (!oss) // EXCEPTION A CREER
-	{
-		std::cerr << RED << "Error : can't open ofstream" <<  C_RES << std::endl;
-		_status_code = 500; // quel status_code ?
-	}
+		else if (!ofs) // EXCEPTION A CREER
+		{
+			std::cerr << RED << "Error : can't open ofstream" <<  C_RES << std::endl;
+			_status_code = 500; // quel status_code ?
+		}
 	else
 	{
 		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
 		_status_code = 200;
-		oss << ifs.rdbuf();
-		_page_content = oss.str();
+		while (ifs >> std::noskipws >> c)
+			_page_content += c;
+		ofs << _page_content;
 	}
 	if (ifs)
 		ifs.close();
@@ -137,43 +142,13 @@ void Client::generate_response(void)
 	_response->generate();
 }
 
-// void Client::send_response(void)
-// {
-// 	int	bytes_sent = 0;
-// 	// int len = _response->getResponse().length() + 1;
-// 	std::cout << RED_B << "SEND_RESPONSE" << C_RES << std::endl;
-// 	size_t len = 10000000;
-// 	char *buffer = new char[len];
-//
-// 	for (size_t i = 0; i < _response->getResponseHeader().length(); i++)
-// 	{
-// 		buffer[i] = _response->getResponseHeader()[i];
-// 	}
-// 	for (size_t i = _response->getResponseHeader().length(); (i < (_response->getResponseHeader().length() + _response->getResponseBody().length())) && (i < len); i++)
-// 	{
-// 		buffer[i] = _response->getResponseBody()[i];
-// 	}
-// 	try
-// 	{
-// 		bytes_sent = ::send(_socket, buffer, len, 0);
-// 		if (bytes_sent == -1)
-// 			throw Exceptions::SendFailure();
-// 		std::cout << GREEN << "Response of size " << bytes_sent << " sent !" <<  C_RES << std::endl;
-// 	}
-// 	catch (Exceptions::SendFailure & e)
-// 	{
-// 		std::cerr << RED << e.what() <<  C_RES << std::endl;
-// 	}
-// }
-
 void Client::send_response(void)
 {
 	int	bytes_sent = 0;
-	int len = _response->getResponse().length() + 1;
-	// size_t len = std::string::npos;
+	int len = (_response->getResponse().length() + 1);
 
 	char buffer[len];
-	strcpy(buffer, _response->getResponse().c_str());
+	memcpy(buffer, _response->getResponse().c_str(), len);
 	try
 	{
 		bytes_sent = ::send(_socket, buffer, len, 0);
@@ -196,7 +171,7 @@ void Client::treat_client(void)
 	generate_response();
 	send_response();
 
-	std::cout <<  _response->getResponse() << std::endl;
+	// std::cout <<  _response->getResponse() << std::endl;
 
 	return ;
 }

@@ -5,12 +5,15 @@ Response::Response(int status_code, std::string page_content, std::string full_p
 {
 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
 	// _full_path = "";
+	_type_mime = "";
+	_charset = "";
+
 	_response = "";
 	_response_header = "";
 	_response_body = "";
-	_response_bin = "";
-	_response_header_bin = "";
-	_response_body_bin = "";
+	// _response_bin = "";
+	// _response_header_bin = "";
+	// _response_body_bin = "";
 	_headers_response = init_map_headers();
 	_error_msg = init_map_msg();
 	_error_content = init_map_body();
@@ -45,9 +48,9 @@ Response &	Response::operator=(const Response& rhs)
 		this->_response = rhs.getResponse();
 		this->_response_body = rhs.getResponseBody();
 		this->_response_header = rhs.getResponseHeader();
-		this->_response_bin = rhs.getResponseBin();
-		this->_response_body_bin = rhs.getResponseBodyBin();
-		this->_response_header_bin = rhs.getResponseHeaderBin();
+		// this->_response_bin = rhs.getResponseBin();
+		// this->_response_body_bin = rhs.getResponseBodyBin();
+		// this->_response_header_bin = rhs.getResponseHeaderBin();
 		this->_headers_response = rhs.getHeadersResponse();
 		this->_error_msg = rhs.getErrorMsg();
 		this->_error_content = rhs.getErrorBody();
@@ -110,39 +113,39 @@ void Response::setResponseBody(const std::string response_body)
 	this->_response_body = response_body;
 	return ;
 }
-
-std::string Response::getResponseBin(void) const
-{
-	return (this->_response_bin);
-}
-
-void Response::setResponseBin(const std::string response_bin)
-{
-	this->_response_bin = response_bin;
-	return ;
-}
-
-std::string Response::getResponseHeaderBin(void) const
-{
-	return (this->_response_header_bin);
-}
-
-void Response::setResponseHeaderBin(const std::string response_header_bin)
-{
-	this->_response_header_bin = response_header_bin;
-	return ;
-}
-
-std::string Response::getResponseBodyBin(void) const
-{
-	return (this->_response_body_bin);
-}
-
-void Response::setResponseBodyBin(const std::string response_body_bin)
-{
-	this->_response_body_bin = response_body_bin;
-	return ;
-}
+//
+// std::string Response::getResponseBin(void) const
+// {
+// 	return (this->_response_bin);
+// }
+//
+// void Response::setResponseBin(const std::string response_bin)
+// {
+// 	this->_response_bin = response_bin;
+// 	return ;
+// }
+//
+// std::string Response::getResponseHeaderBin(void) const
+// {
+// 	return (this->_response_header_bin);
+// }
+//
+// void Response::setResponseHeaderBin(const std::string response_header_bin)
+// {
+// 	this->_response_header_bin = response_header_bin;
+// 	return ;
+// }
+//
+// std::string Response::getResponseBodyBin(void) const
+// {
+// 	return (this->_response_body_bin);
+// }
+//
+// void Response::setResponseBodyBin(const std::string response_body_bin)
+// {
+// 	this->_response_body_bin = response_body_bin;
+// 	return ;
+// }
 
 std::map<int, std::string> Response::getErrorMsg(void) const
 {

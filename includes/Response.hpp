@@ -21,12 +21,16 @@ class Response
 		int							_status_code;
 		std::string					_page_content;
 		std::string					_full_path;
+		std::string					_type_mime;
+		std::string					_charset;
+
+
 		std::string					_response;
 		std::string					_response_header;
 		std::string					_response_body;
-		std::string					_response_bin;
-		std::string					_response_header_bin;
-		std::string					_response_body_bin;
+		// std::string					_response_bin;
+		// std::string					_response_header_bin;
+		// std::string					_response_body_bin;
 		std::map<int, std::string>	_headers_response;
 		std::map<int, std::string>	_error_msg;
 		std::map<int, std::string>	_error_content;
@@ -48,12 +52,12 @@ class Response
 		void						setResponseHeader(const std::string response_header);
 		std::string					getResponseBody(void) const;
 		void						setResponseBody(const std::string response_body);
-		std::string					getResponseBin(void) const;
-		void						setResponseBin(const std::string response_bin);
-		std::string					getResponseHeaderBin(void) const;
-		void						setResponseHeaderBin(const std::string response_header_bin);
-		std::string					getResponseBodyBin(void) const;
-		void						setResponseBodyBin(const std::string response_body_bin);
+		// std::string					getResponseBin(void) const;
+		// void						setResponseBin(const std::string response_bin);
+		// std::string					getResponseHeaderBin(void) const;
+		// void						setResponseHeaderBin(const std::string response_header_bin);
+		// std::string					getResponseBodyBin(void) const;
+		// void						setResponseBodyBin(const std::string response_body_bin);
 		std::map<int, std::string>	getErrorMsg(void) const;
 		void						setErrorMsg(const std::map<int, std::string> error_msg);
 		std::map<int, std::string>	getErrorBody(void) const;
@@ -84,10 +88,12 @@ class Response
 		std::string		get_extension(std::string path);
 		std::string		get_mime_type(std::string extension);
 		void			generate_response_header();
+		void			retrieve_type_mime_charset(std::string res);
+		std::string		exec_cmd(std::string cmd);
 
 		// date
 		// last Modified
-		// locattion
+		// location
 		// retry-after
 		// transfer encoding
 
