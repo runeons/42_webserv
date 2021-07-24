@@ -6,7 +6,7 @@
 #    By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/16 21:13:33 by tsantoni          #+#    #+#              #
-#    Updated: 2021/07/22 09:19:27 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/23 11:04:00 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #!/bin/bash
@@ -17,7 +17,7 @@
 TAB_SIZE=4
 
 #___________________________ CLASS_NAME __________________________#
-CLASS_NAME="Client"
+CLASS_NAME="Response"
 INHERIT_FROM=""
 
 #___________________________ FILES TO INCLUDE __________________________#
@@ -44,8 +44,16 @@ ALL_GREY=1
 #_____________________ INPUT ATTRIBUTES _____________________#
 # "Type"	"Name"	"Value" (Value : " " si pas de value)
 
-ATT_1=("SOCKET"			"client_socket"	" ")
-ATT_2=("std::string"	"address"	" ")
+ATT_1=("std::map<int, std::string>"			"headers_response"	" ")
+ATT_2=("std::string"	"page_content"	" ")
+# ATT_3=("std::string"	"response"	" ")
+# ATT_4=("std::string"	"response_header"	" ")
+# ATT_5=("std::string"	"response_body"	" ")
+# ATT_6=("std::string"	"response_bin"	" ")
+# ATT_7=("std::string"	"response_header_bin"	" ")
+# ATT_8=("std::string"	"response_body_bin"	" ")
+# ATT_9=("std::map<int, std::string>"	"error_msg"	" ")
+# ATT_10=("std::map<int, std::string>"	"error_body"	" ")
 # ATT_3=("const int"	"gradeToSign"	" ")
 # ATT_4=("const int"	"gradeToExecute"	" ")
 # ATT_5=(""	""	" ")
@@ -55,8 +63,8 @@ ATT_2=("std::string"	"address"	" ")
 # ATT_9=(""	""	" ")
 
 #_____________________ INPUT INCLUDES _____________________#
-INCLUDES_GLOBAL=("iostream" "string")
-INCLUDES_LOCAL=("color")
+# INCLUDES_GLOBAL=("" "")
+INCLUDES_LOCAL=("webserv")
 #_____________________ INPUT CONSTRUCTORS/DESTRUCTOR MESSAGES _____________________#
 # si *STRUCT_*_MSG="", rempli par defaut
 CONSTRUCT_DEF_MSG="\""$CLASS_NAME" creation...\""
@@ -79,9 +87,9 @@ OSTREAM="${ATT_1[1]}"
 # PRIV_FUNC_3=("" "" "" " ")
 # PRIV_FUNC_4=("" "" "" " ")
 
-PUB_FUNC_1=("void" "treat_client" "void" " ")
-PUB_FUNC_2=("void" "receive_request" "void" " ")
-PUB_FUNC_3=("void" "check_request" "void" " ")
+# PUB_FUNC_1=("void" "treat_client" "void" " ")
+# PUB_FUNC_2=("void" "receive_request" "void" " ")
+# PUB_FUNC_3=("void" "check_request" "void" " ")
 # PUB_FUNC_4=("const value_type &" "top" "void" " ")
 # PUB_FUNC_5=("void" "push" "const value_type&" "val")
 # PUB_FUNC_6=("void" "emplace" "Args&&..." "args")

@@ -97,35 +97,34 @@ void Client::receive_request(void)
 
 void Client::check_request(void)
 {
-	// _request_parser = new RequestParser(_request); // create parser request
-	// _request_parser->print_request_info();
+	_request_parser = new RequestParser(_request); // create parser request
+	_request_parser->print_request_info();
 	return ;
 }
 
 void Client::read_resource(void)
 {
-	// _full_path = "./html/forty-two";
-	// _full_path = "./html/five_thousands";
-	// _full_path = "./html/images/mini_img.png";
-	// _full_path = "./html/images/orange.jpeg";
-	_full_path = "./html/images/to_include.png";
-	// _full_path = "./html/error_pages/500.html";
-	// _full_path = "./html/error_dne";
+	_full_path = "./html/forty-two";
 
 	std::ifstream ifs(_full_path);
-	char c;
+	std::ostringstream oss;
 
 	if (!ifs)
 	{
 		std::cerr << RED << "Error (404) : file does'nt exist" <<  C_RES << std::endl;
 		_status_code = 404;
 	}
+	else if (!oss) // EXCEPTION A CREER
+	{
+		std::cerr << RED << "Error : can't open ofstream" <<  C_RES << std::endl;
+		_status_code = 500; // quel status_code ?
+	}
 	else
 	{
 		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
 		_status_code = 200;
-		while (ifs >> std::noskipws >> c)
-			_page_content += c;
+		oss << ifs.rdbuf();
+		_page_content = oss.str();
 	}
 	if (ifs)
 		ifs.close();
@@ -134,20 +133,20 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	_response = new Response(_status_code, _page_content, _full_path);
+	_response = new Response(_status_code, _page_content);
 	_response->generate();
 }
 
 void Client::send_response(void)
 {
 	int	bytes_sent = 0;
-	int len = (_response->getResponse().length() + 1);
+	int len = _response->getResponse().length() + 1;
 
-	char buffer[len];
-	memcpy(buffer, _response->getResponse().c_str(), len);
+	char response_array[len];
+	strcpy(response_array, _response->getResponse().c_str());
 	try
 	{
-		bytes_sent = ::send(_socket, buffer, len, 0);
+		bytes_sent = ::send(_socket, response_array, len, 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
 		std::cout << GREEN << "Response of size " << bytes_sent << " sent !" <<  C_RES << std::endl;
@@ -167,7 +166,7 @@ void Client::treat_client(void)
 	generate_response();
 	send_response();
 
-	// std::cout <<  _response->getResponse() << std::endl;
+	std::cout <<  _response->getResponse() << std::endl;
 
 	return ;
 }

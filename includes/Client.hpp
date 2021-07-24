@@ -4,42 +4,42 @@
 # include "webserv.hpp"
 
 class RequestParser;
+class Response;
 
 class Client
 {
 	private:
-		SOCKET		_socket;
-
-		// errors
-		std::map<int, std::string> _error_msg;
-		std::map<int, std::string> _error_body;
+		SOCKET						_socket;
+		int							_status_code;
 
 		// requete
-		std::string	_request; // full request
-		RequestParser		*_request_parser;
+		std::string					_request; // full request
+		RequestParser				*_request_parser;
+		
+		std::string					_full_path;
 
-		// reponse
-		std::string	_full_path;
+		// response
+		Response					*_response;
+		std::string					_page_content;
+
 
 	public:
 		Client();
 		Client(const Client & src);
 		virtual ~Client();
 
-		SOCKET		getSocket(void) const;
-		void		setSocket(const SOCKET client_socket);
-		std::string	getRequest(void) const;
-		void		setRequest(const std::string request);
+		SOCKET			getSocket(void) const;
+		void			setSocket(const SOCKET client_socket);
+		std::string		getRequest(void) const;
+		void			setRequest(const std::string request);
 
-		void		treat_client(void);
-		void		receive_request(void);
-		void		check_request(void);
-		void		generate_response_header(void);
-		void		generate_error_body(int);
-		void		construct_full_path(void);
-
-		std::map<int, std::string>	create_map_msg();
-		std::map<int, std::string>	create_map_body();
+		void			treat_client();
+		void			receive_request();
+		void			check_request();
+		void			construct_full_path();
+		void			read_resource();
+		void			generate_response();
+		void			send_response();
 
 		Client		&operator=(const Client & src);
 };

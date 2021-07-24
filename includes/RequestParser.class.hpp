@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 17:51:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/24 18:06:21 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,3 +146,100 @@ class RequestParser
 
 std::ostream	&operator<<(std::ostream &o, const RequestParser &i);
 #endif
+
+/*
+** ***********************************************
+** ******************* METHODS *******************
+**
+** ***************** implemented *****************
+** GET
+** POST
+** DELETE
+** *************** none implemented **************
+** COPY
+** OPTIONS
+** HEAD
+** LINK
+** MOVE
+** PUT
+** PATCH
+** TRACE
+** UNLINK
+** WRAPPED
+**
+**
+** ******************* HEADERS *******************
+**
+
+** **************** General-Header ***************
+** Cache-Control
+** Connection
+** Date
+** Forwarded
+** Keep-Alive
+** MIME-Version
+** Pragma
+** Upgrade
+**
+** **************** Request-Header ***************
+** Accept
+** Accept-Charset
+** Accept-Encoding
+** Accept-Language
+** Authorization
+** From
+** Host
+** If-Modified-Since
+** Proxy-Authorization
+** Range
+** Referer
+** Unless
+** User-Agent
+**
+**
+** **************** Response-Header ***************
+* Accept-Ranges
+* Age
+* ETag
+** Location
+** Proxy-Authenticate
+** Public
+** Retry-After
+** Server
+* Vary
+** WWW-Authenticate
+**
+** ***************** Entity-Header ***************
+** Allow
+** Content-Encoding
+** Content-Language
+** Content-Length
+** Content-MD5
+** Content-Range
+** Content-Type
+** Content-Version
+** Derived-From
+** Expires
+** Last-Modified
+** Link
+** Title
+** Transfer-Encoding
+** URI-header
+** ***********************************************
+*/
+
+
+/*
+___________________________________ GENERAL ___________________________________
+Cache-Control            ; Section 14.9
+Connection               ; Section 14.10
+Date                     ; Section 14.18
+Pragma                   ; Section 14.32
+Trailer                  ; Section 14.40
+Transfer-Encoding        ; Section 14.41
+Upgrade                  ; Section 14.42
+Via                      ; Section 14.45
+Warning
+
+*/
+

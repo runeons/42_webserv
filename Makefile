@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/24 17:41:55 by tharchen         ###   ########.fr        #
+#    Updated: 2021/07/24 18:05:46 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ _FLAGS					=	-Wall -Wextra -Werror -std=c++98 -fsanitize=address -g3
 
 ifeq ($(COMPILE_MODE), 0)
 NAME					=	webserv
-FLAGS					=	-Wall -Wextra -Werror -std=c++98
+FLAGS					=	-Wall -Wextra -Werror -std=c++98 -g3
 COMPILE_MSG				=	printf "\033[31m Program \033[32m%s : \033[34;01;03mCompilation \033[36m%-50s\033[0m\n" $(NAME) "done !"
 COMPILE_MSG_OBJ			=	printf "\033[31m Program \033[32m%s : \033[34;01;03mCompilation of \033[36m%-50s\033[0m\r" $(NAME) $(notdir $<)
 else
@@ -58,11 +58,13 @@ HEADER_DIR				=	\
 
 HEADER					=	\
 							Client.hpp \
+							Response.hpp \
 							Config.hpp \
 							Exceptions.hpp \
 							RequestParser.class.hpp \
 							Server.hpp \
 							color.hpp \
+							utils.hpp \
 							webserv.hpp \
 
 # *** SRCS ******************************************************************* #
@@ -86,12 +88,23 @@ SRCS_CONFIG				=	\
 SRCS_CLIENT				=	\
 							Client/Client.cpp \
 
+SRCS_RESPONSE			=	\
+							Response/Response_basics.cpp \
+							Response/Response_class.cpp \
+							Response/Response_headers.cpp \
+							Response/Response_init_maps.cpp \
+
+SRCS_UTILS			=	\
+							utils/utils.cpp \
+
 SRCS_LIST				=	\
 							main.cpp \
 							$(SRCS_REQUESTPARSER) \
 							$(SRCS_SERVER) \
 							$(SRCS_CONFIG) \
 							$(SRCS_CLIENT) \
+							$(SRCS_RESPONSE) \
+							$(SRCS_UTILS) \
 
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
