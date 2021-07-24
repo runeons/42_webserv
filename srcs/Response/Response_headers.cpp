@@ -76,14 +76,6 @@ std::string		Response::exec_cmd(std::string cmd)
 	oss << std::ifstream("test.txt").rdbuf();
 	return oss.str();
 }
-//
-// std::string		Response::get_mime_type(std::string path)
-// {
-// 	if (_mime_types[get_extension(path)] == "")
-// 		return _mime_types["html"];
-// 	return _mime_types[get_extension(path)];
-// 	// and charset ??
-// }
 
 void		Response::retrieve_type_mime_charset(std::string str)
 {

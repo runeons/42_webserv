@@ -105,12 +105,12 @@ void Client::check_request(void)
 void Client::read_resource(void)
 {
 	// _full_path = "./html/forty-two";
+	_full_path = "./html/five_thousands";
 	// _full_path = "./html/images/mini_img.png";
 	// _full_path = "./html/images/orange.jpeg";
-	_full_path = "./html/images/to_include.png";
+	// _full_path = "./html/images/to_include.png";
 
 	std::ifstream ifs(_full_path);
-	std::ofstream ofs("./html/images/test_bin");
 	char c;
 
 	if (!ifs)
@@ -118,18 +118,12 @@ void Client::read_resource(void)
 		std::cerr << RED << "Error (404) : file does'nt exist" <<  C_RES << std::endl;
 		_status_code = 404;
 	}
-		else if (!ofs) // EXCEPTION A CREER
-		{
-			std::cerr << RED << "Error : can't open ofstream" <<  C_RES << std::endl;
-			_status_code = 500; // quel status_code ?
-		}
 	else
 	{
 		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
 		_status_code = 200;
 		while (ifs >> std::noskipws >> c)
 			_page_content += c;
-		ofs << _page_content;
 	}
 	if (ifs)
 		ifs.close();

@@ -24,17 +24,12 @@ class Response
 		std::string					_type_mime;
 		std::string					_charset;
 
-
 		std::string					_response;
 		std::string					_response_header;
 		std::string					_response_body;
-		// std::string					_response_bin;
-		// std::string					_response_header_bin;
-		// std::string					_response_body_bin;
 		std::map<int, std::string>	_headers_response;
 		std::map<int, std::string>	_error_msg;
 		std::map<int, std::string>	_error_content;
-		std::map<std::string, std::string>	_mime_types;
 
 	public:
 		// Response_basics
@@ -52,12 +47,6 @@ class Response
 		void						setResponseHeader(const std::string response_header);
 		std::string					getResponseBody(void) const;
 		void						setResponseBody(const std::string response_body);
-		// std::string					getResponseBin(void) const;
-		// void						setResponseBin(const std::string response_bin);
-		// std::string					getResponseHeaderBin(void) const;
-		// void						setResponseHeaderBin(const std::string response_header_bin);
-		// std::string					getResponseBodyBin(void) const;
-		// void						setResponseBodyBin(const std::string response_body_bin);
 		std::map<int, std::string>	getErrorMsg(void) const;
 		void						setErrorMsg(const std::map<int, std::string> error_msg);
 		std::map<int, std::string>	getErrorBody(void) const;
@@ -73,7 +62,6 @@ class Response
 		std::map<int, std::string>	init_map_msg();
 		std::map<int, std::string>	init_map_body();
 		std::map<int, std::string>	init_map_headers();
-		std::map<std::string, std::string>	init_map_mimes();
 		std::string		get_response_field_name(enum e_resp_fields field);
 
 

@@ -13,9 +13,6 @@ void	Response::generate_error_content(void)
 void	Response::GET_create_body(void)
 {
 	_response_body = _page_content;
-	// _response_body_bin = string_to_binary(_response_body);
-	// std::cout << "_response_body_bin : " << _response_body_bin << std::endl;
-	// std::cout << RED_B << " binary_to_string(_response_body_bin) : " << binary_to_string(_response_body_bin) << std::endl << C_RES;
 }
 
 // ********************************************* generate response headers *********************************************
@@ -37,7 +34,6 @@ void		Response::generate_response_header(void)
 void	Response::concatenate_response()
 {
 	_response = _response_header + PAT_CRLF + _response_body;
-	// _response_bin = string_to_binary(_response);
 }
 
 // ********************************************* main - generate *********************************************
