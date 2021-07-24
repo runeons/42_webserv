@@ -1,13 +1,19 @@
 # include "webserv.hpp"
 
 
-int main(void)
+// int main(void)
+// {
+// 	Server server;
+//
+// 	if (server.launch())
+// 		return (-1);
+//
+// 	return 0;
+// }
+//
+
+int		main(void)
 {
-	Server server;
-
-	if (server.launch())
-		return (-1);
-
-	return 0;
+	RequestParser		rp("");
+	return (0);
 }
-

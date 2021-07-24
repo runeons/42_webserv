@@ -10,6 +10,7 @@
 # include <unistd.h>
 # include <cstdlib>
 # include <map>
+# include <vector>
 
 typedef int SOCKET;
 # define MAX_RCV	4096

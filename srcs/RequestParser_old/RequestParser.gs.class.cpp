@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RequestParser.cd.class.cpp                         :+:      :+:    :+:   */
+/*   RequestParser.gs.class.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 17:36:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/24 17:36:57 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <webserv.hpp>
 
-RequestParser::RequestParser(void) {} // constructor
-RequestParser::RequestParser(std::string request_raw) // param constructor
+// GETTER _method
+enum e_methods	RequestParser::get__method(void) const
 {
-	this->_request_raw = request_raw;
-	this->_head = 0;
-	this->_head_last_digest = 0;
-
-	this->start_parsing();
+	return (this->_method);
 }
 
-RequestParser::RequestParser(RequestParser const &src)  // constructor by copy
+// GETTER _resource
+std::string		RequestParser::get__resource(void) const
 {
-	*this = src;
+	return (this->_resource);
 }
 
-RequestParser::~RequestParser(void) // destructor
+// GETTER _http_version
+std::string		RequestParser::get__http_version(void) const
 {
+	return (this->_http_version);
+}
 
+// GETTER _body
+std::string		RequestParser::get__body(void) const
+{
+	return (this->_body);
 }

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/22 15:16:13 by tharchen         ###   ########.fr        #
+#    Updated: 2021/07/24 17:41:55 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,10 +70,12 @@ HEADER					=	\
 SRCS_DIR				=	./srcs/
 
 SRCS_REQUESTPARSER		=	\
-							RequestParser/RequestParser.class.cpp \
 							RequestParser/RequestParser.cd.class.cpp \
+							RequestParser/RequestParser.class.cpp \
 							RequestParser/RequestParser.gs.class.cpp \
+							RequestParser/RequestParser.lexer.class.cpp \
 							RequestParser/RequestParser.ovop.class.cpp \
+							RequestParser/RequestParser.parser.class.cpp \
 
 SRCS_SERVER				=	\
 							Server/Server.cpp \
