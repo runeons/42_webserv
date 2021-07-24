@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/24 18:44:03 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/24 18:44:41 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void Client::read_resource(void)
 
 	if (!ifs)
 	{
-		std::cerr << RED << "Error (404) : file doesn't exist" <<  C_RES << std::endl;
+		std::cerr << BROWN << "Error (404) : file doesn't exist" <<  C_RES << std::endl;
 		_status_code = 404;
 	}
 	else
