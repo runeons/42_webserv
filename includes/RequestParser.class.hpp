@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 18:06:21 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/24 18:11:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 # define REQUESTPARSER_CLASS_HPP
 # include <execinfo.h>
 # include <webserv.hpp>
+
+# define PAT_SP		" "
+# define PAT_HTAB	"\t"
+# define PAT_CR		"\r"
+# define PAT_LF		"\n"
+# define PAT_DOT	"."
+# define PAT_DDOT	":"
+# define PAT_HYPHEN	"-"
+# define PAT_SLASH	"/"
+# define PAT_CRLF	PAT_CR""PAT_LF
 
 // DEBUG BACKTRACE
 

@@ -6,6 +6,11 @@ std::string itos(int nb)
 {
 	std::stringstream ss;
 
+	if (!ss)
+	{
+		std::cout << RED << "Error in itos" << std::endl << C_RES;
+		return "";
+	}
 	ss << nb;
 	return ss.str();
 }

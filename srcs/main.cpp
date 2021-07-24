@@ -1,19 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/24 18:12:44 by tharchen          #+#    #+#             */
+/*   Updated: 2021/07/24 18:12:52 by tharchen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "webserv.hpp"
 
-
-// int main(void)
-// {
-// 	Server server;
-//
-// 	if (server.launch())
-// 		return (-1);
-//
-// 	return 0;
-// }
-//
-
-int		main(void)
+int main(void)
 {
-	RequestParser		rp("");
-	return (0);
+	Server server;
+
+	if (server.launch())
+		return (-1);
+
+	return 0;
 }

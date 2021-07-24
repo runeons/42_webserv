@@ -7,7 +7,15 @@ std::string Response::generate_status_line(void)
 	std::map<int, std::string>::iterator it_msg = _error_msg.find(_status_code);
 
 	// sl = "HTTP/" + _request_parser->get__http_version() + PAT_SP + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF;
-	return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
+	std::string s;
+	// s = "HTTP/1.1 " + itos(_status_code) + " " + it_msg->second + "\r\n";
+	s = "HTTP/1.1 ";
+	s += itos(_status_code);
+	s += " ";
+	s += it_msg->second;
+	s += "\r\n";
+	return s;
+	// return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 }
 
 std::string		Response::formatted_header_response(enum e_resp_fields field)

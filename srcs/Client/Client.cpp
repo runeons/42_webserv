@@ -105,10 +105,10 @@ void Client::check_request(void)
 void Client::read_resource(void)
 {
 	// _full_path = "./html/forty-two";
-	// _full_path = "./html/five_thousands";
+	_full_path = "./html/five_thousands";
 	// _full_path = "./html/images/mini_img.png";
 	// _full_path = "./html/images/orange.jpeg";
-	_full_path = "./html/images/to_include.png";
+	// _full_path = "./html/images/to_include.png";
 	// _full_path = "./html/error_pages/500.html";
 	// _full_path = "./html/error_dne";
 
@@ -125,6 +125,8 @@ void Client::read_resource(void)
 		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
 		while (ifs >> std::noskipws >> c)
 			_page_content += c;
+		_status_code = 200;
+
 	}
 	if (ifs)
 		ifs.close();
@@ -162,8 +164,7 @@ void Client::treat_client(void)
 	std::cout << GREEN_B << "Treating client " << _socket << C_RES << std::endl;
 	receive_request();
 	check_request();
-	if (_status_code == 200)
-		read_resource();
+	read_resource();
 	generate_response();
 	send_response();
 
