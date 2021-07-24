@@ -31,18 +31,18 @@ std::map<int, std::string>	Response::init_map_msg()
 	std::map<int, std::string> m;
 
 	m[200] = "OK"; 							// BOTH
-	m[204] = "No Content"; 					// RESP
-	m[301] = "Moved Permanently"; 			// RESP
-	m[307] = "Temporary Redirect"; 			// RESP
+	m[204] = "No Content"; 						// RESP
+	m[301] = "Moved Permanently"; 				// RESP
+	m[307] = "Temporary Redirect"; 				// RESP
 	m[400] = "Bad Request"; 				// REQ
-	m[403] = "Forbidden"; 					// RESP
-	m[404] = "Not Found"; 					// RESP
-	m[405] = "Method Not Allowed";			// RESP
-	m[408] = "Request Timeout"; 			// RESP
+	m[403] = "Forbidden"; 						// RESP
+	m[404] = "Not Found"; 						// RESP
+	m[405] = "Method Not Allowed";				// RESP
+	m[408] = "Request Timeout"; 				// RESP
 	m[411] = "Length Required";				// REQ
 	m[413] = "Payload Too Large"; 			// REQ
 	m[414] = "URI Too Long"; 				// REQ
-	m[415] = "Unsupported Media Type";		// RESP
+	m[415] = "Unsupported Media Type";			// RESP
 	m[500] = "Internal Server Error";		// BOTH
 	m[501] = "Not Implemented";				// REQ
 	m[505] = "HTTP Version Not Supported";	// REQ
@@ -93,10 +93,16 @@ std::map<int, std::string>	Response::init_map_body()
 	std::map<int, std::string> m;
 	std::map<int, std::string>::iterator it;
 
+	std::string path;
 	for (it = _error_msg.begin(); it != _error_msg.end(); it++)
 	{
+		path = DIR_ERROR_PAGES + itos(it->first) + ".html";
 		if (it->first != 200)
-			m[it->first] = generate_error_page_content(it->first);
+		{
+			m[it->first] = get_file_content(path.c_str());
+			if (m[it->first].length() == 0)
+				m[it->first] = generate_error_page_content(it->first);
+		}
 	}
 
 	return m;
