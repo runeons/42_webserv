@@ -4,6 +4,7 @@
 # include "webserv.hpp"
 
 # define SERVER_NAME "webserv"
+# define PATH_CMD_RES "./srcs/utils/cmd_res"
 
 typedef enum		e_resp_fields
 {

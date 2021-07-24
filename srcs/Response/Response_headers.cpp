@@ -73,7 +73,7 @@ std::string		Response::exec_cmd(std::string cmd)
 	int status = std::system(cmd.c_str());
 	if (WEXITSTATUS(status) != 0)
 		std::cerr << RED << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
-	oss << std::ifstream("test.txt").rdbuf();
+	oss << std::ifstream(PATH_CMD_RES).rdbuf();
 	return oss.str();
 }
 
@@ -98,9 +98,8 @@ void		Response::retrieve_type_mime_charset(std::string str)
 std::string		Response::r_header_content_type()
 {
 	std::string cmd;
-	cmd = "file --mime " + _full_path + " > test.txt";
+	cmd = "file --mime " + _full_path + " > " + PATH_CMD_RES;
 	retrieve_type_mime_charset(exec_cmd(cmd.c_str()));
-	// AJOUTER : si couldn't exec file => utiliser get_mime_type ?
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;
 	return (formatted_header_response(R_CONTENT_TYPE));
 }
