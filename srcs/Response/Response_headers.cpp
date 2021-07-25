@@ -6,13 +6,13 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 11:31:06 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 15:13:01 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Response.hpp"
 
-// ********************************************* generate_response_header *********************************************
+// ********************************************* status line *********************************************
 
 std::string Response::generate_status_line(void)
 {
@@ -22,16 +22,22 @@ std::string Response::generate_status_line(void)
 	return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 }
 
+// ********************************************* headers utils *********************************************
+
 std::string		Response::formatted_header_response(enum e_resp_fields field)
 {
 	return (get_response_field_name(field) + PAT_DDOT + PAT_SP + _headers_response[field] + PAT_CRLF);
 }
+
+// ********************************************* Server *********************************************
 
 std::string		Response::r_header_server()
 {
 	_headers_response[R_SERVER] = SERVER_NAME;
 	return (formatted_header_response(R_SERVER));
 }
+
+// ********************************************* Date *********************************************
 
 std::string		Response::r_header_date()
 {
@@ -46,11 +52,16 @@ std::string		Response::r_header_date()
 	return (formatted_header_response(R_DATE));
 }
 
+// ********************************************* Connection *********************************************
+
 std::string		Response::r_header_connection()
 {
 	_headers_response[R_CONNECTION] = "close"; // à vérifier
+	_headers_response[R_CONNECTION] = "Keep-Alive"; // à vérifier
 	return (formatted_header_response(R_CONNECTION));
 }
+
+// ********************************************* Content-Length *********************************************
 
 std::string		Response::r_header_content_length()
 {
@@ -60,6 +71,8 @@ std::string		Response::r_header_content_length()
 		_headers_response[R_CONTENT_LENGTH] = "None";
 	return (formatted_header_response(R_CONTENT_LENGTH));
 }
+
+// ********************************************* Content-Type *********************************************
 
 std::string		Response::exec_cmd(std::string cmd)
 {
@@ -91,10 +104,10 @@ void		Response::retrieve_type_mime_charset(std::string str)
 	_charset = str.substr(first, last - first);
 }
 
-
 std::string		Response::r_header_content_type()
 {
 	std::string cmd;
+	std::cout << C_B_GREEN << "full_path dans mime_types : " << _full_path << C_RES << std::endl;
 	cmd = "file --mime " + _full_path + " > " + PATH_CMD_RES;
 	retrieve_type_mime_charset(exec_cmd(cmd.c_str()));
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;

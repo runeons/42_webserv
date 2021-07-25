@@ -6,13 +6,13 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:07:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 16:15:15 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
-// ********************************************* ::recv + ::assign *********************************************
+// ********************************************* ::recv => request en std::string *********************************************
 
 void Client::receive_request(void)
 {
@@ -49,23 +49,31 @@ void Client::check_request(void)
 
 void		Client::construct_full_path(void)
 {
+
+	// _full_path = "./html/six";
+
+	// /*
+	// taking into account RequestParser
+
+	std::cout << C_B_RED << "full_path before changing it : " << _full_path << C_RES << std::endl;
 	if (_request_parser->get__resource() == "/")
 		_full_path = "./html/index.html";
 	else
-		_full_path =  "./html/" + _request_parser->get__resource();
+		_full_path =  "./html" + _request_parser->get__resource();
+	std::cout << C_B_RED << "full_path after changing it : " << _full_path << C_RES << std::endl;
+	// */
 
-	// std::cout << C_B_MAGENTA << "_full_path avant de le construire :" << _full_path << C_RES << std::endl;
-	// new_path
-	// remplacer les caractères spéciaux
-		// 	ex : %20 " "
-		// 	ex : %C3%A7 "ç"
-	// enlever tous les arguments de query (après le ?)
-		// 	ex : ?ordre=1
-	// et les parser / mettre de côté => dans un environnement ??
-
-	// si finit par / => concat avec index.html
-
-	// concatener ROOT_DIR et new_path
+	/*
+	// pseudo-code path parsing + concatenating
+	- remplacer les caractères spéciaux
+		- ex : %20 " "
+		- ex : %C3%A7 "ç"
+	- enlever tous les arguments de query (après le ?)
+		- ex : ?ordre=1
+		- les parser / mettre de côté => dans une map pour etre utilises en variables d'environnement plus tard
+	- si finit par / => concat avec index.html
+	- concatener ROOT_DIR et new_path
+	*/
 	return;
 }
 
@@ -100,6 +108,8 @@ void Client::generate_response(void)
 {
 	_response = new Response(_status_code, _page_content, _full_path);
 	_response->generate();
+	if (_request_parser != NULL)
+		delete _request_parser;
 }
 
 // ********************************************* ::send response *********************************************
@@ -136,7 +146,7 @@ void Client::treat_client(void)
 	generate_response();
 	send_response();
 
-	// std::cout <<  _response->getResponse() << std::endl;
+	std::cout <<  _response->getResponse() << std::endl;
 
 	return ;
 }

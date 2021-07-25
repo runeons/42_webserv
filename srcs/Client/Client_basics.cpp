@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 11:53:31 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 16:00:52 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ Client::Client(const Client& src)
 Client::~Client(void)
 {
 	std::cout << GREY << "Client destruction..." << C_RES << std::endl;
-	if (_request_parser != NULL)
-		delete _request_parser;
 	if (_response != NULL)
 		delete _response;
 	return;
