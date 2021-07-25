@@ -5,7 +5,7 @@
      By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+
                                                   +#+#+#+#+#+   +#+
      Created: 2021/07/25 04:23:36 by tharchen          #+#    #+#
-     Updated: 2021/07/25 14:45:47 by tharchen         ###   ########.fr
+     Updated: 2021/07/25 18:05:06 by tsantoni         ###   ########.fr
 -->
 
 <!doctype html>
@@ -36,6 +36,32 @@
 				<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
 			</div>
 			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+		<form action="#" method="get">
+		  <div>
+		    <label for="say">Quelle salutation voulez-vous adresser ?</label>
+		    <input name="say" id="say" value="Salut">
+		  </div>
+		  <div>
+		    <label for="to">À qui voulez‑vous l'adresser ?</label>
+		    <input name="to" value="Maman">
+		  </div>
+		  <div>
+		    <button>Envoyer mes salutations [GET]</button>
+		  </div>
+		</form>
+		<form action="#" method="POST">
+		  <div>
+		    <label for="say">[POST] Quelle salutation voulez-vous dire ?</label>
+		    <input name="say" id="say" value="Salut">
+		  </div>
+		  <div>
+		    <label for="to">A qui voulez-vous le dire ?</label>
+		    <input name="to" id="to" value="Maman">
+		  </div>
+		  <div>
+		    <button>Envoyer mes salutations [POST]</button>
+		  </div>
 		</form>
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
