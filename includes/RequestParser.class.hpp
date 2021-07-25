@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 18:11:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/24 23:32:29 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class RequestParser
 		// debug
 		void	bc_s(void);
 		void	bc_p(void);
+		void	debug_print_line(void);
 
 		// entry point
 		void	start_parsing(void);
@@ -87,6 +88,8 @@ class RequestParser
 		void	sub_delims(void);
 		void	tchar(void);
 		void	obs_text(void);
+
+		void	field_char(void);
 
 		// parsing functions
 		void	CRLF(void);

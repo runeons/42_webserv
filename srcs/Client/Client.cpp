@@ -97,8 +97,10 @@ void Client::receive_request(void)
 
 void Client::check_request(void)
 {
-	// _request_parser = new RequestParser(_request); // create parser request
-	// _request_parser->print_request_info();
+	_request_parser = new RequestParser(_request); // create parser request
+	_request_parser->print_request_info();
+
+
 	return ;
 }
 
@@ -110,7 +112,12 @@ void Client::read_resource(void)
 	// _full_path = "./html/images/orange.jpeg";
 	// _full_path = "./html/images/to_include.png";
 	// _full_path = "./html/error_pages/500.html";
-	_full_path = "./html/error_dne";
+	// _full_path = "./html/error_dne";
+
+	if (_request_parser->get__resource() == "/")
+		_full_path = "./html/index.html";
+	else
+		_full_path = "./html" + _request_parser->get__resource();
 
 	std::ifstream ifs(_full_path);
 	char c;
@@ -144,6 +151,7 @@ void Client::send_response(void)
 	int	bytes_sent = 0;
 	int len = (_response->getResponse().length() + 1);
 
+	std::cout << "len: " << len << std::endl;
 	char buffer[len];
 	memcpy(buffer, _response->getResponse().c_str(), len);
 	try

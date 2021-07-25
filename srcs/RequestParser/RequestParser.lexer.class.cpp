@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 17:50:27 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/24 23:36:13 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,66 @@
 
 // test one char
 
+// static std::string	convchar(int c)
+// {
+// 	std::string r("~");
+// 	if (c == '\r')
+// 		return (std::string("\\r"));
+// 	if (c == '\n')
+// 		return (std::string("\\n"));
+// 	if (c == '\t')
+// 		return (std::string("\\t"));
+// 	r[0] = c;
+// 	return (r);
+// }
+
 void	RequestParser::CHAR(char c)
 {
 	if (eat(c) == FAILURE)
-		bc_s(); throw (LexerException("CHAR expected"));
+	{
+		bc_s();
+		throw (LexerException("CHAR expected"));
+	}
 }
 
 // CR = 0x0D
 void	RequestParser::CR(void)
 {
 	if (eat(0x0D) == FAILURE)
-		bc_s(); throw (LexerException("CR expected"));
+	{
+		bc_s();
+		throw (LexerException("CR expected"));
+	}
 }
 
 // LF = 0x0A
 void	RequestParser::LF(void)
 {
 	if (eat(0x0A) == FAILURE)
-		bc_s(); throw (LexerException("LF expected"));
+	{
+		bc_s();
+		throw (LexerException("LF expected"));
+	}
 }
 
 // SP = 0x20
 void	RequestParser::SP(void)
 {
 	if (eat(0x20) == FAILURE)
-		bc_s(); throw (LexerException("SP expected"));
+	{
+		bc_s();
+		throw (LexerException("SP expected"));
+	}
 }
 
 // HTAB = 0x09
 void	RequestParser::HTAB(void)
 {
 	if (eat(0x09) == FAILURE)
-		bc_s(); throw (LexerException("HTAB expected"));
+	{
+		bc_s();
+		throw (LexerException("HTAB expected"));
+	}
 }
 
 ///////
@@ -123,8 +151,26 @@ void	RequestParser::VCHAR(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
+	// std::cout << "[ FAIL VCHAR ] head: " << this->_head << " [" << static_cast<int>(this->_request_raw[this->_head]) << "]" << " \'" << convchar(this->_request_raw[this->_head]) << "\'" << std::endl;
 	bc_s(); throw (LexerException("VCHAR expected"));
 }
+
+// VCHAR = 0x21-7E
+void	RequestParser::field_char(void)
+{
+	for (char i = 0x21; i <= 0x7E; i++)
+	{
+		if (eat(i) == SUCCESS)
+			return ;
+	}
+	if (eat('\t') == SUCCESS)
+		return ;
+	if (eat(' ') == SUCCESS)
+		return ;
+	// std::cout << "[ FAIL VCHAR ] head: " << this->_head << " [" << static_cast<int>(this->_request_raw[this->_head]) << "]" << " \'" << convchar(this->_request_raw[this->_head]) << "\'" << std::endl;
+	bc_s(); throw (LexerException("VCHAR expected"));
+}
+
 
 // sub_delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 

@@ -32,6 +32,20 @@
 # define C_G_CYAN		"\033[36;01m"
 # define C_G_WHITE		"\033[37;01m"
 # define C_G_GRAY		"\033[90;01m"
+
+# define C_B_BLACK 		"\033[40m"
+# define C_B_RED 		"\033[41m"
+# define C_B_GREEN		"\033[42m"
+# define C_B_YELLOW		"\033[43m"
+# define C_B_BLUE		"\033[44m"
+# define C_B_MAGENTA	"\033[45m"
+# define C_B_CYAN		"\033[46m"
+# define C_B_WHITE		"\033[47m"
+# define C_B_GRAY		"\033[100m"
+
 # define C_RES			"\033[0m"
+
+# define MINUS_STR "----------------------------------------------------------------------------------------------------"
+# define TEST "\033[36;01m(%s:%d:0) \033[31;01m%s\033[0m %.*s>\033[35;01m%d\033[0m\n", __FILE__, __LINE__, __FUNCTION__, (int)(70 - (strlen(__FUNCTION__) + strlen(__FILE__) + 3)), MINUS_STR, __LINE__
 
 #endif

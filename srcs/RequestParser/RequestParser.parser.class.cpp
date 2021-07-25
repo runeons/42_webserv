@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 17:50:28 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/24 23:32:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -478,7 +478,7 @@ void	RequestParser::segment_nz(void)
 		while (1)
 		{
 			try { pchar(); }
-			catch (std::exception &) {}
+			catch (std::exception &) { break ; }
 		}
 	}
 	catch (std::exception & e)
@@ -574,7 +574,7 @@ void	RequestParser::path_rootless(void)
 				CHAR('/');
 				segment();
 			}
-			catch (std::exception &) { }
+			catch (std::exception &) { break ; }
 		}
 	}
 	catch (std::exception & e)
@@ -664,7 +664,7 @@ void	RequestParser::port(void)
 	while (1)
 	{
 		try { DIGIT(); }
-		catch (std::exception &) {}
+		catch (std::exception &) { break ; }
 	}
 }
 
@@ -830,7 +830,7 @@ void	RequestParser::segment(void)
 	while (1)
 	{
 		try { pchar(); }
-		catch (std::exception &) { }
+		catch (std::exception &) { break ; }
 	}
 }
 
@@ -1102,7 +1102,7 @@ void	RequestParser::token(void)
 		while (1)
 		{
 			try { tchar(); }
-			catch (std::exception &) {}
+			catch (std::exception &) { break ; }
 		}
 	}
 	catch (std::exception & e)
@@ -1181,22 +1181,20 @@ void	RequestParser::method(void)
 // field_value = *( field_content / obs_fold )
 void	RequestParser::field_value(void)
 {
-	size_t	head_start = 0;
+	// size_t	head_start = 0;
 
-	head_start = this->_head;
 	while (1)
 	{
-		try { field_content(); }
-		catch (std::exception & e)
-		{
-			this->_head = head_start;
-			try { obs_fold(); }
-			catch (std::exception & e)
-			{
-				this->_head = head_start;
-				break ;
-			}
-		}
+		// head_start = this->_head;
+		// try { field_content(); }
+		// catch (std::exception &)
+		// {
+		// 	this->_head = head_start;
+		// 	try { obs_fold(); }
+		// 	catch (std::exception &) { break ; }
+		// }
+		try { field_char(); }
+		catch (std::exception &) { break ; }
 	}
 }
 
@@ -1243,7 +1241,7 @@ void	RequestParser::message_body(void)
 	while (1)
 	{
 		try { OCTET(); }
-		catch (std::exception &) { }
+		catch (std::exception &) { break ; }
 	}
 	digest(this->_body);
 }
@@ -1312,6 +1310,7 @@ void	RequestParser::HTTP_message(void)
 			}
 			catch (std::exception &) {
 				this->_head = head_save;
+				break ;
 			}
 		}
 		CRLF();

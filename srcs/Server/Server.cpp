@@ -116,7 +116,7 @@ void Server::listen(void)
 		{
 			std::cout << GREEN_B << "Connexion received from " << _client->getSocket() << C_RES << std::endl;
 			_client->treat_client();
-			break ;
+			// break ;
 		}
 	}
 	return ;
@@ -167,7 +167,8 @@ int		Server::launch(void)
 		this->print_config();
 		this->create_server_socket();
 		this->bind_address_and_port();
-		this->listen();
+		while (1)
+			this->listen();
 	}
 	catch (std::exception & e)
 	{
