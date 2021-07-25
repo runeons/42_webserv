@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 15:37:21 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 15:57:56 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void Server::listen_and_treat_connection(void)
 		{
 			std::cout << GREEN_B << "Connexion received from " << _client->getSocket() << C_RES << std::endl;
 			_client->treat_client();
-			// break ;
 		}
 	}
 	return ;
@@ -88,8 +87,7 @@ int		Server::launch(void)
 		print_config();
 		create_server_socket();
 		bind_address_and_port();
-		// while (1)
-			listen_and_treat_connection();
+		listen_and_treat_connection();
 	}
 	catch (std::exception & e)
 	{

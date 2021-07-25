@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 15:32:09 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 15:44:13 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ Server::Server(void)
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	_config = new Config;
 	_client = new Client;
+	// _client = NULL;
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
@@ -62,7 +63,8 @@ Server::Server(const Server& src)
 Server::~Server(void)
 {
 	delete _config;
-	delete _client;
+	if (_client)
+		delete _client;
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;
 }
