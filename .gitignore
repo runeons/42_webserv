@@ -1,0 +1,4 @@
+*.o
+srcs/utils/cmd_res
+webserv
+webserv.fsanitize
