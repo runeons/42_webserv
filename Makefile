@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/24 18:42:14 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/25 11:54:08 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,7 +86,8 @@ SRCS_CONFIG				=	\
 							Config/Config.cpp \
 
 SRCS_CLIENT				=	\
-							Client/Client.cpp \
+							Client/Client_basics.cpp \
+							Client/Client_class.cpp \
 
 SRCS_RESPONSE			=	\
 							Response/Response_basics.cpp \

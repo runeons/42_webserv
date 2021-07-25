@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 16:35:48 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 23:55:37 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 12:37:45 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,13 @@ void	RequestParser::bc_p(void)
 
 int				RequestParser::eat(int to_eat)
 {
-	// if (this->_request_raw[this->_head] == '\0')
-	// 	std::cerr << C_G_MAGENTA << "warning:" << C_G_WHITE << " end of _request_raw reached ! (head: " << this->_head << ")" << C_RES << std::endl;
-	if (this->_request_raw[this->_head] == to_eat)
+	static int stop = 0;
+	if (this->_request_raw[this->_head] == '\0')
+	{
+		stop = 1;
+		std::cerr << C_G_MAGENTA << "warning:" << C_G_WHITE << " end of _request_raw reached ! (head: " << this->_head << ")" << C_RES << std::endl;
+	}
+	if (stop == 0 && this->_request_raw[this->_head] == to_eat)
 	{
 		this->_head++;
 		return (SUCCESS);

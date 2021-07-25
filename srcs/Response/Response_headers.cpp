@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/24 18:41:49 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 11:31:06 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,8 @@ std::string Response::generate_status_line(void)
 {
 	std::map<int, std::string>::iterator it_msg = _error_msg.find(_status_code);
 
-	// sl = "HTTP/" + _request_parser->get__http_version() + PAT_SP + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF;
-	std::string s;
-	// s = "HTTP/1.1 " + itos(_status_code) + " " + it_msg->second + "\r\n";
-	s = "HTTP/1.1 ";
-	s += itos(_status_code);
-	s += " ";
-	s += it_msg->second;
-	s += "\r\n";
-	return s;
-	// return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
+	// return ("HTTP/" + _request_parser->get__http_version() + PAT_SP + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
+	return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 }
 
 std::string		Response::formatted_header_response(enum e_resp_fields field)
@@ -49,8 +41,7 @@ std::string		Response::r_header_date()
 
 	time(&rawtime);
 	timeinfo = gmtime(&rawtime);
-	//Sun, 06 Nov 1994 08:49:37 GMT
-	strftime(buffer, MAX_DATE, "%a, %d %h %G %X GMT", timeinfo);
+	strftime(buffer, MAX_DATE, "%a, %d %h %G %X GMT", timeinfo); // Sun, 06 Nov 1994 08:49:37 GMT
 	_headers_response[R_DATE] = buffer;
 	return (formatted_header_response(R_DATE));
 }

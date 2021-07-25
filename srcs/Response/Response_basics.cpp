@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:43 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/24 18:41:44 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 11:50:39 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 Response::Response(int status_code, std::string page_content, std::string full_path) : _status_code(status_code), _page_content(page_content), _full_path(full_path)
 {
 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
-	// _full_path = "";
 	_type_mime = "";
 	_charset = "";
-
 	_response = "";
 	_response_header = "";
 	_response_body = "";

@@ -1,89 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Client_class.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 05:31:06 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 12:41:24 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
-// Default constructor
-Client::Client(void)
-{
-	std::cout << GREY << "Client creation..." << C_RES << std::endl;
-	_socket = 0;
-	_status_code = 0;
-	_request = "";
-	_full_path = "";
-	_response = NULL;
-	_request_parser = NULL;
-	_page_content = "";
-	return ;
-}
-
-// Copy constructor
-Client::Client(const Client& src)
-{
-	std::cout << GREY << "Client creation..." << C_RES << std::endl;
-	*this = src;
-	return;
-}
-
-// Destructor
-Client::~Client(void)
-{
-	std::cout << GREY << "Client destruction..." << C_RES << std::endl;
-	if (_request_parser != NULL)
-		delete _request_parser;
-	if (_response != NULL)
-		delete _response;
-	return;
-}
-
-// Assignation operator
-Client &	Client::operator=(const Client& rhs)
-{
-	std::cout << GREY << "Client Assignation operator called" << C_RES << std::endl;
-	if (this != &rhs)
-	{
-		_socket = rhs.getSocket();
-	}
-	return (*this);
-}
-
-// getters and setters (non static attributes)
-SOCKET Client::getSocket(void) const
-{
-	return (_socket);
-}
-
-void Client::setSocket(const SOCKET client_socket)
-{
-	_socket = client_socket;
-	return ;
-}
-
-std::string Client::getRequest(void) const
-{
-	return (_request);
-}
-
-void Client::setRequest(const std::string request)
-{
-	_request = request;
-	return ;
-}
-
-void		Client::construct_full_path(void)
-{
-	// _full_path = ROOT_DIR + _request_parser.getResource();
-	return;
-}
+// ********************************************* ::recv + ::assign *********************************************
 
 void Client::receive_request(void)
 {
@@ -107,30 +36,44 @@ void Client::receive_request(void)
 	return ;
 }
 
+// ********************************************* parse + check request *********************************************
+
 void Client::check_request(void)
 {
 	_request_parser = new RequestParser(_request); // create parser request
-	_request_parser->print_request_info();
-
+	// _request_parser->print_request_info();
 
 	return ;
 }
 
-void Client::read_resource(void)
-{
-	// _full_path = "./html/forty-two";
-	// _full_path = "./html/five_thousands";
-	// _full_path = "./html/images/mini_img.png";
-	_full_path = "./html/images/orange.jpeg";
-	// _full_path = "./html/images/to_include.png";
-	// _full_path = "./html/error_pages/500.html";
-	// _full_path = "./html/error_dne";
+// ********************************************* parse path *********************************************
 
+void		Client::construct_full_path(void)
+{
 	if (_request_parser->get__resource() == "/")
 		_full_path = "./html/index.html";
 	else
-		_full_path = "./html" + _request_parser->get__resource();
+		_full_path =  "./html/" + _request_parser->get__resource();
 
+	// std::cout << C_B_MAGENTA << "_full_path avant de le construire :" << _full_path << C_RES << std::endl;
+	// new_path
+	// remplacer les caractères spéciaux
+		// 	ex : %20 " "
+		// 	ex : %C3%A7 "ç"
+	// enlever tous les arguments de query (après le ?)
+		// 	ex : ?ordre=1
+	// et les parser / mettre de côté => dans un environnement ??
+
+	// si finit par / => concat avec index.html
+
+	// concatener ROOT_DIR et new_path
+	return;
+}
+
+// ********************************************* read resource *********************************************
+
+void Client::read_resource(void)
+{
 	std::ifstream ifs(_full_path);
 	char c;
 
@@ -152,11 +95,15 @@ void Client::read_resource(void)
 	return ;
 }
 
+// ********************************************* generate response *********************************************
+
 void Client::generate_response(void)
 {
 	_response = new Response(_status_code, _page_content, _full_path);
 	_response->generate();
 }
+
+// ********************************************* ::send response *********************************************
 
 void Client::send_response(void)
 {
@@ -179,11 +126,13 @@ void Client::send_response(void)
 	}
 }
 
+// ********************************************* main - treat client *********************************************
+
 void Client::treat_client(void)
 {
-	std::cout << GREEN_B << "Treating client " << _socket << C_RES << std::endl;
 	receive_request();
 	check_request();
+	construct_full_path();
 	read_resource();
 	generate_response();
 	send_response();
