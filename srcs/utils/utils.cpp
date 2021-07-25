@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:57 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/24 18:41:57 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 17:00:20 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ std::string get_file_content(std::string filename)
 		return "";
 	else
 	{
-		std::cerr << GREEN_B << "OK get content : file found" <<  C_RES << std::endl;
 		oss << ifs.rdbuf();
 		ifs.close();
 		return (oss.str());

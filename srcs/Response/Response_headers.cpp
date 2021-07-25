@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 15:13:01 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 16:57:35 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void		Response::retrieve_type_mime_charset(std::string str)
 std::string		Response::r_header_content_type()
 {
 	std::string cmd;
-	std::cout << C_B_GREEN << "full_path dans mime_types : " << _full_path << C_RES << std::endl;
+
 	cmd = "file --mime " + _full_path + " > " + PATH_CMD_RES;
 	retrieve_type_mime_charset(exec_cmd(cmd.c_str()));
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;

@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:42:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 17:01:04 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,12 @@ void Client::check_request(void)
 
 void		Client::construct_full_path(void)
 {
-
-	// _full_path = "./html/six";
-
-	// /*
-	// taking into account RequestParser
-
-	std::cout << C_B_RED << "full_path before changing it : " << _full_path << C_RES << std::endl;
+	// std::cout << C_B_RED << "full_path before changing it : " << _full_path << C_RES << std::endl;
 	if (_request_parser->get__resource() == "/")
 		_full_path = "./html/index.html";
 	else
 		_full_path =  "./html" + _request_parser->get__resource();
-	std::cout << C_B_RED << "full_path after changing it : " << _full_path << C_RES << std::endl;
-	// */
+	// std::cout << C_B_RED << "full_path after changing it : " << _full_path << C_RES << std::endl;
 
 	/*
 	// pseudo-code path parsing + concatenating
@@ -92,11 +85,10 @@ void Client::read_resource(void)
 	}
 	else
 	{
-		std::cerr << GREEN_B << "OK : file found" <<  C_RES << std::endl;
 		while (ifs >> std::noskipws >> c)
 			_page_content += c;
 		_status_code = 200;
-
+		std::cerr << BROWN << "200: OK" <<  C_RES << std::endl;
 	}
 	if (ifs)
 		ifs.close();
@@ -120,7 +112,6 @@ void Client::send_response(void)
 	int	bytes_sent = 0;
 	int len = (_response->getResponse().length() + 1);
 
-	std::cout << "len: " << len << std::endl;
 	char buffer[len];
 	memcpy(buffer, _response->getResponse().c_str(), len);
 	try
