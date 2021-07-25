@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 12:41:24 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 16:07:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void Client::receive_request(void)
 void Client::check_request(void)
 {
 	_request_parser = new RequestParser(_request); // create parser request
-	// _request_parser->print_request_info();
-
+	_request_parser->print_request_info();
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 23:32:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 16:04:54 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1167,6 +1167,7 @@ void	RequestParser::method(void)
 {
 	size_t	head_start = 0;
 
+	// debug_print_line();
 	head_start = this->_head;
 	init_digest();
 	try { token(); }
