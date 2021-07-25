@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 12:11:41 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 15:09:49 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void Server::listen(void)
 		{
 			std::cout << GREEN_B << "Connexion received from " << _client->getSocket() << C_RES << std::endl;
 			_client->treat_client();
+			// break ;
 		}
 	}
 	return ;
