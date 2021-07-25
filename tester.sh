@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/25 13:28:04 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/25 16:03:14 by tharchen         ###   ########.fr        #
+#    Updated: 2021/07/25 16:26:25 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -122,13 +122,13 @@ tester()
 	test "/asdfasd"
 	test "/"
 	test "/?ok=lol"
-	# test "^/#@!_()_#"
-	# test "/asd"
-	# test "/sdfds"
-	# test "/docs/"
-	# test "/as"
-	# test "//////////"
-	# test "./"
+	test "^/#@!_()_#"
+	test "/asd"
+	test "/sdfds"
+	test "/docs/"
+	test "/as"
+	test "//////////"
+	test "./"
 }
 
 printf "╔═%-.30s═╦═%.${WIDTH_RET_TITLE}s═╦═%.${WIDTH_RET_TITLE}s═╗\n" $PATTERN_BORDER $PATTERN_BORDER $PATTERN_BORDER

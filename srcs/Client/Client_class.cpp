@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:15:15 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 16:42:53 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Client::receive_request(void)
 		bytes_read = ::recv(_socket, buffer, MAX_RCV - 1, 0);
 		if (bytes_read == -1)
 			throw Exceptions::RecvFailure();
-		std::cout << GREEN << "Request of size " << bytes_read << " received !" <<  C_RES << std::endl;
+		std::cout << GREEN << "Request of size " << bytes_read << " received :" <<  C_RES << std::endl;
 		buffer[bytes_read] = '\0';
 		_request.assign(buffer, bytes_read);
 	}
@@ -84,6 +84,7 @@ void Client::read_resource(void)
 	std::ifstream ifs(_full_path);
 	char c;
 
+	_page_content = "";
 	if (!ifs)
 	{
 		std::cerr << BROWN << "Error (404) : file doesn't exist" <<  C_RES << std::endl;
@@ -127,7 +128,7 @@ void Client::send_response(void)
 		bytes_sent = ::send(_socket, buffer, len, 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
-		std::cout << GREEN << "Response of size " << bytes_sent << " sent !" <<  C_RES << std::endl;
+		std::cout << GREEN << "Response of size " << bytes_sent << " sent :" <<  C_RES << std::endl;
 	}
 	catch (Exceptions::SendFailure & e)
 	{
@@ -146,7 +147,8 @@ void Client::treat_client(void)
 	generate_response();
 	send_response();
 
-	std::cout <<  _response->getResponse() << std::endl;
+	std::cout <<  _response->getResponseHeader() << std::endl;
+	// std::cout <<  _response->getResponseBody() << std::endl;
 
 	return ;
 }
