@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/25 11:54:08 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/25 15:34:48 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,8 @@ SRCS_REQUESTPARSER		=	\
 							RequestParser/RequestParser.parser.class.cpp \
 
 SRCS_SERVER				=	\
-							Server/Server.cpp \
+							Server/Server_basics.cpp \
+							Server/Server_class.cpp \
 
 SRCS_CONFIG				=	\
 							Config/Config.cpp \

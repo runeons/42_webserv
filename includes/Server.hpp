@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/24 18:42:48 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 15:37:07 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ class Server
 		SOCKET		getSocket(void) const;
 		void		setSocket(const SOCKET server_socket);
 
+		void		stop_server();
+		void 		print_config(void);
 		void		create_server_socket();
 		void		bind_address_and_port();
-		void		stop_server();
-		void		listen();
+		void		listen_and_treat_connection();
 		int			launch();
-		void 		print_config(void);
 
 		Server		&operator=(const Server & src);
 };
