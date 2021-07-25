@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 11:56:45 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 18:40:56 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Client
 		// requete
 		std::string					_request; // full request
 		RequestParser				*_request_parser;
+		ssize_t						_bytes_read;
 
 		std::string					_full_path;
 

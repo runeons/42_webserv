@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 17:01:04 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 18:41:00 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@
 void Client::receive_request(void)
 {
 	char	buffer[MAX_RCV];
-	int		bytes_read = 0;
+	// int		bytes_read = 0;
 
 	try
 	{
-		bytes_read = ::recv(_socket, buffer, MAX_RCV - 1, 0);
-		if (bytes_read == -1)
+		_bytes_read = ::recv(_socket, buffer, MAX_RCV - 1, 0);
+		if (_bytes_read == -1)
 			throw Exceptions::RecvFailure();
-		std::cout << GREEN << "Request of size " << bytes_read << " received :" <<  C_RES << std::endl;
-		buffer[bytes_read] = '\0';
-		_request.assign(buffer, bytes_read);
+		std::cout << GREEN << "Request of size " << _bytes_read << " received :" <<  C_RES << std::endl;
+		buffer[_bytes_read] = '\0';
+		_request.assign(buffer, _bytes_read);
 	}
 	catch (Exceptions::RecvFailure & e)
 	{

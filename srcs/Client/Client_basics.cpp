@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:00:52 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/25 18:40:00 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ Client::Client(void)
 	std::cout << GREY << "Client creation..." << C_RES << std::endl;
 	_socket = 0;
 	_status_code = 0;
+	_bytes_read = 0;
 	_request = "";
 	_full_path = "";
 	_response = NULL;

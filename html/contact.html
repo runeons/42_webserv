@@ -5,7 +5,7 @@
      By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+
                                                   +#+#+#+#+#+   +#+
      Created: 2021/07/25 04:23:36 by tharchen          #+#    #+#
-     Updated: 2021/07/25 18:05:06 by tsantoni         ###   ########.fr
+     Updated: 2021/07/25 18:26:31 by tsantoni         ###   ########.fr
 -->
 
 <!doctype html>
@@ -37,6 +37,7 @@
 			</div>
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
+		<br /><br />
 		<form action="#" method="get">
 		  <div>
 		    <label for="say">Quelle salutation voulez-vous adresser ?</label>
@@ -50,6 +51,7 @@
 		    <button>Envoyer mes salutations [GET]</button>
 		  </div>
 		</form>
+		<br /><br />
 		<form action="#" method="POST">
 		  <div>
 		    <label for="say">[POST] Quelle salutation voulez-vous dire ?</label>
@@ -61,6 +63,16 @@
 		  </div>
 		  <div>
 		    <button>Envoyer mes salutations [POST]</button>
+		  </div>
+		</form>
+		<br /><br />
+		<form method="post" action="#" enctype="multipart/form-data">
+		  <div>
+		    <label for="file">Choisir un fichier</label>
+		    <input type="file" id="file" name="myFile">
+		  </div>
+		  <div>
+		    <button>Envoyer le fichier [POST]</button>
 		  </div>
 		</form>
 		<!-- Optional JavaScript -->
