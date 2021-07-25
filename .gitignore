@@ -1,4 +1,8 @@
 *.o
 cmd_res
+rqstfile
+response_body
+response
+output
 webserv
 webserv.fsanitize
