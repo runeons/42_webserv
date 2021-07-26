@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 23:32:29 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 18:50:34 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ class RequestParser
 	private:
 		// PRIVATE MEMBERS ATRIBUTE : PRIMA
 		std::string		_request_raw;
+		ssize_t			_bytes_read;
 		size_t			_head;
 		size_t			_head_last_digest;
 
@@ -55,6 +56,7 @@ class RequestParser
 		std::string		_resource;
 		std::string		_http_version;
 		std::string		_body;
+		ssize_t			_body_size;
 		std::map<std::string, std::string>	_header_fields;
 
 		// PRIVATE MEMBERS FUNCTION : PRIMF
@@ -140,7 +142,7 @@ class RequestParser
 		void	HTTP_message(void);
 	public:
 		// CONSTRUCTOR / DESTRUCTOR : CD
-		RequestParser(std::string request_raw); // param constructor
+		RequestParser(std::string request_raw, ssize_t bytes_read); // param constructor
 		RequestParser(const RequestParser &src);  // constructor by copy
 		virtual ~RequestParser(void); // destructor
 		// OVERLOADED OPERATORS : OVOP
