@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 08:43:59 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 09:28:45 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Client
 
 		std::string					_full_path;
 
-		std::string					_parameters_str;
+		std::string					_query_string;
 		std::map<std::string, std::string>	_parameters;
 
 

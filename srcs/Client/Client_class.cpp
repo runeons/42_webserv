@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 08:45:36 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 09:29:05 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void Client::check_request(void)
 
 void		Client::parse_parameters(void)
 {
-	std::string p = _parameters_str;
+	std::string p = _query_string;
 	int sep = 0;
 	int eq = 0;
 
@@ -72,14 +72,14 @@ void		Client::construct_full_path(void)
 	*/
 	if (rsc.find("?") < rsc.length())
 	{
-		_parameters_str = rsc.substr(rsc.find("?") + 1);
+		_query_string = rsc.substr(rsc.find("?") + 1);
 		rsc.erase(rsc.find("?"));
 	}
 	rsc = "./html" + rsc;
 	if (rsc.back() == '/')
 		rsc += "index.html";
 	_full_path = rsc;
-	if (!_parameters_str.empty())
+	if (!_query_string.empty())
 		parse_parameters();
 	return;
 }
