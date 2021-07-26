@@ -6,7 +6,7 @@
 #    By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/16 21:13:33 by tsantoni          #+#    #+#              #
-#    Updated: 2021/07/23 11:04:00 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/26 10:24:36 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #!/bin/bash
@@ -17,7 +17,7 @@
 TAB_SIZE=4
 
 #___________________________ CLASS_NAME __________________________#
-CLASS_NAME="Response"
+CLASS_NAME="CGI"
 INHERIT_FROM=""
 
 #___________________________ FILES TO INCLUDE __________________________#
@@ -44,10 +44,10 @@ ALL_GREY=1
 #_____________________ INPUT ATTRIBUTES _____________________#
 # "Type"	"Name"	"Value" (Value : " " si pas de value)
 
-ATT_1=("std::map<int, std::string>"			"headers_response"	" ")
-ATT_2=("std::string"	"page_content"	" ")
-# ATT_3=("std::string"	"response"	" ")
-# ATT_4=("std::string"	"response_header"	" ")
+ATT_1=("std::map<std::string, std::string>"			"env_map"	" ")
+ATT_2=("char **"	"env_arr"	" ")
+ATT_3=("Request &"	"request"	" ")
+ATT_4=("Config &"		"config"	" ")
 # ATT_5=("std::string"	"response_body"	" ")
 # ATT_6=("std::string"	"response_bin"	" ")
 # ATT_7=("std::string"	"response_header_bin"	" ")

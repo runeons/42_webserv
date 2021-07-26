@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 07:48:26 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 10:47:09 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@ void	Response::generate_error_content(void)
 void	Response::GET_create_body(void)
 {
 	_response_body = _page_content;
+
+	std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
+	Cgi *cgi = new Cgi(_request);
+	(void)cgi;
+
+	delete cgi;
+	std::cout << C_G_YELLOW << "We are finished with cgi !" << C_RES << std::endl;
 }
 
 // ********************************************* generate response headers *********************************************

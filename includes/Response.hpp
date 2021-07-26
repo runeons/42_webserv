@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 07:48:42 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 10:43:45 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,17 @@ class Response
 {
 	private:
 		Response();
+		Response(const Response & src);
+
+		// Config &					_config;
+
 		int							_status_code;
 		std::string					_page_content;
 		std::string					_full_path;
 		std::string					_type_mime;
 		std::string					_charset;
+
+		RequestParser &				_request;
 
 		std::string					_response;
 		std::string					_response_header;
@@ -48,8 +54,7 @@ class Response
 
 	public:
 		// Response_basics
-		Response(int status_code, std::string page_content, std::string full_path);
-		Response(const Response & src);
+		Response(int status_code, std::string page_content, std::string full_path, RequestParser & request);
 		virtual ~Response();
 
 		int							getStatusCode(void) const;
