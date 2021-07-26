@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:52:25 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/26 07:48:42 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 // discord server_name : "Ca lie avec le header HTTP Host Si tu match avec au moins un serveur name tu choisis un block serveur different"
 # define SERVER_NAME "webserv"
 # define PATH_CMD_RES "cmd_res"
-// # define PATH_CMD_RES "./srcs/utils/cmd_res"
 # define DIR_ERROR_PAGES "./html/error_pages/"
 
 typedef enum		e_resp_fields
@@ -96,7 +95,6 @@ class Response
 		std::string		exec_cmd(std::string cmd);
 
 		// Response_class
-		// void	construct_full_path();
 		void	generate_error_content();
 		void	GET_create_body();
 		void	concatenate_response();

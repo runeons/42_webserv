@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 18:41:00 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 08:45:36 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 void Client::receive_request(void)
 {
 	char	buffer[MAX_RCV];
-	// int		bytes_read = 0;
 
 	try
 	{
@@ -47,26 +46,41 @@ void Client::check_request(void)
 
 // ********************************************* parse path *********************************************
 
+void		Client::parse_parameters(void)
+{
+	std::string p = _parameters_str;
+	int sep = 0;
+	int eq = 0;
+
+	while (sep > -1)
+	{
+		sep = p.find("&");
+		eq = p.find("=");
+		_parameters[p.substr(0, eq)] = p.substr(eq + 1, sep - (eq + 1));
+		p.erase(0, sep + 1);
+	}
+}
+
 void		Client::construct_full_path(void)
 {
-	// std::cout << C_B_RED << "full_path before changing it : " << _full_path << C_RES << std::endl;
-	if (_request_parser->get__resource() == "/")
-		_full_path = "./html/index.html";
-	else
-		_full_path =  "./html" + _request_parser->get__resource();
-	// std::cout << C_B_RED << "full_path after changing it : " << _full_path << C_RES << std::endl;
+	std::string rsc = _request_parser->get__resource();
 
 	/*
-	// pseudo-code path parsing + concatenating
-	- remplacer les caractères spéciaux
-		- ex : %20 " "
-		- ex : %C3%A7 "ç"
-	- enlever tous les arguments de query (après le ?)
-		- ex : ?ordre=1
-		- les parser / mettre de côté => dans une map pour etre utilises en variables d'environnement plus tard
-	- si finit par / => concat avec index.html
-	- concatener ROOT_DIR et new_path
+		TO DO : remplacer les caractères spéciaux
+			- ex : %20 " "
+			- ex : %C3%A7 "ç"
 	*/
+	if (rsc.find("?") < rsc.length())
+	{
+		_parameters_str = rsc.substr(rsc.find("?") + 1);
+		rsc.erase(rsc.find("?"));
+	}
+	rsc = "./html" + rsc;
+	if (rsc.back() == '/')
+		rsc += "index.html";
+	_full_path = rsc;
+	if (!_parameters_str.empty())
+		parse_parameters();
 	return;
 }
 
