@@ -1,28 +1,13 @@
 # include "Cgi.hpp"
 
-// Default constructor
-// Cgi::Cgi(void)
-// {
-// 	std::cout << GREY << "Cgi creation..." << C_RES << std::endl;
-// 	return ;
-// }
-
 // Parameter constructor
 Cgi::Cgi(RequestParser & request) : _request(request)
 {
 	std::cout << GREY << "Cgi creation..." << C_RES << std::endl;
-	// env_map =
+	_env_map = init_map_env();
 	_env_arr = NULL;
 	return ;
 }
-//
-// // Copy constructor
-// Cgi::Cgi(const Cgi& src)
-// {
-// 	std::cout << GREY << "Cgi creation..." << C_RES << std::endl;
-// 	*this = src;
-// 	return;
-// }
 
 // Destructor
 Cgi::~Cgi(void)

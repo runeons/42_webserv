@@ -30,9 +30,9 @@ class Cgi
 		void								setRequest(const RequestParser & request);
 		// Config &							getConfig(void) const;
 		// void								setConfig(const Config & config);
-
-
 		Cgi									&operator=(const Cgi & src);
+
+		std::map<std::string, std::string>	init_map_env();
 };
 
 
