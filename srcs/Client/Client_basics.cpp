@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 18:40:00 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 09:28:54 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ Client::Client(void)
 	_response = NULL;
 	_request_parser = NULL;
 	_page_content = "";
+	_query_string = "";
+	// _parameters_map = ();
 	return ;
 }
 

@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/25 15:34:48 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/26 10:48:32 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ HEADER_DIR				=	\
 
 HEADER					=	\
 							Client.hpp \
+							Cgi.hpp \
 							Response.hpp \
 							Config.hpp \
 							Exceptions.hpp \
@@ -83,6 +84,10 @@ SRCS_SERVER				=	\
 							Server/Server_basics.cpp \
 							Server/Server_class.cpp \
 
+SRCS_CGI				=	\
+							Cgi/Cgi_basics.cpp \
+							Cgi/Cgi_class.cpp \
+
 SRCS_CONFIG				=	\
 							Config/Config.cpp \
 
@@ -103,6 +108,7 @@ SRCS_LIST				=	\
 							main.cpp \
 							$(SRCS_REQUESTPARSER) \
 							$(SRCS_SERVER) \
+							$(SRCS_CGI) \
 							$(SRCS_CONFIG) \
 							$(SRCS_CLIENT) \
 							$(SRCS_RESPONSE) \

@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 18:40:56 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 09:28:45 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ class Client
 
 		std::string					_full_path;
 
+		std::string					_query_string;
+		std::map<std::string, std::string>	_parameters;
+
+
 		// response
 		Response					*_response;
 		std::string					_page_content;
@@ -50,6 +54,7 @@ class Client
 
 		void			receive_request();
 		void			check_request();
+		void			parse_parameters();
 		void			construct_full_path();
 		void			read_resource();
 		void			generate_response();

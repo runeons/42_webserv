@@ -6,29 +6,11 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:42:06 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/26 10:47:09 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Response.hpp"
-
-// ********************************************* construct response path *********************************************
-
-// void	Response::construct_full_path(void)
-// {
-	// std::cout << C_B_MAGENTA << "_full_path avant de le construire :" << _full_path << C_RES << std::endl;
-	// new_path
-	// remplacer les caractères spéciaux
-		// ex : %20 " "
-		// ex : %C3%A7 "ç"
-	// enlever tous les arguments de query (après le ?)
-		// ex : ?ordre=1 HTTP/1.1
-	// et les parser / mettre de côté => dans un environnement ??
-
-	// si finit par / => concat avec index.html
-
-	// concatener ROOT_DIR et new_path
-// }
 
 // ********************************************* set page content if error *********************************************
 
@@ -43,6 +25,13 @@ void	Response::generate_error_content(void)
 void	Response::GET_create_body(void)
 {
 	_response_body = _page_content;
+
+	std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
+	Cgi *cgi = new Cgi(_request);
+	(void)cgi;
+
+	delete cgi;
+	std::cout << C_G_YELLOW << "We are finished with cgi !" << C_RES << std::endl;
 }
 
 // ********************************************* generate response headers *********************************************

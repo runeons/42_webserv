@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 16:52:25 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/26 10:43:45 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 // discord server_name : "Ca lie avec le header HTTP Host Si tu match avec au moins un serveur name tu choisis un block serveur different"
 # define SERVER_NAME "webserv"
 # define PATH_CMD_RES "cmd_res"
-// # define PATH_CMD_RES "./srcs/utils/cmd_res"
 # define DIR_ERROR_PAGES "./html/error_pages/"
 
 typedef enum		e_resp_fields
@@ -34,11 +33,17 @@ class Response
 {
 	private:
 		Response();
+		Response(const Response & src);
+
+		// Config &					_config;
+
 		int							_status_code;
 		std::string					_page_content;
 		std::string					_full_path;
 		std::string					_type_mime;
 		std::string					_charset;
+
+		RequestParser &				_request;
 
 		std::string					_response;
 		std::string					_response_header;
@@ -49,8 +54,7 @@ class Response
 
 	public:
 		// Response_basics
-		Response(int status_code, std::string page_content, std::string full_path);
-		Response(const Response & src);
+		Response(int status_code, std::string page_content, std::string full_path, RequestParser & request);
 		virtual ~Response();
 
 		int							getStatusCode(void) const;
@@ -96,7 +100,6 @@ class Response
 		std::string		exec_cmd(std::string cmd);
 
 		// Response_class
-		// void	construct_full_path();
 		void	generate_error_content();
 		void	GET_create_body();
 		void	concatenate_response();

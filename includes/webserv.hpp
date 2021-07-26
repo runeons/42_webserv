@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/24 18:42:53 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 10:27:39 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef int SOCKET;
 # include "utils.hpp"
 # include "Config.hpp"
 # include "RequestParser.class.hpp"
+# include "Cgi.hpp"
 # include "Response.hpp"
 # include "Client.hpp"
 # include "Server.hpp"
