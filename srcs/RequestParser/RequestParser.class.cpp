@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 16:35:48 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/25 16:30:07 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 18:54:04 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,8 @@ void			RequestParser::init_digest(void)
 
 void			RequestParser::digest(std::string & target)
 {
-	// std::cout << "  -------------------------------------------------------------" << std::endl;
-	// std::cout << "/                                                               \\" << std::endl;
-	// std::cout << "   digest:" << std::endl;
-	// debug_print_line();
 	try
 	{
-		// std::cout << "substr from \'" << this->_request_raw[this->_head_last_digest] << "\' to \'" << this->_request_raw[this->_head] << "\'" << std::endl;
 		target = this->_request_raw.substr(
 			this->_head_last_digest,				// pos
 			this->_head - this->_head_last_digest	// length
@@ -105,8 +100,6 @@ void			RequestParser::digest(std::string & target)
 	catch (std::exception & e) {
 		std::cout << "error: substr: " << e.what() << std::endl;
 	}
-	// std::cout << "\\                                                               /" << std::endl;
-	// std::cout << "  -------------------------------------------------------------" << std::endl;
 }
 
 void			RequestParser::start_parsing(void)
@@ -126,7 +119,10 @@ void			RequestParser::print_request_info(void)
 	std::cout << "    method          : " << this->get__method() << std::endl;
 	std::cout << "    path            : " << "[" << this->get__resource() << "]" << std::endl;
 	std::cout << "    http_version    : " << this->get__http_version() << std::endl;
-	std::cout << "    body            : " << "[" << this->get__body() << "]" << std::endl;
+	std::cout << "    body size       : " << this->_body_size << std::endl;
+	std::cout << "    body            : " << "[";
+	write(1, this->get__body().c_str(), this->_body_size);
+	std::cout << "]" << std::endl;
 	// std::cout << "    body            : " << "too long" << std::endl;
 	std::cout << "    headers         : " << std::endl;
 	for (headers_iterator it = this->_header_fields.begin();

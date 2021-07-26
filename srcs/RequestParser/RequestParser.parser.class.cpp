@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/25 16:04:54 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/25 18:51:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1239,11 +1239,13 @@ void	RequestParser::request_line(void)
 void	RequestParser::message_body(void)
 {
 	init_digest();
-	while (1)
-	{
-		try { OCTET(); }
-		catch (std::exception &) { break ; }
-	}
+	this->_head = this->_bytes_read - 1;
+	this->_body_size = this->_head - this->_head_last_digest;
+	// while (1)
+	// {
+	// 	try { OCTET(); }
+	// 	catch (std::exception &) { break ; }
+	// }
 	digest(this->_body);
 }
 
