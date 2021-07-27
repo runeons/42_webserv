@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/27 10:26:19 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/27 14:08:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void	Response::GET_create_body(void)
 	std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
 	Cgi *cgi = new Cgi(_request);
 	cgi->launch();
-	// (void)cgi;
-
 	delete cgi;
 	std::cout << C_G_YELLOW << "We are finished with cgi !" << C_RES << std::endl;
 }
