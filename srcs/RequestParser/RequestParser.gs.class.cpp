@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 17:37:12 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/27 13:48:59 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,10 @@ std::string		RequestParser::get__http_version(void) const
 std::string		RequestParser::get__body(void) const
 {
 	return (this->_body);
+}
+
+// GETTER _status_code
+int		RequestParser::get__status(void) const
+{
+	return (this->_status_code);
 }

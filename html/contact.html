@@ -5,7 +5,7 @@
      By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+
                                                   +#+#+#+#+#+   +#+
      Created: 2021/07/25 04:23:36 by tharchen          #+#    #+#
-     Updated: 2021/07/26 09:43:11 by tsantoni         ###   ########.fr
+     Updated: 2021/07/27 13:30:53 by tharchen         ###   ########.fr
 -->
 
 <!doctype html>
@@ -23,58 +23,105 @@
 			body {
 				/* background-image: url('images/wallpaper_large.jpeg');
 				background-attachment: fixed;
-  				background-size: 100% 100%;
-				background-color: black; */
+  				background-size: 100% 100%;*/
+				background-color: #7e7e7e;
 			}
-
+			.form1 {
+				text-align: center;
+				margin-top: 1%;
+				font-size: 20px;
+				margin-right: 30%;
+				margin-left: 30%;
+			}
+			.subform {
+				border: 5px solid black;
+				border-radius: 20%;
+				padding: 3%;
+				padding-left: 5%;
+				padding-right: 5%;
+			}
+			/* .form2 {
+				text-align: center;
+				margin-top: 10%;
+				font-size: 30px;
+			} */
 		</style>
 	</head>
 	<body>
-		<form>
-			<div class="form-group">
-				<label for="exampleFormControlTextarea1">Example textarea</label>
-				<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-			</div>
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</form>
-		<br /><br />
-		<form action="#" method="get">
-		  <div>
-		    <label for="say">Quelle salutation voulez-vous adresser ?</label>
-		    <input name="say" id="say" value="Salut">
-		  </div>
-		  <div>
-		    <label for="to">À qui voulez‑vous l'adresser ?</label>
-		    <input name="to" value="Maman">
-		  </div>
-		  <div>
-		    <button>Envoyer mes salutations [GET]</button>
-		  </div>
-		</form>
-		<br /><br />
-		<form action="#" method="POST">
-		  <div>
-		    <label for="say">[POST] Quelle salutation voulez-vous dire ?</label>
-		    <input name="say" id="say" value="Salut">
-		  </div>
-		  <div>
-		    <label for="to">A qui voulez-vous le dire ?</label>
-		    <input name="to" id="to" value="Maman">
-		  </div>
-		  <div>
-		    <button>Envoyer mes salutations [POST]</button>
-		  </div>
-		</form>
-		<br /><br />
-		<form method="post" action="#" enctype="multipart/form-data">
-		  <div>
-		    <label for="file">Choisir un fichier</label>
-		    <input type="file" id="file" name="myFile">
-		  </div>
-		  <div>
-		    <button>Envoyer le fichier [POST]</button>
-		  </div>
-		</form>
+		<div class="form1">
+			<form action="/contact.html" method="get" class="subform">
+				<label for="id1">GET</label>
+				<div class="form-group">
+					<textarea class="form-control" name="first_name">Voltaire</textarea>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" name="last_name">Filoutier</textarea>
+				</div>
+				<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
+				<button class="btn btn-primary">Send data with GET request</button>
+			</form>
+			<br>
+			<form action="/contact.html" method="post" class="subform">
+				<label>POST</label>
+				<div class="form-group">
+					<textarea class="form-control" name="first_name">Prairie</textarea>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" name="last_name">OA</textarea>
+				</div>
+				<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
+				<button class="btn btn-primary">Send data with POST request</button>
+			</form>
+			<br>
+			<form class="subform" action="/contact.html" method="post" enctype="multipart/form-data">
+				<label for="id_1">FILE</label>
+				<br>
+				<input class="subform" type="file" id="file" name="myFile" label="hello">
+				<br>
+				<button class="btn btn-primary">Send file with POST request</button>
+			</form>
+		</div>
+		<!--
+		<div class="form2">
+			<form action="#" method="get">
+			  <div>
+			    <label for="say">var 1</label>
+			    <input name="say" id="say" value="FOO">
+			  </div>
+			  <div>
+			    <label for="to">var 2</label>
+			    <input name="to" value="BAR">
+			  </div>
+			  <div>
+			    <button>Envoyer mes salutations [GET]</button>
+			  </div>
+			</form>
+			<br /><br />
+			<form action="#" method="POST">
+			  <div>
+			    <label for="say">var 1</label>
+			    <input name="say" id="say" value="FOO">
+			  </div>
+			  <div>
+			    <label for="to">var 2</label>
+			    <input name="to" id="to" value="BAR">
+			  </div>
+			  <div>
+			    <button>Envoyer mes salutations [POST]</button>
+			  </div>
+			</form>
+			<br /><br />
+			<form action="#" method="post" enctype="multipart/form-data">
+			  <div>
+			    <label for="file">File: </label>
+			    <input type="file" id="file" name="myFile" label="hello">
+			  </div>
+			  <div>
+			    <button>Send file</button>
+			  </div>
+			</form>
+		</div>
+		-->
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 09:28:45 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 15:24:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ class Client
 
 		Client		&operator=(const Client & src);
 
+		void			check_method(void);
+		void			check_http_version(void);
+
 		void			receive_request();
 		void			check_request();
 		void			parse_parameters();
@@ -60,6 +63,10 @@ class Client
 		void			generate_response();
 		void			send_response();
 		void			treat_client();
+		void			close(void)
+		{
+			::close(this->_socket);
+		}
 
 };
 

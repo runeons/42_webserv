@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 16:35:48 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/25 18:54:04 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/27 13:46:05 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void			RequestParser::start_parsing(void)
 	try { HTTP_message(); }
 	catch (std::exception & e)
 	{
+		this->_status_code = 400;
 		std::cout << "error: " << e.what() << std::endl;
 		bc_p();
 	}

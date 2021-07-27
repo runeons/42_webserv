@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 12:09:31 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/27 13:51:19 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,44 @@ void Client::receive_request(void)
 
 // ********************************************* parse + check request *********************************************
 
-void Client::check_request(void)
+void	Client::check_method(void)
 {
-	_request_parser = new RequestParser(_request, _bytes_read); // create parser request
+	for (v_string_iterator it = this->_request_parser->_methods_implemented.begin();
+		it != this->_request_parser->_methods_implemented.end(); it++)
+	{
+		if (this->_request_parser->get__method() == *it)
+			return ;
+	}
+	throw (HTTP_ErrorStatusException(501)); // Not Implemented
+}
+void	Client::check_http_version(void)
+{
+	if (this->_request_parser->get__http_version() != "1.1")
+		throw (HTTP_ErrorStatusException(505)); // HTTP Version Not Supported
+}
+
+void	Client::check_request(void)
+{
+	_request_parser = new RequestParser(_request, _bytes_read); // delete in generate_response :)
 	_request_parser->print_request_info();
+	_status_code = _request_parser->get__status();
+	if (_status_code == 200)
+	{
+		try { check_method(); }
+		catch (HTTP_ErrorStatusException & e) {
+			_status_code = e.get__status();
+		}
+		try { check_http_version(); }
+		catch (HTTP_ErrorStatusException & e) {
+			_status_code = e.get__status();
+		}
+	}
 	return ;
 }
 
 // ********************************************* parse path *********************************************
 
-void		Client::parse_parameters(void)
+void	Client::parse_parameters(void)
 {
 	std::string p = _query_string;
 	int sep = 0;
@@ -93,17 +121,13 @@ void Client::read_resource(void)
 
 	_page_content = "";
 	if (!ifs)
-	{
-		std::cerr << BROWN << "Error (404) : file doesn't exist" <<  C_RES << std::endl;
 		_status_code = 404;
-	}
 	else
 	{
 		while (ifs >> std::noskipws >> c)
 			_page_content += c;
-		_status_code = 200;
-		std::cerr << BROWN << "200: OK" <<  C_RES << std::endl;
 	}
+	std::cerr << BROWN << "status code: " << _status_code << C_RES << std::endl;
 	if (ifs)
 		ifs.close();
 	return ;

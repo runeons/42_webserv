@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/25 18:50:34 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/27 13:48:37 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,25 @@ class LexerException: public std::exception
 		virtual const char *what() const throw() { return (this->_msg.c_str()); }
 };
 
+class HTTP_ErrorStatusException: public std::exception
+{
+	private:
+		int _status_code;
+	public:
+		HTTP_ErrorStatusException(int status_code): _status_code(status_code) {}  // constructor
+		virtual ~HTTP_ErrorStatusException(void) throw() {} // destructor
+		virtual const char *what() const throw() {
+			std::cout << _status_code << std::endl;
+			return ("error http generated");
+		}
+		int get__status(void) const
+		{
+			return (_status_code);
+		}
+};
+
 class RequestParser
 {
-	typedef std::map<std::string, std::string>::iterator headers_iterator;
 	protected:
 		// PROTECTED MEMBERS ATRIBUTE : PROMA
 
@@ -57,7 +73,9 @@ class RequestParser
 		std::string		_http_version;
 		std::string		_body;
 		ssize_t			_body_size;
+		int				_status_code;
 		std::map<std::string, std::string>	_header_fields;
+
 
 		// PRIVATE MEMBERS FUNCTION : PRIMF
 		RequestParser(void);  // constructor
@@ -66,6 +84,10 @@ class RequestParser
 		void	bc_s(void);
 		void	bc_p(void);
 		void	debug_print_line(void);
+
+		// maps/vectors initiators
+		std::vector<std::string> init_methods_implemented(void);
+		std::vector<std::string> init_methods_unimplemented(void);
 
 		// entry point
 		void	start_parsing(void);
@@ -152,11 +174,13 @@ class RequestParser
 		std::string		get__resource(void) const;
 		std::string		get__http_version(void) const;
 		std::string		get__body(void) const;
+		int				get__status(void) const;
 		// PUBLIC MEMBERS ATRIBUTE : PUMA
-		void			print_request_info(void);
+		std::vector<std::string>	_methods_implemented;
+		std::vector<std::string>	_methods_unimplemented;
 
 		// PUBLIC MEMBERS FUNCTION : PUMF
-
+		void			print_request_info(void);
 };
 
 std::ostream	&operator<<(std::ostream &o, const RequestParser &i);

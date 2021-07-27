@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 10:27:39 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/26 15:25:11 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,8 @@ typedef int SOCKET;
 # include "Client.hpp"
 # include "Server.hpp"
 # include "Exceptions.hpp"
+
+typedef std::map<std::string, std::string>::iterator	headers_iterator;
+typedef std::vector<std::string>::iterator				v_string_iterator;
 
 #endif
