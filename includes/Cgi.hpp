@@ -3,6 +3,8 @@
 
 # include "webserv.hpp"
 
+# define BUFS 4096
+
 class RequestParser;
 class Config;
 
