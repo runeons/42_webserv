@@ -20,19 +20,33 @@ void	Cgi::transform_to_envp(void)
 		env[i] = strcpy(env[i], var.c_str());
 		// std::cout << "env[" << i << "]" << " : " << env[i] << std::endl;
 	}
-	env[_env_map.size() + 1] = NULL;
+	env[_env_map.size()] = NULL;
 	_env_arr = env;
 }
 
 void	Cgi::exec_script(void)
 {
-	int pipefd[2];
+	int	pipe_fd[2];
+	int	cgi_fd;
 	pid_t child;
-	char buf;
+	// char buf;
+	int status;
 
-	char av1[12] = "hello world";
+	std::string script = "./scripts/displayenv.pl";
+	char *av[3] = {
+		(char *)script.c_str(),
+		(char *)script.c_str(),
+		(char *)0
+	};
+	// open tmp file to store cgi response
+	cgi_fd = open("/tmp/cgi_file", O_RDWR | O_CREAT | O_APPEND | O_TRUNC, 0666);
+	if (cgi_fd == -1)
+	{
+		perror("open cgi_fd");
+		exit(EXIT_FAILURE);
+	}
 	// create pipe
-	if (pipe(pipefd) == -1)
+	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe");
 		exit(EXIT_FAILURE);
@@ -44,67 +58,43 @@ void	Cgi::exec_script(void)
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	// if child: connect pipe to stdin + exec more
-	if (child == 0) // Child reads from pipe
+	if (child == 0)		// Child reads from pipe (connect pipe to stdin + exec more)
 	{
-		close(pipefd[1]);  		// Close unused write end
-		while (read(pipefd[0], &buf, 1) > 0)
-			write(STDOUT_FILENO, &buf, 1);
-		write(STDOUT_FILENO, "\n", 1);
-		close(pipefd[0]);
-		_exit(EXIT_SUCCESS);
+		close(pipe_fd[1]);					// Close unused write side
+		dup2(pipe_fd[0], STDIN_FILENO);		// Connect the read side with stdin
+		close(pipe_fd[0]);					// Close the read side
+		for (int i = 0; _env_arr[i]; i++)
+			std::cout << "[ DEBUG ] _env_arr[" << i << "] = \"" << _env_arr[i] << "\"" << std::endl;
+		if (execve(av[0], &av[0], _env_arr) < 0)	// Execute process
+		{
+			perror("execve");
+			close(pipe_fd[0]);
+			exit(EXIT_FAILURE);
+		}
 	}
-	// write to pipe
-	else // Parent writes argv[1] to pipe
+	else				// Parent writes to pipe
 	{
-		close(pipefd[0]);  		// Close unused read end
-		write(pipefd[1], av1, strlen(av1));
-		close(pipefd[1]);  		// Reader will see EOF
-		wait(NULL);				// Wait for child
+		// Close unused read side
+		// close(pipe_fd[0]);
+		// Connect the write side with stdout
+		// dup2(pipe_fd[1], STDOUT_FILENO);
+		// Close the write side
+		// close(pipe_fd[1]);
+		// execute process
+		if (waitpid(child, &status, 0) == -1)
+		{
+			perror("waitpid");
+			exit(EXIT_FAILURE);
+		}
+		if (!WIFEXITED(status))
+		{
+			std::cout << "status : " << status << std::endl;
+			std::cout << "WIFEXITED(status) : " << WIFEXITED(status) << std::endl;
+			perror("WIFEXITED(status)");
+			exit(EXIT_FAILURE);
+		}
 	}
 }
-/* basic man pipe
-void	Cgi::exec_script(void)
-{
-	int pipefd[2];
-	pid_t child;
-	char buf;
-
-	char av1[12] = "hello world";
-	// create pipe
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	// fork process
-	child = fork();
-	if (child == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	// if child: connect pipe to stdin + exec more
-	if (child == 0) // Child reads from pipe
-	{
-		close(pipefd[1]);  		// Close unused write end
-		while (read(pipefd[0], &buf, 1) > 0)
-			write(STDOUT_FILENO, &buf, 1);
-		write(STDOUT_FILENO, "\n", 1);
-		close(pipefd[0]);
-		_exit(EXIT_SUCCESS);
-	}
-	// write to pipe
-	else // Parent writes argv[1] to pipe
-	{
-		close(pipefd[0]);  		// Close unused read end
-		write(pipefd[1], av1, strlen(av1));
-		close(pipefd[1]);  		// Reader will see EOF
-		wait(NULL);				// Wait for child
-	}
-	std::cout << "test cout" << std::endl;
-}
-*/
 
 void	Cgi::launch(void)
 {
