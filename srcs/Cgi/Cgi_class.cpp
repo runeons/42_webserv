@@ -1,99 +1,150 @@
 # include "Cgi.hpp"
 
-std::map<std::string, std::string>	Cgi::init_map_env()
+void	Cgi::setup_metavariables(void)
 {
-	std::map<std::string, std::string> m;
 
-	// très important
-	m["REDIRECT_STATUS"] = "200";		// nécessaire si utilise php-cgi
-	m["GATEWAY_INTERFACE"] = "CGI/1.1";	// CGI/1.1
-	m["REQUEST_METHOD"] = "";			// methode
-	m["SCRIPT_FILENAME"] = "";			// ABSOLUTE path to script.php que je voudrais utiliser (path réel)
-	m["SCRIPT_NAME"] = "";				// ROOT-RELATIVE path to script (peut être un alias dans certains cas, par ex quand on utilise Apache)
-	m["PATH_INFO"] = "";				// SCRIPT_FILENAME will not be available if PATH_INFO is not (=$SCRIPT_FILENAME in some examples) : contient le path réel du script à exécuter
-	m["QUERY_STRING"] = "";				// parametres
 
-	m["CONTENT_LENGTH"] = "";			//
-	m["CONTENT_TYPE"] = "";				//
-	m["PATH_TRANSLATED"] = "";			//
-	m["REMOTE_ADDR"] = "";				//
-	m["SERVER_NAME"] = "";				//
-	m["SERVER_PORT"] = "";				//
-	m["SERVER_PROTOCOL"] = "";			//
-	m["SERVER_SOFTWARE"] = "";			//
 
-	// source : php.net/manual mais pas example discord
-
-	m["AUTH_TYPE"] = ""; 				//
-	m["REMOTE_HOST"] = ""; 				//
-	m["REMOTE_IDENT"] = ""; 			//
-	m["REMOTE_USER"] = ""; 				//
-
-	// source : discord example (fassani) mais pas php.net/manual
-
-	m["HTTP_ACCEPT-ENCODING"] = "";		//
-	m["HTTP_HOST"] = "";				//
-	m["HTTP_USER-AGENT"] = "";			//
-	m["REMOTE_ADDR"] = "";				//
-	m["REQUEST_URI"] = "";				//
-
-	return m;
 }
 
-/*
-env
-REDIRECT_STATUS="200"
-GATEWAY_INTERFACE="CGI/1.1"
-REQUEST_METHOD="GET"
-SCRIPT_FILENAME="/Users/user/42_webserv/tester_42/ubuntu_cgi_tester"
-PATH_INFO="/Users/user/42_webserv/tester_42/ubuntu_cgi_tester"
-QUERY_STRING="say=Salut&to=Maman"
-./ubuntu_cgi_tester
+void	Cgi::transform_to_envp(void)
+{
+	char **env = new char*[_env_map.size() + 1];
 
-env
-CONTENT_LENGTH="0"
-CONTENT_TYPE="text/plain"
-GATEWAY_INTERFACE="CGI/1.1"
-HTTP_ACCEPT-ENCODING="gzip"
-HTTP_HOST="localhost"
-HTTP_USER-AGENT="Go-http-client/1.1"
-PATH_INFO="/ubuntu_cgi_tester"
-PATH_TRANSLATED="/ubuntu_cgi_tester"
-REDIRECT_STATUS="200"
-REMOTE_ADDR="127.0.0.1"
-REQUEST_METHOD="GET"
-REQUEST_URI="/directory/youpi.bla"
-SCRIPT_FILENAME="/Users/user/42_webserv/tester_42/ubuntu_cgi_tester"
-SCRIPT_NAME="ubuntu_cgi_tester"
-SERVER_NAME="webserv"
-SERVER_PORT="8000"
-SERVER_PROTOCOL="HTTP/1.1"
-SERVER_SOFTWARE="WebServ/1.0"
-./ubuntu_cgi_tester
+	std::map<std::string, std::string>::iterator it = _env_map.begin();
+	std::map<std::string, std::string>::iterator itend = _env_map.end();
+	for (int i = 0; it != itend; it++, i++)
+	{
+		std::string var = it->first + "=" + it->second;
+		env[i] = new char[var.size() + 1];
+		env[i] = strcpy(env[i], var.c_str());
+		// std::cout << "env[" << i << "]" << " : " << env[i] << std::endl;
+	}
+	env[_env_map.size() + 1] = NULL;
+	_env_arr = env;
+}
 
-env REDIRECT_STATUS="200" GATEWAY_INTERFACE="CGI/1.1" REQUEST_METHOD="GET" SCRIPT_FILENAME="/Users/user/42_webserv/tester_42/ubuntu_cgi_tester" PATH_INFO="/Users/user/42_webserv/tester_42/ubuntu_cgi_tester" QUERY_STRING="say=Salut&to=Maman" ./ubuntu_cgi_tester
-env CONTENT_LENGTH="0" CONTENT_TYPE="text/plain" GATEWAY_INTERFACE="CGI/1.1" HTTP_ACCEPT-ENCODING="gzip" HTTP_HOST="localhost" HTTP_USER-AGENT="Go-http-client/1.1" PATH_INFO="/ubuntu_cgi_tester" PATH_TRANSLATED="/ubuntu_cgi_tester" REDIRECT_STATUS="200" REMOTE_ADDR="127.0.0.1" REQUEST_METHOD="GET" REQUEST_URI="/directory/youpi.bla" SCRIPT_FILENAME="/Users/user/42_webserv/tester_42/ubuntu_cgi_tester" SCRIPT_NAME="ubuntu_cgi_tester" SERVER_NAME="webserv" SERVER_PORT="8000" SERVER_PROTOCOL="HTTP/1.1" SERVER_SOFTWARE="WebServ/1.0" ./ubuntu_cgi_tester
+void	Cgi::exec_script(void)
+{
+	int pipefd[2];
+	pid_t child;
+	// char buf;
+	int	status;
+	int	ret = 0;
+
+	char *args[] = {(char *)"/bin/ls", 0};
+	// char av1[12] = "hello world";
+	// create pipe
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	// fork process
+	child = fork();
+	if (child == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	// if child: connect pipe to stdin + exec more
+	if (child == 0) // Child reads from pipe
+	{
+		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			exit(EXIT_FAILURE);
+		}
+		ret = execve(args[0], args, _env_arr);
+		if (!ret)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+		exit (ret);
+		/*
+			close(pipefd[1]);  		// Close unused write end
+			while (read(pipefd[0], &buf, 1) > 0)
+				write(STDOUT_FILENO, &buf, 1);
+			write(STDOUT_FILENO, "\n", 1);
+			close(pipefd[0]);
+			_exit(EXIT_SUCCESS);
+		*/
+	}
+	// write to pipe
+	else // Parent writes argv[1] to pipe
+	{
+		waitpid(child, &status, 0);
+		if (close(pipefd[1]) < 0)
+		{
+			perror("close(pipefd[1])");
+			exit(EXIT_FAILURE);
+		}
+		if (close(pipefd[0]) < 0)
+		{
+			perror("close(pipefd[0])");
+			exit(EXIT_FAILURE);
+		}
+		if (WIFEXITED(status))
+			ret = WIFEXITED(status);
+
+		/*
+			close(pipefd[0]);  		// Close unused read end
+			write(pipefd[1], av1, strlen(av1));
+			close(pipefd[1]);  		// Reader will see EOF
+			wait(NULL);				// Wait for child
+		*/
+	}
+	std::cout << "test cout" << std::endl;
+	std::cout << "ret : " << ret << std::endl;
+}
+/* basic man pipe
+void	Cgi::exec_script(void)
+{
+	int pipefd[2];
+	pid_t child;
+	char buf;
+
+	char av1[12] = "hello world";
+	// create pipe
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	// fork process
+	child = fork();
+	if (child == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	// if child: connect pipe to stdin + exec more
+	if (child == 0) // Child reads from pipe
+	{
+		close(pipefd[1]);  		// Close unused write end
+		while (read(pipefd[0], &buf, 1) > 0)
+			write(STDOUT_FILENO, &buf, 1);
+		write(STDOUT_FILENO, "\n", 1);
+		close(pipefd[0]);
+		_exit(EXIT_SUCCESS);
+	}
+	// write to pipe
+	else // Parent writes argv[1] to pipe
+	{
+		close(pipefd[0]);  		// Close unused read end
+		write(pipefd[1], av1, strlen(av1));
+		close(pipefd[1]);  		// Reader will see EOF
+		wait(NULL);				// Wait for child
+	}
+	std::cout << "test cout" << std::endl;
+}
 */
-/*
 
-	Example discord :
+void	Cgi::launch(void)
+{
+	setup_metavariables();
+	transform_to_envp();
+	exec_script(); // get response and/or body
 
-	CONTENT_LENGTH=0
-	CONTENT_TYPE=text/plain
-	GATEWAY_INTERFACE=CGI/1.1
-	HTTP_ACCEPT-ENCODING=gzip
-	HTTP_HOST=localhost
-	HTTP_USER-AGENT=Go-http-client/1.1
-	PATH_INFO=/directory/youpi.bla
-	PATH_TRANSLATED=/YoupiBanane/youpi.bla
-	REDIRECT_STATUS=200
-	REMOTE_ADDR=127.0.0.1
-	REQUEST_METHOD=GET
-	REQUEST_URI=/directory/youpi.bla
-	SCRIPT_FILENAME=/home/fouad/Bureau/webserv/YoupiBanane/youpi.bla
-	SCRIPT_NAME=/home/fouad/Bureau/webserv/ubuntu_cgi_tester
-	SERVER_NAME=42WebServer
-	SERVER_PORT=8080
-	SERVER_PROTOCOL=HTTP/1.1
-	SERVER_SOFTWARE=WebServ/1.0
-*/
+}

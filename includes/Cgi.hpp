@@ -32,6 +32,11 @@ class Cgi
 		// void								setConfig(const Config & config);
 		Cgi									&operator=(const Cgi & src);
 
+		void	setup_metavariables(void);
+		void	transform_to_envp(void);
+		void	exec_script(void);
+		void	launch(void);
+
 		std::map<std::string, std::string>	init_map_env();
 };
 
