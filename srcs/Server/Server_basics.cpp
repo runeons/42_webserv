@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 15:44:13 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/28 11:21:46 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 
 /*
-struct sockaddr_in {
-    sa_family_t    sin_family; // famille d'adresses : AF_INET
-    uint16_t       sin_port;   // port dans l'ordre d'octets réseau
-    struct in_addr sin_addr;   // adresse Internet, adresse IP de l'hôte
-};
+	struct sockaddr_in {
+		sa_family_t	sin_family; // famille d'adresses : AF_INET
+		uint16_t	   sin_port;   // port dans l'ordre d'octets réseau
+		struct in_addr sin_addr;   // adresse Internet, adresse IP de l'hôte
+	};
 
-// Adresse Internet
-struct in_addr {
-    uint32_t       s_addr;     // Adresse dans l'ordre d'octets réseau
-};
+	// Adresse Internet
+	struct in_addr {
+		uint32_t	   s_addr;	 // Adresse dans l'ordre d'octets réseau
+	};
 */
 
 
@@ -31,8 +31,9 @@ struct in_addr {
 Server::Server(void)
 {
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
-	_config = new Config;
-	_client = new Client;
+	// TO DO parse config
+	_config = new Config; // parametree avec le parsing
+	_client = new Client(*_config); // dans lequel j'envoie Config
 	// _client = NULL;
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;

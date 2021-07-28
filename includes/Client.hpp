@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 15:24:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/28 12:07:03 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ class Response;
 class Client
 {
 	private:
+
+		Config & 					_config;
+		// Location *					_applied_location;
+
 		SOCKET						_socket;
 		int							_status_code;
 
@@ -39,10 +43,11 @@ class Client
 		Response					*_response;
 		std::string					_page_content;
 
-
-	public:
 		Client();
 		Client(const Client & src);
+
+	public:
+		Client(Config & config);
 		virtual ~Client();
 
 		SOCKET			getSocket(void) const;

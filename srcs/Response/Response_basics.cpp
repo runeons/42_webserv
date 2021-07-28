@@ -6,16 +6,22 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:43 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 10:43:37 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/28 11:28:31 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Response.hpp"
 
-// Default constructor
-Response::Response(int status_code, std::string page_content, std::string full_path, RequestParser & request) : _status_code(status_code), _page_content(page_content), _full_path(full_path), _request(request)
+// Parametric constructor
+Response::Response(Config & config, int status_code, std::string page_content, std::string full_path, RequestParser & request) : _config(config), _request(request)
 {
 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
+	// from parameters
+	_status_code = status_code;
+	_page_content = page_content;
+	_full_path = full_path;
+
+	// init
 	_type_mime = "";
 	_charset = "";
 	_response = "";
@@ -26,14 +32,6 @@ Response::Response(int status_code, std::string page_content, std::string full_p
 	_error_content = init_map_body();
 	return ;
 }
-
-// Copy constructor
-// Response::Response(const Response& src)
-// {
-// 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
-// 	*this = src;
-// 	return;
-// }
 
 // Destructor
 Response::~Response(void)

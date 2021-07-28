@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/27 13:51:19 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/28 11:22:37 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	_response = new Response(_status_code, _page_content, _full_path, *_request_parser);
+	_response = new Response(_config, _status_code, _page_content, _full_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
 		delete _request_parser;

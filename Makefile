@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/28 11:04:48 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/28 11:37:08 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -93,6 +93,7 @@ SRCS_CGI				=	\
 SRCS_CONFIG				=	\
 							Config/Config_basics.cpp \
 							Config/Config_class.cpp \
+							Config/Location.cpp \
 
 SRCS_CLIENT				=	\
 							Client/Client_basics.cpp \

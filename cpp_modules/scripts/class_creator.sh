@@ -6,7 +6,7 @@
 #    By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/16 21:13:33 by tsantoni          #+#    #+#              #
-#    Updated: 2021/07/28 10:56:01 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/28 11:36:00 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #!/bin/bash
@@ -17,7 +17,7 @@
 TAB_SIZE=4
 
 #___________________________ CLASS_NAME __________________________#
-CLASS_NAME="Config"
+CLASS_NAME="Location"
 INHERIT_FROM=""
 
 #___________________________ FILES TO INCLUDE __________________________#
@@ -44,27 +44,18 @@ ALL_GREY=1
 #_____________________ INPUT ATTRIBUTES _____________________#
 # "Type"	"Name"	"Value" (Value : " " si pas de value)
 
-ATT_1=("std::string"						"host"	" ")
-ATT_2=("int"								"port"	" ")
-ATT_3=("std::string"						"server_name"	" ")
-ATT_4=("std::string"						"host_name"	" ")
-ATT_5=("std::string"						"root_dir"	" ")
-ATT_6=("int"								"max_body_size"	" ")
-ATT_7=("std::map<int, std::string>"			"error_pages"	" ")
-ATT_8=("std::map<std::string, Location &>"	"locations"	" ")
-# ATT_5=("std::string"	"response_body"	" ")
-# ATT_6=("std::string"	"response_bin"	" ")
-# ATT_7=("std::string"	"response_header_bin"	" ")
-# ATT_8=("std::string"	"response_body_bin"	" ")
-# ATT_9=("std::map<int, std::string>"	"error_msg"	" ")
-# ATT_10=("std::map<int, std::string>"	"error_body"	" ")
-# ATT_3=("const int"	"gradeToSign"	" ")
-# ATT_4=("const int"	"gradeToExecute"	" ")
-# ATT_5=(""	""	" ")
+ATT_1=("std::string"						"uri"	" ")
+ATT_2=("std::string"						"root_loc"	" ")
+ATT_3=("bool"								"autoindex"	" ")
+ATT_4=("std::vector<std::string>"			"methods"	" ")
+ATT_5=("std::map<bool, std::string>"		"upload"	" ")
+ATT_6=("std::vector<std::string>"			"alias"	" ")
+ATT_7=("std::map<std::string, std::map<std::string, std::string>>"	"cgi"	" ")
 # ATT_6=(""	""	" ")
 # ATT_7=(""	""	" ")
 # ATT_8=(""	""	" ")
 # ATT_9=(""	""	" ")
+# ATT_10=(""	""	" ")
 
 #_____________________ INPUT INCLUDES _____________________#
 # INCLUDES_GLOBAL=("" "")
