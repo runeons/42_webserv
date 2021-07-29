@@ -6,18 +6,14 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/25 15:37:07 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/28 19:34:49 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-// # include "webserv.hpp"
-# include <iostream>
-# include <string>
-# include "color.hpp"
-# include "Config.hpp"
+# include <webserv.hpp>
 
 class Config;
 class Client;

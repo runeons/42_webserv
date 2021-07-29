@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/28 11:37:08 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/28 19:33:16 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ HEADER					=	\
 							Cgi.hpp \
 							Response.hpp \
 							Config.hpp \
+							Location.hpp \
 							Exceptions.hpp \
 							RequestParser.class.hpp \
 							Server.hpp \
@@ -91,9 +92,10 @@ SRCS_CGI				=	\
 							Cgi/Cgi_init_map.cpp \
 
 SRCS_CONFIG				=	\
+							Config/Location/Location_basics.cpp \
+							Config/Location/Location_class.cpp \
 							Config/Config_basics.cpp \
 							Config/Config_class.cpp \
-							Config/Location.cpp \
 
 SRCS_CLIENT				=	\
 							Client/Client_basics.cpp \

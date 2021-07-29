@@ -1,4 +1,4 @@
-# include "Config.hpp"
+# include <webserv.hpp>
 
 // Default constructor
 Config::Config(void)
@@ -15,7 +15,13 @@ Config::Config(void)
 	_root_dir = "./html";
 	_max_body_size = 1000000;
 	_error_pages = init_map_error_pages();
-	// _locations = "";
+	std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "BEFORE INIT MAP LOC" << std::endl;
+	// std::vector<std::string> v;
+	// v.push_back("GET");
+	_loc = NULL;
+	// _loc = new Location("/", "./html/", 1, v, v, v);
+	// _locations = init_map_locations();
+	std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "AFTER INIT MAP LOC" << std::endl;
 
 	return ;
 }
@@ -48,7 +54,7 @@ Config &	Config::operator=(const Config& rhs)
 		_root_dir = rhs.getRootDir();
 		_max_body_size = rhs.getMaxBodySize();
 		_error_pages = rhs.getErrorPages();
-		// _locations = rhs.getLocations();
+		_locations = rhs.getLocations();
 	}
 	return (*this);
 }
@@ -131,14 +137,14 @@ void Config::setErrorPages(const std::map<int, std::string> error_pages)
 	return ;
 }
 
-// std::map<std::string, Location &> Config::getLocations(void) const
-// {
-// 	return (_locations);
-// }
-//
-// void Config::setLocations(const std::map<std::string, Location &> locations)
-// {
-// 	_locations = locations;
-// 	return ;
-// }
-//
+std::map<std::string, Location *> Config::getLocations(void) const
+{
+	return (_locations);
+}
+
+void Config::setLocations(const std::map<std::string, Location *> locations)
+{
+	_locations = locations;
+	return ;
+}
+

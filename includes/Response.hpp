@@ -6,14 +6,14 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 11:24:40 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/28 19:35:39 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
-# include "webserv.hpp"
+# include <webserv.hpp>
 
 // discord server_name : "Ca lie avec le header HTTP Host Si tu match avec au moins un serveur name tu choisis un block serveur different"
 # define SERVER_NAME "webserv"

@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/26 15:25:11 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/07/28 19:35:50 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,15 @@ typedef int SOCKET;
 # define SUCCESS	0
 # define FAILURE	-1
 
-# include "utils.hpp"
-# include "Config.hpp"
-# include "RequestParser.class.hpp"
-# include "Cgi.hpp"
-# include "Response.hpp"
-# include "Client.hpp"
-# include "Server.hpp"
-# include "Exceptions.hpp"
+# include <Config.hpp>
+# include <Location.hpp>
+# include <utils.hpp>
+# include <RequestParser.class.hpp>
+# include <Cgi.hpp>
+# include <Response.hpp>
+# include <Client.hpp>
+# include <Server.hpp>
+# include <Exceptions.hpp>
 
 typedef std::map<std::string, std::string>::iterator	headers_iterator;
 typedef std::vector<std::string>::iterator				v_string_iterator;

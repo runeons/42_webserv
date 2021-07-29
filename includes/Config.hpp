@@ -1,12 +1,12 @@
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
 
-# include "webserv.hpp"
+# include <webserv.hpp>
 
 // # define ROOT_DIR	"./html"
 // # define PORT		8000
 
-// class Location;
+class Location;
 
 class Config
 {
@@ -18,8 +18,8 @@ class Config
 		std::string							_root_dir;
 		int									_max_body_size;
 		std::map<int, std::string>			_error_pages;
-		std::map<std::string, Location &>	_locations;
-
+		Location *							_loc;
+		std::map<std::string, Location *>		_locations;
 	public:
 		Config();
 		Config(const Config & src);
@@ -39,11 +39,12 @@ class Config
 		void								setMaxBodySize(const int max_body_size);
 		std::map<int, std::string>			getErrorPages(void) const;
 		void								setErrorPages(const std::map<int, std::string> error_pages);
-		// std::map<std::string, Location &>	getLocations(void) const;
-		// void								setLocations(const std::map<std::string, Location &> locations);
+		std::map<std::string, Location *>	getLocations(void) const;
+		void								setLocations(const std::map<std::string, Location *> locations);
 		Config								&operator=(const Config & src);
 
 		std::map<int, std::string>			init_map_error_pages();
+		std::map<std::string, Location *>	init_map_locations();
 
 };
 
