@@ -3,7 +3,7 @@
 
 # include <webserv.hpp>
 
-class Location : public Config
+class Location
 {
 	private:
 		std::string													_uri;
