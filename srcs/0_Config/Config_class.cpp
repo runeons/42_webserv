@@ -1,23 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Config_class.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:12:44 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:42 by tsantoni         ###   ########.fr       */
+/*   Created: 2021/07/31 11:12:16 by tsantoni          #+#    #+#             */
+/*   Updated: 2021/07/31 11:12:41 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
-
-int main(void)
-{
-	Server server;
-
-	if (server.launch())
-		return (-1);
-
-	return 0;
-}

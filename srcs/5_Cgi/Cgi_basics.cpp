@@ -1,4 +1,16 @@
-# include "Cgi.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Cgi_basics.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/31 11:12:04 by tsantoni          #+#    #+#             */
+/*   Updated: 2021/07/31 11:12:51 by tsantoni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+# include <webserv.hpp>
 
 // Parameter constructor
 Cgi::Cgi(RequestParser & request) : _request(request)

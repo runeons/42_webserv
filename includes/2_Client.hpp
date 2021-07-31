@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 19:35:09 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 10:50:12 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Client
 	private:
 
 		Config & 					_config;
-		// Location *					_applied_location;
+		Location *					_applied_location;
 
 		SOCKET						_socket;
 		int							_status_code;
@@ -54,6 +54,8 @@ class Client
 		void			setSocket(const SOCKET client_socket);
 		std::string		getRequest(void) const;
 		void			setRequest(const std::string request);
+		Location *		getAppliedLocation(void) const;
+		void			setAppliedLocation(Location * applied_location);
 
 		Client		&operator=(const Client & src);
 
@@ -63,6 +65,7 @@ class Client
 		void			receive_request();
 		void			check_request();
 		void			parse_parameters();
+		void			apply_location();
 		void			construct_full_path();
 		void			read_resource();
 		void			generate_response();

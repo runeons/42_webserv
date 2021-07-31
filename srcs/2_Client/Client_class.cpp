@@ -6,11 +6,11 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 11:22:37 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 11:11:05 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Client.hpp"
+# include <webserv.hpp>
 
 // ********************************************* ::recv => request en std::string *********************************************
 
@@ -89,10 +89,37 @@ void	Client::parse_parameters(void)
 	}
 }
 
+void		Client::apply_location(void)
+{
+	// si path contient location, lier _applied location à la location
+	std::string							rsc = _request_parser->get__resource();
+	std::map<std::string, Location *>	m = _config.getLocations();
+	Location 							*l = NULL;;
+
+	// TO PRECISE iterate through maps && search from end to beginning
+	std::size_t found = rsc.find("/documents");
+	if (rsc == "/")
+		l = m["/"];
+	else if (found == 0)
+		l = m["/documents"];
+	_applied_location = l;
+	if (_applied_location)
+	{
+		std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+	}
+}
+
 void		Client::construct_full_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
+	std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << rsc << std::endl;
+	/*
+		si path contient alias, remplacer par location uri
+	*/
+	apply_location();
 	/*
 		TO DO : remplacer les caractères spéciaux
 			- ex : %20 " "

@@ -6,11 +6,11 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 11:21:35 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 11:11:02 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Client.hpp"
+# include <webserv.hpp>
 
 // Parametric constructor
 Client::Client(Config & config) : _config(config)
@@ -26,6 +26,7 @@ Client::Client(Config & config) : _config(config)
 	_request_parser = NULL;
 	_page_content = "";
 	_query_string = "";
+	_applied_location = NULL;
 	// _parameters_map = ();
 	return ;
 }
@@ -70,5 +71,16 @@ std::string Client::getRequest(void) const
 void Client::setRequest(const std::string request)
 {
 	_request = request;
+	return ;
+}
+
+Location * Client::getAppliedLocation(void) const
+{
+	return (_applied_location);
+}
+
+void Client::setAppliedLocation(Location * applied_location)
+{
+	_applied_location = applied_location;
 	return ;
 }

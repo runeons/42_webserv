@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/31 10:11:48 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/07/31 11:10:13 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,14 +57,14 @@ HEADER_DIR				=	\
 							./includes/
 
 HEADER					=	\
-							Client.hpp \
-							Cgi.hpp \
-							Response.hpp \
-							Config.hpp \
-							Location.hpp \
+							2_Client.hpp \
+							5_Cgi.hpp \
+							4_Response.hpp \
+							0_Config.hpp \
+							0_Location.hpp \
 							Exceptions.hpp \
-							RequestParser.class.hpp \
-							Server.hpp \
+							3_RequestParser.class.hpp \
+							1_Server.hpp \
 							color.hpp \
 							utils.hpp \
 							webserv.hpp \
@@ -74,39 +74,39 @@ HEADER					=	\
 SRCS_DIR				=	./srcs/
 
 SRCS_REQUESTPARSER		=	\
-							RequestParser/RequestParser.cd.class.cpp \
-							RequestParser/RequestParser.class.cpp \
-							RequestParser/RequestParser.gs.class.cpp \
-							RequestParser/RequestParser.lexer.class.cpp \
-							RequestParser/RequestParser.ovop.class.cpp \
-							RequestParser/RequestParser.parser.class.cpp \
-							RequestParser/RequestParser.maps.class.cpp \
+							3_RequestParser/RequestParser.cd.class.cpp \
+							3_RequestParser/RequestParser.class.cpp \
+							3_RequestParser/RequestParser.gs.class.cpp \
+							3_RequestParser/RequestParser.lexer.class.cpp \
+							3_RequestParser/RequestParser.ovop.class.cpp \
+							3_RequestParser/RequestParser.parser.class.cpp \
+							3_RequestParser/RequestParser.maps.class.cpp \
 
 SRCS_SERVER				=	\
-							Server/Server_basics.cpp \
-							Server/Server_class.cpp \
+							1_Server/Server_basics.cpp \
+							1_Server/Server_class.cpp \
 
 SRCS_CGI				=	\
-							Cgi/Cgi_basics.cpp \
-							Cgi/Cgi_class.cpp \
-							Cgi/Cgi_init_map.cpp \
+							5_Cgi/Cgi_basics.cpp \
+							5_Cgi/Cgi_class.cpp \
+							5_Cgi/Cgi_init_map.cpp \
 
 SRCS_CONFIG				=	\
-							Config/Location/Location_basics.cpp \
-							Config/Location/Location_class.cpp \
-							Config/Config_basics.cpp \
-							Config/Config_class.cpp \
-							Config/Config_init_maps.cpp \
+							0_Config/Location/Location_basics.cpp \
+							0_Config/Location/Location_class.cpp \
+							0_Config/Config_basics.cpp \
+							0_Config/Config_class.cpp \
+							0_Config/Config_init_maps.cpp \
 
 SRCS_CLIENT				=	\
-							Client/Client_basics.cpp \
-							Client/Client_class.cpp \
+							2_Client/Client_basics.cpp \
+							2_Client/Client_class.cpp \
 
 SRCS_RESPONSE			=	\
-							Response/Response_basics.cpp \
-							Response/Response_class.cpp \
-							Response/Response_headers.cpp \
-							Response/Response_init_maps.cpp \
+							4_Response/Response_basics.cpp \
+							4_Response/Response_class.cpp \
+							4_Response/Response_headers.cpp \
+							4_Response/Response_init_maps.cpp \
 
 SRCS_UTILS			=	\
 							utils/utils.cpp \

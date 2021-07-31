@@ -6,11 +6,11 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:43 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 11:28:31 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 11:11:13 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Response.hpp"
+# include <webserv.hpp>
 
 // Parametric constructor
 Response::Response(Config & config, int status_code, std::string page_content, std::string full_path, RequestParser & request) : _config(config), _request(request)

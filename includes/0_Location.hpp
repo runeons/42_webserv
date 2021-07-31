@@ -13,7 +13,6 @@ class Location
 		std::vector<std::string>									_methods;
 		std::vector<std::string>									_upload;
 		std::vector<std::string>									_alias;
-		// bool														_cgi;
 		// std::map<std::string, std::map<std::string, std::string> >	_cgi;
 		Location();
 		Location(const Location & src);
