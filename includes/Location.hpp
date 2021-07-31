@@ -8,10 +8,12 @@ class Location
 	private:
 		std::string													_uri;
 		std::string													_root_loc;
+		std::string													_index;
 		bool														_autoindex;
 		std::vector<std::string>									_methods;
 		std::vector<std::string>									_upload;
 		std::vector<std::string>									_alias;
+		// bool														_cgi;
 		// std::map<std::string, std::map<std::string, std::string> >	_cgi;
 		Location();
 		Location(const Location & src);
@@ -25,6 +27,8 @@ class Location
 		void														setUri(const std::string uri);
 		std::string													getRootLoc(void) const;
 		void														setRootLoc(const std::string root_loc);
+		std::string													getIndex(void) const;
+		void														setIndex(const std::string index);
 		bool														getAutoindex(void) const;
 		void														setAutoindex(const bool autoindex);
 		std::vector<std::string>									getMethods(void) const;

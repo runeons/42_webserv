@@ -19,7 +19,7 @@ class Config
 		int									_max_body_size;
 		std::map<int, std::string>			_error_pages;
 		Location *							_loc;
-		std::map<std::string, Location *>		_locations;
+		std::map<std::string, Location *>	_locations;
 	public:
 		Config();
 		Config(const Config & src);

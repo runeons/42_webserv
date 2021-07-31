@@ -15,13 +15,7 @@ Config::Config(void)
 	_root_dir = "./html";
 	_max_body_size = 1000000;
 	_error_pages = init_map_error_pages();
-	std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "BEFORE INIT MAP LOC" << std::endl;
-	std::vector<std::string> v;
-	v.push_back("GET");
-	_loc = NULL;
-	_loc = new Location("/", "./html/", 1, v, v, v);
 	_locations = init_map_locations();
-	std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "AFTER INIT MAP LOC" << std::endl;
 
 	return ;
 }

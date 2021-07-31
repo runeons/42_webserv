@@ -1,32 +1,18 @@
 # include <webserv.hpp>
 
-// Default constructor
-// Location::Location(void)
-// {
-// 	std::cout << GREY << "Location creation..." << C_RES << std::endl;
-// 	return ;
-// }
-//
 // Parametric constructor
 Location::Location(std::string uri, std::string root_loc, bool autoindex, std::vector<std::string> methods, std::vector<std::string> upload, std::vector<std::string> alias)
 {
 	std::cout << GREY << "Location creation..." << C_RES << std::endl;
 	_uri = uri;
 	_root_loc = root_loc;
+	_index = "index.html";
 	_autoindex = autoindex;
 	_methods = methods;
 	_upload = upload;
 	_alias = alias;
 	return ;
 }
-
-// Copy constructor
-// Location::Location(const Location& src)
-// {
-// 	std::cout << GREY << "Location creation..." << C_RES << std::endl;
-// 	*this = src;
-// 	return;
-// }
 
 // Destructor
 Location::~Location(void)
@@ -43,6 +29,7 @@ Location &	Location::operator=(const Location& rhs)
 	{
 		_uri = rhs.getUri();
 		_root_loc = rhs.getRootLoc();
+		_index = rhs.getIndex();
 		_autoindex = rhs.getAutoindex();
 		_methods = rhs.getMethods();
 		_upload = rhs.getUpload();
@@ -72,6 +59,17 @@ std::string Location::getRootLoc(void) const
 void Location::setRootLoc(const std::string root_loc)
 {
 	_root_loc = root_loc;
+	return ;
+}
+
+std::string Location::getIndex(void) const
+{
+	return (_index);
+}
+
+void Location::setIndex(const std::string index)
+{
+	_index = index;
 	return ;
 }
 
