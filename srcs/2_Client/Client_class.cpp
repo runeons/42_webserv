@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:58:34 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 16:56:07 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,19 +103,28 @@ void		Client::apply_location(void)
 	else if (rsc.front() == '/')
 		l = m["/"];
 	_applied_location = l;
-	// if (_applied_location)
-	// {
-	// 	std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
-	// }
+	if (_applied_location)
+	{
+		std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+		// std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+	}
+}
+
+std::string	Client::generate_autoindex(std::string rsc)
+{
+	std::string cmd = "scripts/bin/tree " + rsc.substr(0, rsc.size() - 1) + " -H '.' -L 1 --noreport --charset utf-8";
+	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
+	return res;
 }
 
 void		Client::construct_full_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
+
+	_page_content = ""; // pourquoi ??
 	/*
 		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
 	*/
@@ -131,12 +140,18 @@ void		Client::construct_full_path(void)
 		_query_string = rsc.substr(rsc.find("?") + 1);
 		rsc.erase(rsc.find("?"));
 	}
-	rsc = "./html" + rsc;
-	// if directory
+	rsc = "html" + rsc;
+	// if directory : set up full_path as index, unless don't exists and autoindex is on : generate_autoindex
 	if (rsc.back() == '/')
 	{
-		// appliquer un index, si on le trouve pas ET QUE autoindex on, generer autoindex
-		rsc += "index.html";
+		struct stat buffer;
+		std::string index_path = rsc + _applied_location->getIndex();
+		if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
+		 ; // ne change rien au full_path
+		else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->getAutoindex() == 1) // if index.html not found + auto
+			_page_content = generate_autoindex(rsc);// rsc += _applied_location->getIndex();
+		else // if (ret == 0) ou -1 et autoindex off
+			rsc += _applied_location->getIndex();
 	}
 	_full_path = rsc;
 	if (!_query_string.empty())
@@ -151,8 +166,10 @@ void Client::read_resource(void)
 	std::ifstream ifs(_full_path);
 	char c;
 
-	_page_content = "";
-	if (!ifs)
+	std::cerr << C_G_RED << "[ DEBUG PAGECONTENT ] " << C_RES << _page_content << std::endl;
+	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex
+		;
+	else if (!ifs)
 		_status_code = 404;
 	else
 	{

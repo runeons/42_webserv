@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:20 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 14:59:24 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,26 +73,26 @@ std::string		Response::r_header_content_length()
 }
 
 // ********************************************* Content-Type *********************************************
-
-std::string		Response::exec_cmd(std::string cmd)
-{
-	std::ostringstream oss;
-
-	if (!oss) // EXCEPTION A CREER
-		std::cerr << RED << "Error : can't open osstream" <<  C_RES << std::endl;
-	int status = std::system(cmd.c_str());
-	if (WEXITSTATUS(status) != 0)
-		std::cerr << RED << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
-	oss << std::ifstream(PATH_CMD_RES).rdbuf();
-	return oss.str();
-}
+//
+// std::string		Response::exec_cmd(std::string cmd)
+// {
+// 	std::ostringstream oss;
+//
+// 	if (!oss) // EXCEPTION A CREER
+// 		std::cerr << RED << "Error : can't open osstream" <<  C_RES << std::endl;
+// 	int status = std::system(cmd.c_str());
+// 	if (WEXITSTATUS(status) != 0)
+// 		std::cerr << RED << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
+// 	oss << std::ifstream(PATH_CMD_RES).rdbuf();
+// 	return oss.str();
+// }
 
 void		Response::retrieve_type_mime_charset(std::string str)
 {
 	unsigned first = str.find(":") + 2;
 	unsigned last = str.find(";");
 
-	if (last > str.length()) // si "cannot open file"
+	if (last > str.length() || _full_path.back() == '/') // si "cannot open file" || directory
 	{
 		_type_mime = "text/html";
 		_charset = "utf-8";
@@ -108,8 +108,8 @@ std::string		Response::r_header_content_type()
 {
 	std::string cmd;
 
-	cmd = "file --mime " + _full_path + " > " + PATH_CMD_RES;
-	retrieve_type_mime_charset(exec_cmd(cmd.c_str()));
+	cmd = "file --mime " + _full_path;
+	retrieve_type_mime_charset(exec_cmd(cmd.c_str(), PATH_CMD_RES));
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;
 	return (formatted_header_response(R_CONTENT_TYPE));
 }

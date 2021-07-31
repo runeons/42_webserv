@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Response.hpp                                       :+:      :+:    :+:   */
+/*   4_Response.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 19:35:39 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 14:58:05 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ class Response
 		std::string		get_mime_type(std::string extension);
 		void			generate_response_header();
 		void			retrieve_type_mime_charset(std::string res);
-		std::string		exec_cmd(std::string cmd);
+		// std::string		exec_cmd(std::string cmd);
 
 		// Response_class
 		void	generate_error_content();

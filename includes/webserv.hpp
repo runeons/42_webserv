@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:10:31 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 13:57:04 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <map>
 # include "color.hpp"
 # include <vector>
+# include <sys/stat.h>
+# include <dirent.h>
 // #include <pstream.h>
 //
 typedef int SOCKET;

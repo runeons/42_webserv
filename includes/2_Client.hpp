@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   2_Client.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 10:50:12 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 14:57:19 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CLIENT_HPP
 
 # include <webserv.hpp>
+# define PATH_AUTOINDEX "autoindex_res"
 
 class RequestParser;
 class Response;
@@ -67,6 +68,7 @@ class Client
 		void			parse_parameters();
 		void			apply_location();
 		void			construct_full_path();
+		std::string		generate_autoindex(std::string rsc);
 		void			read_resource();
 		void			generate_response();
 		void			send_response();
