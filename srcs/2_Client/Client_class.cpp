@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:45:09 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 11:58:34 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,15 +98,16 @@ void		Client::apply_location(void)
 
 	// TO PRECISE iterate through maps && search from end to beginning
 	std::size_t found = rsc.find("/documents");
-	if (rsc == "/")
-		l = m["/"];
-	else if (found == 0)
+	if (found == 0)
 		l = m["/documents"];
+	else if (rsc.front() == '/')
+		l = m["/"];
 	_applied_location = l;
 	// if (_applied_location)
 	// {
 	// 	std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
 	// 	std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+	// 	std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
 	// 	std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
 	// }
 }

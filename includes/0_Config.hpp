@@ -18,7 +18,6 @@ class Config
 		std::string							_root_dir;
 		int									_max_body_size;
 		std::map<int, std::string>			_error_pages;
-		// Location *							_loc;
 		std::map<std::string, Location *>	_locations;
 	public:
 		Config();

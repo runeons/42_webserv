@@ -6,19 +6,19 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:12:24 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:14:45 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 11:56:30 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
 // Parametric constructor
-Location::Location(std::string uri, std::string root_loc, bool autoindex, std::vector<std::string> methods, std::vector<std::string> upload, std::vector<std::string> alias)
+Location::Location(std::string uri, std::string root_loc, std::string index, bool autoindex, std::vector<std::string> methods, std::string upload, std::vector<std::string> alias)
 {
 	std::cout << GREY << "Location creation..." << C_RES << std::endl;
 	_uri = uri;
 	_root_loc = root_loc;
-	_index = "index.html";
+	_index = index;
 	_autoindex = autoindex;
 	_methods = methods;
 	_upload = upload;
@@ -107,12 +107,12 @@ void Location::setMethods(const std::vector<std::string> methods)
 	return ;
 }
 
-std::vector<std::string> Location::getUpload(void) const
+std::string Location::getUpload(void) const
 {
 	return (_upload);
 }
 
-void Location::setUpload(const std::vector<std::string> upload)
+void Location::setUpload(const std::string upload)
 {
 	_upload = upload;
 	return ;

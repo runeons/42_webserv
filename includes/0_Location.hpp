@@ -6,20 +6,20 @@
 class Location
 {
 	private:
-		std::string													_uri;
-		std::string													_root_loc;
-		std::string													_index;
-		bool														_autoindex;
-		std::vector<std::string>									_methods;
-		std::vector<std::string>									_upload;
-		std::vector<std::string>									_alias;
+		std::string								_uri;
+		std::string								_root_loc;
+		std::string								_index;
+		bool									_autoindex;
+		std::vector<std::string>				_methods;
+		std::string								_upload;
+		std::vector<std::string>				_alias;
 		// std::map<std::string, std::map<std::string, std::string> >	_cgi;
 		Location();
 		Location(const Location & src);
 
 	public:
-		Location(std::string uri, std::string root_loc, bool autoindex,
-			std::vector<std::string> methods, std::vector<std::string> upload, std::vector<std::string> alias); // tmp constructor
+		Location(std::string uri, std::string root_loc, std::string index, bool autoindex,
+			std::vector<std::string> methods, std::string upload, std::vector<std::string> alias); // tmp constructor
 		virtual ~Location();
 
 		std::string													getUri(void) const;
@@ -32,8 +32,8 @@ class Location
 		void														setAutoindex(const bool autoindex);
 		std::vector<std::string>									getMethods(void) const;
 		void														setMethods(const std::vector<std::string> methods);
-		std::vector<std::string>									getUpload(void) const;
-		void														setUpload(const std::vector<std::string> upload);
+		std::string													getUpload(void) const;
+		void														setUpload(const std::string upload);
 		std::vector<std::string>									getAlias(void) const;
 		void														setAlias(const std::vector<std::string> alias);
 		// std::map<std::string, std::map<std::string, std::string> >	getCgi(void) const;
