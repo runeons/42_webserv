@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:05 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 11:45:09 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,21 +103,20 @@ void		Client::apply_location(void)
 	else if (found == 0)
 		l = m["/documents"];
 	_applied_location = l;
-	if (_applied_location)
-	{
-		std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
-	}
+	// if (_applied_location)
+	// {
+	// 	std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+	// 	std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+	// 	std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+	// }
 }
 
 void		Client::construct_full_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
-	std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << rsc << std::endl;
 	/*
-		si path contient alias, remplacer par location uri
+		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
 	*/
 	apply_location();
 	/*
@@ -125,14 +124,19 @@ void		Client::construct_full_path(void)
 			- ex : %20 " "
 			- ex : %C3%A7 "ç"
 	*/
+	// Theo remaster - // remplir query_string
 	if (rsc.find("?") < rsc.length())
 	{
 		_query_string = rsc.substr(rsc.find("?") + 1);
 		rsc.erase(rsc.find("?"));
 	}
 	rsc = "./html" + rsc;
+	// if directory
 	if (rsc.back() == '/')
+	{
+		// appliquer un index, si on le trouve pas ET QUE autoindex on, generer autoindex
 		rsc += "index.html";
+	}
 	_full_path = rsc;
 	if (!_query_string.empty())
 		parse_parameters();
