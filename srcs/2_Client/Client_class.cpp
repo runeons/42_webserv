@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 16:56:07 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 10:54:45 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,10 @@ void		Client::apply_location(void)
 	_applied_location = l;
 	if (_applied_location)
 	{
-		std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+		// std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
 		// std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+		// std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
+		// std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
 	}
 }
 
@@ -166,7 +166,7 @@ void Client::read_resource(void)
 	std::ifstream ifs(_full_path);
 	char c;
 
-	std::cerr << C_G_RED << "[ DEBUG PAGECONTENT ] " << C_RES << _page_content << std::endl;
+	// std::cerr << C_G_RED << "[ DEBUG PAGECONTENT ] " << C_RES << _page_content << std::endl;
 	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex
 		;
 	else if (!ifs)
