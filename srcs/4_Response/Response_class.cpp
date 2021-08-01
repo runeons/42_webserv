@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:54:38 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 14:45:00 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ void	Response::fill_content_if_error(void)
 void	Response::GET_create_body(void)
 {
 	_response_body = _page_content;
+}
+
+void	Response::GET_handle(void)
+{
+	GET_create_body();
 
 	// if CGI (dans quels cas ?? A reflechir)
 	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
@@ -55,7 +60,18 @@ void	Response::GET_create_body(void)
 void	Response::POST_create_body(void)
 {
 	_response_body = _page_content;
+}
 
+void	Response::POST_handle(void)
+{
+	POST_create_body();
+
+	// check POST types
+	std::string request_content_type = _request.get__header_value("Content-Type");
+	if (request_content_type == "application/x-www-form-urlencoded")
+		; // POST formulaire
+	else if (request_content_type.find("multipart/form-data;", 0) == 0)
+		; // POST upload
 	// if CGI (dans quels cas ?? A reflechir)
 	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
 	// Cgi *cgi = new Cgi(_request);
@@ -92,8 +108,10 @@ void	Response::generate(void)
 {
 	check_if_method_allowed();
 	fill_content_if_error();
-	GET_create_body(); // from page_content
-	POST_create_body(); // from page_content
+	if (_request.get__method() == "GET")
+		GET_handle(); // from page_content
+	else if (_request.get__method() == "POST")
+		POST_handle(); // from page_content
 	generate_response_header(); // from status_code, page_content and translated_path
 	concatenate_response();
 }

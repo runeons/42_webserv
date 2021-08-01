@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RequestParser.class.hpp                            :+:      :+:    :+:   */
+/*   3_RequestParser.class.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/27 13:48:37 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/01 14:35:00 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,17 +170,19 @@ class RequestParser
 		// OVERLOADED OPERATORS : OVOP
 		RequestParser	&operator=(const RequestParser &rhs);
 		// GETTERS / SETTERS : GS
-		std::string		get__method(void) const;
-		std::string		get__resource(void) const;
-		std::string		get__http_version(void) const;
-		std::string		get__body(void) const;
-		int				get__status(void) const;
+		std::string							get__method(void) const;
+		std::string							get__resource(void) const;
+		std::string							get__http_version(void) const;
+		std::string							get__body(void) const;
+		int									get__status(void) const;
+		std::map<std::string, std::string>	get__header_fields(void) const;
 		// PUBLIC MEMBERS ATRIBUTE : PUMA
 		std::vector<std::string>	_methods_implemented;
 		std::vector<std::string>	_methods_unimplemented;
 
 		// PUBLIC MEMBERS FUNCTION : PUMF
 		void			print_request_info(void);
+		std::string		get__header_value(std::string header_name);
 };
 
 std::ostream	&operator<<(std::ostream &o, const RequestParser &i);

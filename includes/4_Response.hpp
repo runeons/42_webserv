@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:43:03 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 14:43:52 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,9 @@ class Response
 		void	check_if_method_allowed();
 		void	fill_content_if_error();
 		void	GET_create_body();
+		void	GET_handle();
 		void	POST_create_body();
+		void	POST_handle();
 		void	concatenate_response();
 		void	generate();
 };
