@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:41:09 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:57:42 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,19 @@ void		Client::apply_location(void)
 	_applied_location = l;
 	if (_applied_location && 0)
 	{
-		std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
-		std::cerr << C_G_RED << "[ DEBUG Upload    ] " << C_RES << _applied_location->getUpload() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Upload    ] " << C_RES << _applied_location->getUpload() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Redir301  ] " << C_RES << _applied_location->getRedir301() << std::endl;
+		std::vector<std::string> v = _applied_location->getMethods();
+		std::vector<std::string>::iterator it;
+		for (it = v.begin(); it != v.end(); it++)
+			std::cerr << C_G_BLUE << "[ DEBUG methods   ] " << C_RES << *it << std::endl;
+		v = _applied_location->getAlias();
+		for (it = v.begin(); it != v.end(); it++)
+			std::cerr << C_G_BLUE << "[ DEBUG alias     ] " << C_RES << *it << std::endl;
 	}
 }
 

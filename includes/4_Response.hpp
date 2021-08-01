@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:40:40 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:43:03 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ class Response
 		// std::string		exec_cmd(std::string cmd);
 
 		// Response_class
+		void	check_if_method_allowed();
 		void	fill_content_if_error();
 		void	GET_create_body();
 		void	POST_create_body();

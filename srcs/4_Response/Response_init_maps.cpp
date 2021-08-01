@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:51 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:38:47 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:56:50 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,9 @@ std::string Response::generate_error_page_content(int code)
 			<div class=\"container\">\
 				<div class=\"row\">\
 					<div class=\"col-md-10 col-md-offset-2\">\
-						<h1 class=\"error\">Oops! (generated)</h1>\
+						<h1 class=\"error\">Oops!</h1>\
 						<h2>Error " + itos(code) + " - " + _error_msg[code] + "</h2>\
+						<p class=\"lead\">[this is an automatically generated error page]</p>\
 						<p class=\"lead\">Sorry.</p>\
 						<a href=\"/\" class=\"btn btn-primary btn-md\"><span class=\"glyphicon glyphicon-home\"></span> Home </a>\
 					</div>\

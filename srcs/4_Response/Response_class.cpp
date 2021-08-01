@@ -6,11 +6,27 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:40:27 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:54:38 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
+
+// ********************************************* check if method allowed *********************************************
+
+void	Response::check_if_method_allowed(void)
+{
+	std::vector<std::string> v_methods = _applied_location.getMethods();
+
+	std::vector<std::string>::iterator it;
+
+	for (it = v_methods.begin(); it != v_methods.end(); it++)
+	{
+		if (*it == _request.get__method())
+			return ;
+	}
+	_status_code = 405;
+}
 
 // ********************************************* set page content if error *********************************************
 
@@ -74,6 +90,7 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
+	check_if_method_allowed();
 	fill_content_if_error();
 	GET_create_body(); // from page_content
 	POST_create_body(); // from page_content
