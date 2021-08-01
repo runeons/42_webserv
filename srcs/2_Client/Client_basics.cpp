@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:02 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:24:35 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Client::Client(Config & config) : _config(config)
 	_status_code = 0;
 	_bytes_read = 0;
 	_request = "";
-	_full_path = "";
+	_translated_path = "";
 	_response = NULL;
 	_request_parser = NULL;
 	_page_content = "";

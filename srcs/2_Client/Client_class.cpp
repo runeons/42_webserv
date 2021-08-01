@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 10:54:45 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:24:19 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,26 +114,53 @@ void		Client::apply_location(void)
 
 std::string	Client::generate_autoindex(std::string rsc)
 {
-	std::string cmd = "scripts/bin/tree " + rsc.substr(0, rsc.size() - 1) + " -H '.' -L 1 --noreport --charset utf-8";
+	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
 	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
 	return res;
 }
 
-void		Client::construct_full_path(void)
+std::string		Client::decode_url(std::string s)
+{
+	std::string	ret;
+	char		ch;
+	int			ii;
+	int			len = s.length();
+
+	for (int i = 0; i < len; i++)
+	{
+		if (s[i] != '%')
+		{
+			if (s[i] == '+')
+				ret += ' ';
+			else
+				ret += s[i];
+		}
+		else
+		{
+			sscanf(s.substr(i + 1, 2).c_str(), "%x", &ii);
+			// std::cerr << C_G_RED << "[ DEBUG ii ] " << C_RES << ii << std::endl;
+			ch = static_cast<char>(ii);
+			// std::cerr << C_G_RED << "[ DEBUG ch ] " << C_RES << ch << std::endl;
+			ret += ch;
+			// std::cerr << C_G_RED << "[ DEBUG ret ] " << C_RES << ret << std::endl;
+			i = i + 2;
+		}
+	}
+	return ret;
+}
+
+void		Client::translate_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
 
-	_page_content = ""; // pourquoi ??
+	std::cerr << C_G_RED << "[ DEBUG RSC  ] " << C_RES << rsc << std::endl;
+	_page_content = ""; // vraiment utile ??
 	/*
 		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
 	*/
 	apply_location();
-	/*
-		TO DO : remplacer les caractères spéciaux
-			- ex : %20 " "
-			- ex : %C3%A7 "ç"
-	*/
+	rsc = decode_url(rsc);
 	// Theo remaster - // remplir query_string
 	if (rsc.find("?") < rsc.length())
 	{
@@ -141,19 +168,20 @@ void		Client::construct_full_path(void)
 		rsc.erase(rsc.find("?"));
 	}
 	rsc = "html" + rsc;
-	// if directory : set up full_path as index, unless don't exists and autoindex is on : generate_autoindex
+	// if directory : set up translated_path as index, unless don't exists and autoindex is on : generate_autoindex
 	if (rsc.back() == '/')
 	{
 		struct stat buffer;
 		std::string index_path = rsc + _applied_location->getIndex();
 		if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
-		 ; // ne change rien au full_path
+		 ; // ne change rien au translated_path
 		else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->getAutoindex() == 1) // if index.html not found + auto
 			_page_content = generate_autoindex(rsc);// rsc += _applied_location->getIndex();
 		else // if (ret == 0) ou -1 et autoindex off
 			rsc += _applied_location->getIndex();
 	}
-	_full_path = rsc;
+	_translated_path = rsc;
+	std::cerr << C_G_RED << "[ DEBUG PATH ] " << C_RES << _translated_path << std::endl;
 	if (!_query_string.empty())
 		parse_parameters();
 	return;
@@ -163,7 +191,7 @@ void		Client::construct_full_path(void)
 
 void Client::read_resource(void)
 {
-	std::ifstream ifs(_full_path);
+	std::ifstream ifs(_translated_path);
 	char c;
 
 	// std::cerr << C_G_RED << "[ DEBUG PAGECONTENT ] " << C_RES << _page_content << std::endl;
@@ -186,7 +214,7 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	_response = new Response(_config, _status_code, _page_content, _full_path, *_request_parser);
+	_response = new Response(_config, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
 		delete _request_parser;
@@ -220,7 +248,7 @@ void Client::treat_client(void)
 {
 	receive_request();
 	check_request();
-	construct_full_path();
+	translate_path();
 	read_resource();
 	generate_response();
 	send_response();

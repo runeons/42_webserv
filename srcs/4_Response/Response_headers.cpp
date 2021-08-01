@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 14:59:24 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:25:09 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void		Response::retrieve_type_mime_charset(std::string str)
 	unsigned first = str.find(":") + 2;
 	unsigned last = str.find(";");
 
-	if (last > str.length() || _full_path.back() == '/') // si "cannot open file" || directory
+	if (last > str.length() || _translated_path.back() == '/') // si "cannot open file" || directory
 	{
 		_type_mime = "text/html";
 		_charset = "utf-8";
@@ -108,7 +108,7 @@ std::string		Response::r_header_content_type()
 {
 	std::string cmd;
 
-	cmd = "file --mime " + _full_path;
+	cmd = "file --mime " + _translated_path;
 	retrieve_type_mime_charset(exec_cmd(cmd.c_str(), PATH_CMD_RES));
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;
 	return (formatted_header_response(R_CONTENT_TYPE));

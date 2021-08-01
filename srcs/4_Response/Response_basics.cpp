@@ -6,20 +6,20 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:43 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:13 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:24:52 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
 // Parametric constructor
-Response::Response(Config & config, int status_code, std::string page_content, std::string full_path, RequestParser & request) : _config(config), _request(request)
+Response::Response(Config & config, int status_code, std::string page_content, std::string translated_path, RequestParser & request) : _config(config), _request(request)
 {
 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
 	// from parameters
 	_status_code = status_code;
 	_page_content = page_content;
-	_full_path = full_path;
+	_translated_path = translated_path;
 
 	// init
 	_type_mime = "";
@@ -48,7 +48,7 @@ Response &	Response::operator=(const Response& rhs)
 	{
 		this->_status_code = rhs.getStatusCode();
 		this->_page_content = rhs.getPageContent();
-		this->_full_path = rhs.getFullPath();
+		this->_translated_path = rhs.getFullPath();
 		this->_response = rhs.getResponse();
 		this->_response_body = rhs.getResponseBody();
 		this->_response_header = rhs.getResponseHeader();
@@ -73,12 +73,12 @@ void Response::setStatusCode(const int status_code)
 
 std::string Response::getFullPath(void) const
 {
-	return (this->_full_path);
+	return (this->_translated_path);
 }
 
-void Response::setFullPath(const std::string full_path)
+void Response::setFullPath(const std::string translated_path)
 {
-	this->_full_path = full_path;
+	this->_translated_path = translated_path;
 	return ;
 }
 

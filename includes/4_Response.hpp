@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 14:58:05 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:25:41 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Response
 
 		int							_status_code;
 		std::string					_page_content;
-		std::string					_full_path;
+		std::string					_translated_path;
 		std::string					_type_mime;
 		std::string					_charset;
 
@@ -54,13 +54,13 @@ class Response
 
 	public:
 		// Response_basics
-		Response(Config & config, int status_code, std::string page_content, std::string full_path, RequestParser & request);
+		Response(Config & config, int status_code, std::string page_content, std::string translated_path, RequestParser & request);
 		virtual ~Response();
 
 		int							getStatusCode(void) const;
 		void						setStatusCode(const int status_code);
 		std::string					getFullPath(void) const;
-		void						setFullPath(const std::string full_path);
+		void						setFullPath(const std::string translated_path);
 		std::string					getResponse(void) const;
 		void						setResponse(const std::string response);
 		std::string					getResponseHeader(void) const;

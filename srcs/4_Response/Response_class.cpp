@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:59:23 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:25:01 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	Response::generate(void)
 {
 	generate_error_content();
 	GET_create_body(); // from page_content
-	generate_response_header(); // from status_code, page_content and full_path
+	generate_response_header(); // from status_code, page_content and translated_path
 	concatenate_response();
 }
 

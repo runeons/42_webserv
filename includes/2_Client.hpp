@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 14:57:19 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:24:07 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class Client
 		RequestParser				*_request_parser;
 		ssize_t						_bytes_read;
 
-		std::string					_full_path;
+		std::string					_translated_path;
 
 		std::string					_query_string;
 		std::map<std::string, std::string>	_parameters;
@@ -67,7 +67,8 @@ class Client
 		void			check_request();
 		void			parse_parameters();
 		void			apply_location();
-		void			construct_full_path();
+		std::string		decode_url(std::string);
+		void			translate_path();
 		std::string		generate_autoindex(std::string rsc);
 		void			read_resource();
 		void			generate_response();
