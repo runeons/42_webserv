@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:12:20 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 10:53:18 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:38:38 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ std::map<int, std::string>		Config::init_map_error_pages()
 {
 	std::map<int, std::string> m;
 
-	m[404] = _root_dir + "error_pages/404_default.html";
-	m[500] = _root_dir + "error_pages/500_default.html";
+	m[404] = _root_dir + "/error_pages/404.html";
+	m[500] = _root_dir + "/error_pages/500.html";
 	return m;
 }
 

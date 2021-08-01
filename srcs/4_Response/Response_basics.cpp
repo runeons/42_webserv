@@ -6,14 +6,14 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:43 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 11:24:52 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:05:48 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
 // Parametric constructor
-Response::Response(Config & config, int status_code, std::string page_content, std::string translated_path, RequestParser & request) : _config(config), _request(request)
+Response::Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request) : _config(config), _applied_location(applied_location), _request(request)
 {
 	std::cout << GREY << "Response creation..." << C_RES << std::endl;
 	// from parameters
@@ -46,15 +46,15 @@ Response &	Response::operator=(const Response& rhs)
 	std::cout << GREY << "Response Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
-		this->_status_code = rhs.getStatusCode();
-		this->_page_content = rhs.getPageContent();
-		this->_translated_path = rhs.getFullPath();
-		this->_response = rhs.getResponse();
-		this->_response_body = rhs.getResponseBody();
-		this->_response_header = rhs.getResponseHeader();
-		this->_headers_response = rhs.getHeadersResponse();
-		this->_error_msg = rhs.getErrorMsg();
-		this->_error_content = rhs.getErrorBody();
+		_status_code = rhs.getStatusCode();
+		_page_content = rhs.getPageContent();
+		_translated_path = rhs.getFullPath();
+		_response = rhs.getResponse();
+		_response_body = rhs.getResponseBody();
+		_response_header = rhs.getResponseHeader();
+		_headers_response = rhs.getHeadersResponse();
+		_error_msg = rhs.getErrorMsg();
+		_error_content = rhs.getErrorBody();
 	}
 	return (*this);
 }
@@ -62,99 +62,99 @@ Response &	Response::operator=(const Response& rhs)
 // getters and setters (non static attributes)
 int Response::getStatusCode(void) const
 {
-	return (this->_status_code);
+	return (_status_code);
 }
 
 void Response::setStatusCode(const int status_code)
 {
-	this->_status_code = status_code;
+	_status_code = status_code;
 	return ;
 }
 
 std::string Response::getFullPath(void) const
 {
-	return (this->_translated_path);
+	return (_translated_path);
 }
 
 void Response::setFullPath(const std::string translated_path)
 {
-	this->_translated_path = translated_path;
+	_translated_path = translated_path;
 	return ;
 }
 
 std::string Response::getResponse(void) const
 {
-	return (this->_response);
+	return (_response);
 }
 
 void Response::setResponse(const std::string response)
 {
-	this->_response = response;
+	_response = response;
 	return ;
 }
 
 std::string Response::getResponseHeader(void) const
 {
-	return (this->_response_header);
+	return (_response_header);
 }
 
 void Response::setResponseHeader(const std::string response_header)
 {
-	this->_response_header = response_header;
+	_response_header = response_header;
 	return ;
 }
 
 std::string Response::getResponseBody(void) const
 {
-	return (this->_response_body);
+	return (_response_body);
 }
 
 void Response::setResponseBody(const std::string response_body)
 {
-	this->_response_body = response_body;
+	_response_body = response_body;
 	return ;
 }
 
 std::map<int, std::string> Response::getErrorMsg(void) const
 {
-	return (this->_error_msg);
+	return (_error_msg);
 }
 
 void Response::setErrorMsg(const std::map<int, std::string> error_msg)
 {
-	this->_error_msg = error_msg;
+	_error_msg = error_msg;
 	return ;
 }
 
 std::map<int, std::string> Response::getErrorBody(void) const
 {
-	return (this->_error_content);
+	return (_error_content);
 }
 
 void Response::setErrorBody(const std::map<int, std::string> error_body)
 {
-	this->_error_content = error_body;
+	_error_content = error_body;
 	return ;
 }
 
 std::map<int, std::string> Response::getHeadersResponse(void) const
 {
-	return (this->_headers_response);
+	return (_headers_response);
 }
 
 void Response::setHeadersResponse(const std::map<int, std::string> headers_response)
 {
-	this->_headers_response = headers_response;
+	_headers_response = headers_response;
 	return ;
 }
 
 std::string Response::getPageContent(void) const
 {
-	return (this->_page_content);
+	return (_page_content);
 }
 
 void Response::setPageContent(const std::string page_content)
 {
-	this->_page_content = page_content;
+	_page_content = page_content;
 	return ;
 }

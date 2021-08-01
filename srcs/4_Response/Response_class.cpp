@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 11:25:01 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:40:27 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // ********************************************* set page content if error *********************************************
 
-void	Response::generate_error_content(void)
+void	Response::fill_content_if_error(void)
 {
 	if (_status_code != 200)
 		_page_content = _error_content[_status_code];
@@ -23,6 +23,20 @@ void	Response::generate_error_content(void)
 // ********************************************* create body *********************************************
 
 void	Response::GET_create_body(void)
+{
+	_response_body = _page_content;
+
+	// if CGI (dans quels cas ?? A reflechir)
+	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
+	// Cgi *cgi = new Cgi(_request);
+	// cgi->launch();
+	// delete cgi;
+	// std::cout << C_G_YELLOW << "We are finished with cgi !" << C_RES << std::endl;
+
+}
+// ********************************************* create body *********************************************
+
+void	Response::POST_create_body(void)
 {
 	_response_body = _page_content;
 
@@ -60,8 +74,9 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
-	generate_error_content();
+	fill_content_if_error();
 	GET_create_body(); // from page_content
+	POST_create_body(); // from page_content
 	generate_response_header(); // from status_code, page_content and translated_path
 	concatenate_response();
 }

@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:51 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:24 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 12:38:47 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ std::string Response::generate_error_page_content(int code)
 			<div class=\"container\">\
 				<div class=\"row\">\
 					<div class=\"col-md-10 col-md-offset-2\">\
-						<h1 class=\"error\">Oops!</h1>\
+						<h1 class=\"error\">Oops! (generated)</h1>\
 						<h2>Error " + itos(code) + " - " + _error_msg[code] + "</h2>\
 						<p class=\"lead\">Sorry.</p>\
 						<a href=\"/\" class=\"btn btn-primary btn-md\"><span class=\"glyphicon glyphicon-home\"></span> Home </a>\
@@ -105,13 +105,28 @@ std::map<int, std::string>	Response::init_map_body()
 	std::map<int, std::string> m;
 	std::map<int, std::string>::iterator it;
 
+	std::map<int, std::string> m_config_errors_path = _config.getErrorPages();
+	std::map<int, std::string>::iterator it_config;
+
 	std::string path;
+
 	for (it = _error_msg.begin(); it != _error_msg.end(); it++)
 	{
-		path = DIR_ERROR_PAGES + itos(it->first) + ".html";
+		path = "";
+		// va chercher le path dans la Config s'il y est
+		for (it_config = m_config_errors_path.begin(); it_config != m_config_errors_path.end(); it_config++)
+		{
+			if (it_config->first == it->first)
+				path = m_config_errors_path[it->first];
+		}
+		// sinon : path par défaut NB.html // A SUPPRIMER ?
+		if (path.length() == 0)
+			path = DIR_ERROR_PAGES + itos(it->first) + ".html";
 		if (it->first != 200)
 		{
+			// recup content du path
 			m[it->first] = get_file_content(path.c_str());
+			// si vide : genere
 			if (m[it->first].length() == 0)
 				m[it->first] = generate_error_page_content(it->first);
 		}
