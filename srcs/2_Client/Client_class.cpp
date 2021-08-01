@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 11:24:19 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:51:03 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,13 @@ void		Client::apply_location(void)
 	else if (rsc.front() == '/')
 		l = m["/"];
 	_applied_location = l;
-	if (_applied_location)
+	if (_applied_location && 0)
 	{
-		// std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
-		// std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-		// std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
-		// std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+		std::cerr << C_G_RED << "[ DEBUG Upload    ] " << C_RES << _applied_location->getUpload() << std::endl;
 	}
 }
 
@@ -149,13 +150,22 @@ std::string		Client::decode_url(std::string s)
 	return ret;
 }
 
+std::string		Client::apply_alias(std::string s)
+{
+	// it through all locations in _config
+	// it through all alias vector in _config
+	// if found : apply
+	return s;
+}
+
 void		Client::translate_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
 
-	std::cerr << C_G_RED << "[ DEBUG RSC  ] " << C_RES << rsc << std::endl;
+	// std::cerr << C_G_RED << "[ DEBUG RSC  ] " << C_RES << rsc << std::endl;
 	_page_content = ""; // vraiment utile ??
+	rsc = apply_alias(rsc);
 	/*
 		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
 	*/
@@ -181,7 +191,7 @@ void		Client::translate_path(void)
 			rsc += _applied_location->getIndex();
 	}
 	_translated_path = rsc;
-	std::cerr << C_G_RED << "[ DEBUG PATH ] " << C_RES << _translated_path << std::endl;
+	// std::cerr << C_G_RED << "[ DEBUG PATH ] " << C_RES << _translated_path << std::endl;
 	if (!_query_string.empty())
 		parse_parameters();
 	return;

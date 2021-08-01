@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 11:24:07 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 11:40:51 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ class Client
 		void			receive_request();
 		void			check_request();
 		void			parse_parameters();
+		std::string		apply_alias(std::string);
 		void			apply_location();
 		std::string		decode_url(std::string);
 		void			translate_path();
