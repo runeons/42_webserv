@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 15:17:19 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/02 09:31:12 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@ void Client::receive_request(void)
 	try
 	{
 		_bytes_read = ::recv(_socket, buffer, MAX_RCV - 1, 0);
+		std::string buf_str(buffer);
+		// std::cerr << C_G_RED << "[ DEBUG buf ] " << C_RES << " [" << buf_str << "]" << std::endl;
+		if (buf_str.find("Content-Length", 0) != std::string::npos)
+		{
+			std::string cl = buf_str.substr(buf_str.find("Content-Length", 0), buf_str.find(PAT_CRLF, buf_str.find("Content-Length", 0)) - buf_str.find("Content-Length", 0));
+			// std::cerr << C_G_RED << "[ DEBUG cl  ] " << C_RES << " [" << cl << "]" << std::endl;
+			std::string cl_val = cl.substr(strlen("Content-Length: "));
+			// std::cerr << C_G_RED << "[ DEBUG clv ] " << C_RES << " [" << cl_val << "]" << std::endl;
+			size_t cl_int = atol(cl_val.c_str());
+			std::cerr << C_G_RED << "[ DEBUG cli ] " << C_RES << " [" << cl_int << "]" << std::endl;
+		}
+		std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
 		if (_bytes_read == -1)
 			throw Exceptions::RecvFailure();
 		std::cout << GREEN << "Request of size " << _bytes_read << " received :" <<  C_RES << std::endl;

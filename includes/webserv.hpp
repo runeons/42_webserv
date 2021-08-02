@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 15:05:21 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/01 15:23:56 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 // #include <pstream.h>
 //
 typedef int SOCKET;
-# define MAX_RCV	1000000
+# define MAX_RCV	4096
 # define MAX_DATE	80
 # define SUCCESS	0
 # define FAILURE	-1
