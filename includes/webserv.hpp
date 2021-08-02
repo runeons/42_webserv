@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 15:23:56 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/02 10:13:23 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <vector>
 # include <sys/stat.h>
 # include <dirent.h>
+# include <sys/time.h>
 // #include <pstream.h>
 //
 typedef int SOCKET;

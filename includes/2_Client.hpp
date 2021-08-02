@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 11:40:51 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/02 10:52:17 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Client
 		std::string					_request; // full request
 		RequestParser				*_request_parser;
 		ssize_t						_bytes_read;
+		char						_chunk[MAX_RCV];
 
 		std::string					_translated_path;
 
@@ -63,6 +64,8 @@ class Client
 		void			check_method(void);
 		void			check_http_version(void);
 
+		void			receive_first(void);
+		void			receive_with_content_length(void);
 		void			receive_request();
 		void			check_request();
 		void			parse_parameters();

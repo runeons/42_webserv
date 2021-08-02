@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 14:45:00 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/02 10:05:11 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
-	check_if_method_allowed();
+	// check_if_method_allowed();
 	fill_content_if_error();
 	if (_request.get__method() == "GET")
 		GET_handle(); // from page_content

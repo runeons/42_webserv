@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 11:24:35 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/02 09:44:20 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ Client::Client(Config & config) : _config(config)
 	_page_content = "";
 	_query_string = "";
 	_applied_location = NULL;
+	memset(_chunk, 0, MAX_RCV);	//clear the variable
+
 	// _parameters_map = ();
 	return ;
 }

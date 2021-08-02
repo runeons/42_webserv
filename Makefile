@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/31 11:10:13 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/08/02 09:58:21 by tsantoni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ _FLAGS					=	-Wall -Wextra -Werror -std=c++98 -fsanitize=address -g3
 
 ifeq ($(COMPILE_MODE), 0)
 NAME					=	webserv
-FLAGS					=	-Wall -Wextra -Werror -std=c++98 -Ofast
+FLAGS					=	-Wall -Wextra -Werror -std=c++98 -Ofast -g3
 COMPILE_MSG				=	printf "\033[31m Program \033[32m%s : \033[34;01;03mCompilation \033[36m%-50s\033[0m\n" $(NAME) "done !"
 COMPILE_MSG_OBJ			=	printf "\033[31m Program \033[32m%s : \033[34;01;03mCompilation of \033[36m%-50s\033[0m\r" $(NAME) $(notdir $<)
 else
