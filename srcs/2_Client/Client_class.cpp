@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/03 14:09:00 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/03 14:56:52 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,50 @@ void Client::receive_first(void)
 void Client::receive_with_content_length(void)
 {
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
-	std::string buf_str(_chunk);
-	// std::cerr << C_G_RED << "[ DEBUG buf ] " << C_RES << " [" << buf_str << "]" << std::endl;
-	if (buf_str.find("Content-Length", 0) != std::string::npos)
-	{
-		std::string cl = buf_str.substr(buf_str.find("Content-Length", 0), buf_str.find(PAT_CRLF, buf_str.find("Content-Length", 0)) - buf_str.find("Content-Length", 0));
-		// std::cerr << C_G_RED << "[ DEBUG cl  ] " << C_RES << " [" << cl << "]" << std::endl;
-		std::string cl_val = cl.substr(strlen("Content-Length: "));
-		// std::cerr << C_G_RED << "[ DEBUG clv ] " << C_RES << " [" << cl_val << "]" << std::endl;
-		size_t cl_int = atol(cl_val.c_str());
-		std::cerr << C_G_RED << "[ DEBUG cli ] " << C_RES << " [" << cl_int << "]" << std::endl;
-	}
-	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
 	if (_bytes_read == -1)
 		throw Exceptions::RecvFailure();
 	_chunk[_bytes_read] = '\0';
+
+	std::string buf_str(_chunk);
+	// std::cerr << C_G_RED << "[ DEBUG buf ] " << C_RES << " [" << buf_str << "]" << std::endl;
+	// si Content-Length can be found in request
+	if (buf_str.find("Content-Length", 0) != std::string::npos)
+	{
+		// convert content-length to int
+		std::string cl = buf_str.substr(buf_str.find("Content-Length", 0), buf_str.find(PAT_CRLF, buf_str.find("Content-Length", 0)) - buf_str.find("Content-Length", 0));
+		std::cerr << C_G_RED << "[ DEBUG content-length  ] " << C_RES << " [" << cl << "]" << std::endl;
+		std::string cl_val = cl.substr(strlen("Content-Length: "));
+		// std::cerr << C_G_RED << "[ DEBUG clv ] " << C_RES << " [" << cl_val << "]" << std::endl;
+		size_t cl_int = atol(cl_val.c_str());
+		std::cerr << C_G_RED << "[ DEBUG content-length int ] " << C_RES << " [" << cl_int << "]" << std::endl;
+		// find end of headers position
+		std::string delim = PAT_CRLF""PAT_CRLF;
+		int end_headers = buf_str.find(delim);
+		std::cerr << C_G_RED << "[ DEBUG PAT_CRLF ] " << C_RES << end_headers << std::endl;
+		// si (end of headers position + delim length + content-length) == size recv, alors tout recu
+		int total_bytes_expected = end_headers + delim.length() + cl_int;
+		std::cerr << C_G_RED << "[ DEBUG total_bytes_expected ] " << C_RES << total_bytes_expected << std::endl;
+		int	remaining_bytes_to_recv = total_bytes_expected - _bytes_read;
+		if (total_bytes_expected == _bytes_read)
+			std::cout << C_G_BLUE << "Request fully received !" << std::endl;
+		else
+		{
+			std::cout << C_G_BLUE << remaining_bytes_to_recv << " remaining to read w/ recv" << std::endl;
+			// char tmp[remaining_bytes_to_recv];
+			// int	bytes_read2 = ::recv(_socket, tmp, remaining_bytes_to_recv - 1, 0);
+			// std::cout << "tmp : " << tmp << std::endl;
+			// std::cout << "bytes_read2 : " << bytes_read2 << std::endl;
+			// for (int i = _bytes_read; i < (_bytes_read + bytes_read2 - 1); i++)
+			// {
+			// 	_chunk[i] = tmp[i - _bytes_read];
+			// 	/* code */
+			// }
+			// _bytes_read += bytes_read2;
+			// _chunk[_bytes_read] = '\0';
+
+		}
+	}
+	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
 
 }
 
@@ -50,10 +79,10 @@ void Client::receive_request(void)
 	// fcntl(_socket, F_SETFL, O_NONBLOCK);
 	try
 	{
-		receive_first();
-		// receive_with_content_length();
+		// receive_first();
+		receive_with_content_length();
 		// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
-		std::cout << GREEN << "Request of size " << _bytes_read << " received :" <<  C_RES << std::endl;
+		std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
 		// print request
 		// std::cout << "[";
 		// for (ssize_t i = 0; i < _bytes_read; i++)
@@ -287,7 +316,7 @@ void Client::send_response(void)
 		bytes_sent = ::send(_socket, buffer, len, 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
-		std::cout << GREEN << "Response of size " << bytes_sent << " sent :" <<  C_RES << std::endl;
+		std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
 	}
 	catch (Exceptions::SendFailure & e)
 	{
@@ -309,6 +338,9 @@ void Client::client_send_response(void)
 	read_resource();
 	generate_response();
 	send_response();
+
+	// std::cout <<  _response->getResponseHeader() << std::endl;
+	// std::cout <<  _response->getResponseBody() << std::endl;
 }
 
 void Client::treat_client(void)
@@ -316,6 +348,4 @@ void Client::treat_client(void)
 	client_receive_request();
 	client_send_response();
 
-	std::cout <<  _response->getResponseHeader() << std::endl;
-	// std::cout <<  _response->getResponseBody() << std::endl;
 }

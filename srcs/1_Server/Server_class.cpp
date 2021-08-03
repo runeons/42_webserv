@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/03 14:07:54 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/03 15:04:13 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void Server::treat_incoming_new_connection_for_reading(int socket)
 		exit(EXIT_FAILURE);
 	}
 	_sockets_used.push_back(cl->getSocket());
-	std::cout << YELLOW << "New connection accepted from fd " << cl->getSocket() << " to " << inet_ntoa(_address.sin_addr) << ":" << ntohs(_address.sin_port) << " - " << cl->getSocket() << " added to _sockets_used vector" << C_RES << std::endl;
+	std::cout << YELLOW << "New connection accepted from fd " << C_G_YELLOW << cl->getSocket() << C_RES << YELLOW << " to " << inet_ntoa(_address.sin_addr) << ":" << ntohs(_address.sin_port) << " - " << cl->getSocket() << " added to _sockets_used vector" << C_RES << std::endl;
 	// adds socket to active fd set
 	FD_SET (cl->getSocket(), &_active_fds);
 	cl->client_receive_request();
@@ -168,7 +168,9 @@ void Server::select_and_treat_connections(void)
 		FD_SET(_master_socket, &_active_fds);
 		// Block until input arrives on one or more active sockets
 		_read_fds = _active_fds;
-		nb_fd_ready = select(FD_SETSIZE, &_read_fds , NULL , NULL , NULL);
+		// _write_fds = _active_fds;
+		nb_fd_ready = select(FD_SETSIZE, &_read_fds, NULL, NULL, NULL);
+		// nb_fd_ready = select(FD_SETSIZE, &_read_fds, &_write_fds, NULL, NULL);
 		if (nb_fd_ready < 0)
 		{
 			perror("___select___");
