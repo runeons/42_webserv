@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/02 10:52:17 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/03 11:52:23 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ class Client
 		void			read_resource();
 		void			generate_response();
 		void			send_response();
+		void			client_receive_request();
+		void			client_send_response();
 		void			treat_client();
 		void			close(void)
 		{

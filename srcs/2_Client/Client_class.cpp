@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/02 10:52:33 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/03 14:09:00 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 void Client::receive_first(void)
 {
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
-	std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
 	if (_bytes_read == -1)
 		throw Exceptions::RecvFailure();
 	_chunk[_bytes_read] = '\0';
@@ -38,7 +38,7 @@ void Client::receive_with_content_length(void)
 		size_t cl_int = atol(cl_val.c_str());
 		std::cerr << C_G_RED << "[ DEBUG cli ] " << C_RES << " [" << cl_int << "]" << std::endl;
 	}
-	std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
 	if (_bytes_read == -1)
 		throw Exceptions::RecvFailure();
 	_chunk[_bytes_read] = '\0';
@@ -52,12 +52,13 @@ void Client::receive_request(void)
 	{
 		receive_first();
 		// receive_with_content_length();
-		std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+		// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
 		std::cout << GREEN << "Request of size " << _bytes_read << " received :" <<  C_RES << std::endl;
-		std::cout << "[";
-		for (ssize_t i = 0; i < _bytes_read; i++)
-			std::cout << _chunk[i] ;
-		std::cout << "]" << std::endl;
+		// print request
+		// std::cout << "[";
+		// for (ssize_t i = 0; i < _bytes_read; i++)
+		// 	std::cout << _chunk[i] ;
+		// std::cout << "]" << std::endl;
 		_request.assign(_chunk, _bytes_read);
 	}
 	catch (Exceptions::RecvFailure & e)
@@ -296,17 +297,25 @@ void Client::send_response(void)
 
 // ********************************************* main - treat client *********************************************
 
-void Client::treat_client(void)
+void Client::client_receive_request(void)
 {
 	receive_request();
 	check_request();
+}
+
+void Client::client_send_response(void)
+{
 	translate_path();
 	read_resource();
 	generate_response();
 	send_response();
+}
+
+void Client::treat_client(void)
+{
+	client_receive_request();
+	client_send_response();
 
 	std::cout <<  _response->getResponseHeader() << std::endl;
 	// std::cout <<  _response->getResponseBody() << std::endl;
-
-	return ;
 }
