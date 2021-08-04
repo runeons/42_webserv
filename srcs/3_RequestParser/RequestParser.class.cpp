@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 16:35:48 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/27 13:46:05 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/01 15:13:09 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ void	RequestParser::bc_p(void)
 int				RequestParser::eat(int to_eat)
 {
 
-	if (this->_request_raw[this->_head] == '\0')
+	// if (this->_request_raw[this->_head] == '\0')
+	// if (this->_head == (this->_bytes_read - static_cast<size_t>(1)))
+	if (this->_head == static_cast<size_t>(this->_bytes_read))
 	{
 		// std::cerr << C_G_MAGENTA << "warning:" << C_G_WHITE << " end of _request_raw reached ! (head: " << this->_head << ")" << C_RES << std::endl;
 		throw (Exceptions::LexerException("eat ending"));
@@ -121,9 +123,9 @@ void			RequestParser::print_request_info(void)
 	std::cout << "    path            : " << "[" << this->get__resource() << "]" << std::endl;
 	std::cout << "    http_version    : " << this->get__http_version() << std::endl;
 	std::cout << "    body size       : " << this->_body_size << std::endl;
-	std::cout << "    body            : " << "[";
+	dprintf(1, "    body            : [");
 	write(1, this->get__body().c_str(), this->_body_size);
-	std::cout << "]" << std::endl;
+	dprintf(1, "]\n");
 	// std::cout << "    body            : " << "too long" << std::endl;
 	std::cout << "    headers         : " << std::endl;
 	for (headers_iterator it = this->_header_fields.begin();

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   2_Client.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 10:50:12 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/03 11:52:23 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CLIENT_HPP
 
 # include <webserv.hpp>
+# define PATH_AUTOINDEX "autoindex_res"
 
 class RequestParser;
 class Response;
@@ -32,8 +33,9 @@ class Client
 		std::string					_request; // full request
 		RequestParser				*_request_parser;
 		ssize_t						_bytes_read;
+		char						_chunk[MAX_RCV];
 
-		std::string					_full_path;
+		std::string					_translated_path;
 
 		std::string					_query_string;
 		std::map<std::string, std::string>	_parameters;
@@ -62,14 +64,21 @@ class Client
 		void			check_method(void);
 		void			check_http_version(void);
 
+		void			receive_first(void);
+		void			receive_with_content_length(void);
 		void			receive_request();
 		void			check_request();
 		void			parse_parameters();
+		std::string		apply_alias(std::string);
 		void			apply_location();
-		void			construct_full_path();
+		std::string		decode_url(std::string);
+		void			translate_path();
+		std::string		generate_autoindex(std::string rsc);
 		void			read_resource();
 		void			generate_response();
 		void			send_response();
+		void			client_receive_request();
+		void			client_send_response();
 		void			treat_client();
 		void			close(void)
 		{

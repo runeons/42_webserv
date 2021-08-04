@@ -1,31 +1,83 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client_class.cpp                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 18:38:51 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
 
 // ********************************************* ::recv => request en std::string *********************************************
 
+void Client::receive_first(void)
+{
+	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
+	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+	if (_bytes_read == -1)
+		throw Exceptions::RecvFailure();
+	_chunk[_bytes_read] = '\0';
+
+}
+
+void Client::receive_with_content_length(void)
+{
+	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
+	if (_bytes_read == -1)
+		throw Exceptions::RecvFailure();
+	_chunk[_bytes_read] = '\0';
+
+	std::string buf_str(_chunk);
+	// std::cerr << C_G_RED << "[ DEBUG buf ] " << C_RES << " [" << buf_str << "]" << std::endl;
+	// si Content-Length can be found in request
+	if (buf_str.find("Content-Length", 0) != std::string::npos)
+	{
+		// convert content-length to int
+		std::string cl = buf_str.substr(buf_str.find("Content-Length", 0), buf_str.find(PAT_CRLF, buf_str.find("Content-Length", 0)) - buf_str.find("Content-Length", 0));
+		std::cerr << C_G_RED << "[ DEBUG content-length  ] " << C_RES << " [" << cl << "]" << std::endl;
+		std::string cl_val = cl.substr(strlen("Content-Length: "));
+		// std::cerr << C_G_RED << "[ DEBUG clv ] " << C_RES << " [" << cl_val << "]" << std::endl;
+		size_t cl_int = atol(cl_val.c_str());
+		std::cerr << C_G_RED << "[ DEBUG content-length int ] " << C_RES << " [" << cl_int << "]" << std::endl;
+		// find end of headers position
+		std::string delim = PAT_CRLF""PAT_CRLF;
+		int end_headers = buf_str.find(delim);
+		std::cerr << C_G_RED << "[ DEBUG PAT_CRLF ] " << C_RES << end_headers << std::endl;
+		// si (end of headers position + delim length + content-length) == size recv, alors tout recu
+		int total_bytes_expected = end_headers + delim.length() + cl_int;
+		std::cerr << C_G_RED << "[ DEBUG total_bytes_expected ] " << C_RES << total_bytes_expected << std::endl;
+		int	remaining_bytes_to_recv = total_bytes_expected - _bytes_read;
+		if (total_bytes_expected == _bytes_read)
+			std::cout << C_G_BLUE << "Request fully received !" << std::endl;
+		else
+		{
+			std::cout << C_G_BLUE << remaining_bytes_to_recv << " remaining to read w/ recv" << std::endl;
+			// char tmp[remaining_bytes_to_recv];
+			// int	bytes_read2 = ::recv(_socket, tmp, remaining_bytes_to_recv - 1, 0);
+			// std::cout << "tmp : " << tmp << std::endl;
+			// std::cout << "bytes_read2 : " << bytes_read2 << std::endl;
+			// for (int i = _bytes_read; i < (_bytes_read + bytes_read2 - 1); i++)
+			// {
+			// 	_chunk[i] = tmp[i - _bytes_read];
+			// 	/* code */
+			// }
+			// _bytes_read += bytes_read2;
+			// _chunk[_bytes_read] = '\0';
+
+		}
+	}
+	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+
+}
+
 void Client::receive_request(void)
 {
-	char	buffer[MAX_RCV];
-
+	// fcntl(_socket, F_SETFL, O_NONBLOCK);
 	try
 	{
-		_bytes_read = ::recv(_socket, buffer, MAX_RCV - 1, 0);
-		if (_bytes_read == -1)
-			throw Exceptions::RecvFailure();
-		std::cout << GREEN << "Request of size " << _bytes_read << " received :" <<  C_RES << std::endl;
-		buffer[_bytes_read] = '\0';
-		_request.assign(buffer, _bytes_read);
+		// receive_first();
+		receive_with_content_length();
+		// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+		std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
+		// print request
+		// std::cout << "[";
+		// for (ssize_t i = 0; i < _bytes_read; i++)
+		// 	std::cout << _chunk[i] ;
+		// std::cout << "]" << std::endl;
+		_request.assign(_chunk, _bytes_read);
 	}
 	catch (Exceptions::RecvFailure & e)
 	{
@@ -103,28 +155,82 @@ void		Client::apply_location(void)
 	else if (rsc.front() == '/')
 		l = &m["/"];
 	_applied_location = l;
-	// if (_applied_location)
-	// {
-	// 	std::cerr << C_G_RED << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
-	// }
+	if (_applied_location && 0)
+	{
+		std::cerr << C_G_BLUE << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Upload    ] " << C_RES << _applied_location->getUpload() << std::endl;
+		std::cerr << C_G_BLUE << "[ DEBUG Redir301  ] " << C_RES << _applied_location->getRedir301() << std::endl;
+		std::vector<std::string> v = _applied_location->getMethods();
+		std::vector<std::string>::iterator it;
+		for (it = v.begin(); it != v.end(); it++)
+			std::cerr << C_G_BLUE << "[ DEBUG methods   ] " << C_RES << *it << std::endl;
+		v = _applied_location->getAlias();
+		for (it = v.begin(); it != v.end(); it++)
+			std::cerr << C_G_BLUE << "[ DEBUG alias     ] " << C_RES << *it << std::endl;
+	}
 }
 
-void		Client::construct_full_path(void)
+std::string	Client::generate_autoindex(std::string rsc)
+{
+	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
+	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
+	return res;
+}
+
+std::string		Client::decode_url(std::string s)
+{
+	std::string	ret;
+	char		ch;
+	int			ii;
+	int			len = s.length();
+
+	for (int i = 0; i < len; i++)
+	{
+		if (s[i] != '%')
+		{
+			if (s[i] == '+')
+				ret += ' ';
+			else
+				ret += s[i];
+		}
+		else
+		{
+			sscanf(s.substr(i + 1, 2).c_str(), "%x", &ii);
+			// std::cerr << C_G_RED << "[ DEBUG ii ] " << C_RES << ii << std::endl;
+			ch = static_cast<char>(ii);
+			// std::cerr << C_G_RED << "[ DEBUG ch ] " << C_RES << ch << std::endl;
+			ret += ch;
+			// std::cerr << C_G_RED << "[ DEBUG ret ] " << C_RES << ret << std::endl;
+			i = i + 2;
+		}
+	}
+	return ret;
+}
+
+std::string		Client::apply_alias(std::string s)
+{
+	// it through all locations in _config
+	// it through all alias vector in _config
+	// if found : apply
+	return s;
+}
+
+void		Client::translate_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
+
+	// std::cerr << C_G_RED << "[ DEBUG RSC  ] " << C_RES << rsc << std::endl;
+	_page_content = ""; // vraiment utile ??
+	rsc = apply_alias(rsc);
 	/*
 		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
 	*/
 	apply_location();
-	/*
-		TO DO : remplacer les caractères spéciaux
-			- ex : %20 " "
-			- ex : %C3%A7 "ç"
-	*/
+	rsc = decode_url(rsc);
 	// Theo remaster - // remplir query_string
 	if (rsc.find("?") < rsc.length())
 	{
@@ -132,13 +238,20 @@ void		Client::construct_full_path(void)
 		rsc.erase(rsc.find("?"));
 	}
 	rsc = "html" + rsc;
-	// if directory
+	// if directory : set up translated_path as index, unless don't exists and autoindex is on : generate_autoindex
 	if (rsc.back() == '/')
 	{
-		// appliquer un index, si on le trouve pas ET QUE autoindex on, generer autoindex
-		rsc += "index.html";
+		struct stat buffer;
+		std::string index_path = rsc + _applied_location->getIndex();
+		if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
+		 ; // ne change rien au translated_path
+		else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->getAutoindex() == 1) // if index.html not found + auto
+			_page_content = generate_autoindex(rsc);// rsc += _applied_location->getIndex();
+		else // if (ret == 0) ou -1 et autoindex off
+			rsc += _applied_location->getIndex();
 	}
-	_full_path = rsc;
+	_translated_path = rsc;
+	// std::cerr << C_G_RED << "[ DEBUG PATH ] " << C_RES << _translated_path << std::endl;
 	if (!_query_string.empty())
 		parse_parameters();
 	return;
@@ -148,11 +261,13 @@ void		Client::construct_full_path(void)
 
 void Client::read_resource(void)
 {
-	std::ifstream ifs(_full_path);
+	std::ifstream ifs(_translated_path);
 	char c;
 
-	_page_content = "";
-	if (!ifs)
+	// std::cerr << C_G_RED << "[ DEBUG PAGECONTENT ] " << C_RES << _page_content << std::endl;
+	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex
+		;
+	else if (!ifs)
 		_status_code = 404;
 	else
 	{
@@ -169,7 +284,8 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	_response = new Response(_config, _status_code, _page_content, _full_path, *_request_parser);
+		// attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
+	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
 		delete _request_parser;
@@ -189,7 +305,7 @@ void Client::send_response(void)
 		bytes_sent = ::send(_socket, buffer, len, 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
-		std::cout << GREEN << "Response of size " << bytes_sent << " sent :" <<  C_RES << std::endl;
+		std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
 	}
 	catch (Exceptions::SendFailure & e)
 	{
@@ -199,17 +315,26 @@ void Client::send_response(void)
 
 // ********************************************* main - treat client *********************************************
 
-void Client::treat_client(void)
+void Client::client_receive_request(void)
 {
 	receive_request();
 	check_request();
-	construct_full_path();
+}
+
+void Client::client_send_response(void)
+{
+	translate_path();
 	read_resource();
 	generate_response();
 	send_response();
 
-	std::cout <<  _response->getResponseHeader() << std::endl;
+	// std::cout <<  _response->getResponseHeader() << std::endl;
 	// std::cout <<  _response->getResponseBody() << std::endl;
+}
 
-	return ;
+void Client::treat_client(void)
+{
+	client_receive_request();
+	client_send_response();
+
 }

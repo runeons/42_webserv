@@ -1,5 +1,6 @@
 *.o
 cmd_res
+autoindex_res
 rqstfile
 response_body
 response

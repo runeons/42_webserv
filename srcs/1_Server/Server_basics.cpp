@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server_basics.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 20:25:38 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
 
@@ -33,7 +22,7 @@ Server::Server(void)
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	// TO DO parse config
 	_config = new Config; // parametree avec le parsing
-	_client = new Client(*_config); // dans lequel j'envoie Config
+	// _client = new Client(*_config); // dans lequel j'envoie Config
 	// _client = NULL;
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
@@ -48,7 +37,7 @@ Server::Server(void)
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
 	_address.sin_port = htons(_config->getPort());
-	_socket = 0;
+	_master_socket = 0;
 	return ;
 }
 
@@ -88,8 +77,8 @@ Server::Server(const Server& src)
 Server::~Server(void)
 {
 	delete _config;
-	if (_client)
-		delete _client;
+	// if (_client)
+	// 	delete _client;
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;
 }
@@ -101,7 +90,7 @@ Server &	Server::operator=(const Server& rhs)
 	if (this != &rhs)
 	{
 		_config = rhs.getConfig();
-		_socket = rhs.getSocket();
+		_master_socket = rhs.getSocket();
 	}
 	return (*this);
 }
@@ -117,25 +106,25 @@ void Server::setConfig(Config * config)
 	_config = config;
 	return ;
 }
-
-Client * Server::getClient(void) const
-{
-	return (_client);
-}
-
-void Server::setClient(Client * client)
-{
-	_client = client;
-	return ;
-}
+//
+// Client * Server::getClient(void) const
+// {
+// 	return (_client);
+// }
+//
+// void Server::setClient(Client * client)
+// {
+// 	_client = client;
+// 	return ;
+// }
 
 SOCKET Server::getSocket(void) const
 {
-	return (_socket);
+	return (_master_socket);
 }
 
 void Server::setSocket(const SOCKET server_socket)
 {
-	_socket = server_socket;
+	_master_socket = server_socket;
 	return ;
 }

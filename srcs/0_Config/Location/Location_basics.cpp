@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Location_basics.cpp                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/31 11:12:24 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 19:31:57 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
 
@@ -19,7 +8,7 @@ Location::Location(void)
 }
 
 // Parametric constructor
-Location::Location(std::string uri, std::string root_loc, std::string index, bool autoindex, std::vector<std::string> methods, std::string upload, std::vector<std::string> alias)
+Location::Location(std::string uri, std::string root_loc, std::string index, bool autoindex, std::vector<std::string> methods, std::string upload, std::vector<std::string> alias, std::string redir_301)
 {
 	// std::cout << GREY << "Location creation..." << C_RES << std::endl;
 	_uri = uri;
@@ -28,6 +17,7 @@ Location::Location(std::string uri, std::string root_loc, std::string index, boo
 	_autoindex = autoindex;
 	_methods = methods;
 	_upload = upload;
+	_redir_301 = redir_301;
 	_alias = alias;
 	return ;
 }
@@ -74,6 +64,7 @@ Location &	Location::operator=(const Location& rhs)
 		_autoindex = rhs.getAutoindex();
 		_methods = rhs.getMethods();
 		_upload = rhs.getUpload();
+		_redir_301 = rhs.getRedir301();
 		_alias = rhs.getAlias();
 		// _cgi = rhs.getCgi();
 	}
@@ -144,6 +135,17 @@ std::string Location::getUpload(void) const
 void Location::setUpload(const std::string upload)
 {
 	_upload = upload;
+	return ;
+}
+
+std::string Location::getRedir301(void) const
+{
+	return (_redir_301);
+}
+
+void Location::setRedir301(const std::string redir_301)
+{
+	_redir_301 = redir_301;
 	return ;
 }
 

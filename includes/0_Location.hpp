@@ -13,13 +13,15 @@ class Location
 		std::vector<std::string>				_alias;
 		std::vector<std::string>				_methods;
 		std::string								_upload;
+		std::vector<std::string>				_alias;
+		std::string								_redir_301;
 		// std::map<std::string, std::map<std::string, std::string> >	_cgi;
 
 	public:
 		Location(void);
 		Location(const Location & src);
 		Location(std::string uri, std::string root_loc, std::string index, bool autoindex,
-			std::vector<std::string> methods, std::string upload, std::vector<std::string> alias); // tmp constructor
+			std::vector<std::string> methods, std::string upload, std::vector<std::string> alias, std::string redir_301); // tmp constructor
 		virtual ~Location();
 		void	clear(void);
 
@@ -37,6 +39,8 @@ class Location
 		void						setUpload(const std::string upload);
 		const std::vector<std::string>	& getAlias(void) const;
 		void						setAlias(const std::vector<std::string> alias);
+		std::string					getRedir301(void) const;
+		void						setRedir301(const std::string redir_301);
 		// std::map<std::string, std::map<std::string, std::string> >	getCgi(void) const;
 		// void														setCgi(const std::map<std::string, std::map<std::string, std::string> > cgi);
 

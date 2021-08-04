@@ -6,15 +6,31 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:59:23 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/02 10:05:11 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
+// ********************************************* check if method allowed *********************************************
+
+void	Response::check_if_method_allowed(void)
+{
+	std::vector<std::string> v_methods = _applied_location.getMethods();
+
+	std::vector<std::string>::iterator it;
+
+	for (it = v_methods.begin(); it != v_methods.end(); it++)
+	{
+		if (*it == _request.get__method())
+			return ;
+	}
+	_status_code = 405;
+}
+
 // ********************************************* set page content if error *********************************************
 
-void	Response::generate_error_content(void)
+void	Response::fill_content_if_error(void)
 {
 	if (_status_code != 200)
 		_page_content = _error_content[_status_code];
@@ -25,7 +41,37 @@ void	Response::generate_error_content(void)
 void	Response::GET_create_body(void)
 {
 	_response_body = _page_content;
+}
 
+void	Response::GET_handle(void)
+{
+	GET_create_body();
+
+	// if CGI (dans quels cas ?? A reflechir)
+	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
+	// Cgi *cgi = new Cgi(_request);
+	// cgi->launch();
+	// delete cgi;
+	// std::cout << C_G_YELLOW << "We are finished with cgi !" << C_RES << std::endl;
+
+}
+// ********************************************* create body *********************************************
+
+void	Response::POST_create_body(void)
+{
+	_response_body = _page_content;
+}
+
+void	Response::POST_handle(void)
+{
+	POST_create_body();
+
+	// check POST types
+	std::string request_content_type = _request.get__header_value("Content-Type");
+	if (request_content_type == "application/x-www-form-urlencoded")
+		; // POST formulaire
+	else if (request_content_type.find("multipart/form-data;", 0) == 0)
+		; // POST upload
 	// if CGI (dans quels cas ?? A reflechir)
 	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
 	// Cgi *cgi = new Cgi(_request);
@@ -60,9 +106,13 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
-	generate_error_content();
-	GET_create_body(); // from page_content
-	generate_response_header(); // from status_code, page_content and full_path
+	// check_if_method_allowed();
+	fill_content_if_error();
+	if (_request.get__method() == "GET")
+		GET_handle(); // from page_content
+	else if (_request.get__method() == "POST")
+		POST_handle(); // from page_content
+	generate_response_header(); // from status_code, page_content and translated_path
 	concatenate_response();
 }
 

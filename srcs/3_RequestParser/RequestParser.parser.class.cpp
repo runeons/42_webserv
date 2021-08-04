@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   RequestParser.parser.class.cpp                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/02 19:07:37 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include <webserv.hpp>
 
@@ -1239,7 +1228,8 @@ void	RequestParser::request_line(void)
 void	RequestParser::message_body(void)
 {
 	init_digest();
-	this->_head = this->_bytes_read - 1;
+	if (this->_head != static_cast<size_t>(this->_bytes_read))
+		this->_head = this->_bytes_read - 1;
 	this->_body_size = this->_head - this->_head_last_digest;
 	// while (1)
 	// {

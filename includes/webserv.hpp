@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/03 12:20:26 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
@@ -27,6 +16,9 @@
 # include <map>
 # include "color.hpp"
 # include <vector>
+# include <sys/stat.h>
+# include <dirent.h>
+# include <sys/time.h>
 // #include <pstream.h>
 //
 typedef int SOCKET;

@@ -6,13 +6,62 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:57 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:11:39 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/07/31 14:55:55 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
-// ********************************************* utils *********************************************
+// ********************************************* exec_cmd *********************************************
+
+std::string		exec_cmd(std::string cmd, std::string file_res)
+{
+	std::ostringstream oss;
+
+	cmd += " > ";
+	cmd += file_res;
+	if (!oss) // EXCEPTION A CREER
+		std::cerr << RED << "Error : can't open osstream" <<  C_RES << std::endl;
+	int status = std::system(cmd.c_str());
+	if (WEXITSTATUS(status) != 0)
+		std::cerr << RED << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
+	oss << std::ifstream(file_res).rdbuf();
+	return oss.str();
+}
+
+// ********************************************* file manip *********************************************
+
+std::string		get_extension(std::string path)
+{
+	size_t pos;
+	std::string sub;
+	pos = path.rfind("/");
+	sub = path.substr(pos + 1, path.length() - (pos + 1));
+	pos = sub.rfind(".");
+	if (pos == std::string::npos)
+		return ("");
+	else
+		return (sub.substr(pos + 1, sub.length() - (pos + 1)));
+}
+
+std::string get_file_content(std::string filename)
+{
+	std::ifstream ifs(filename);
+	std::ostringstream oss;
+
+	if (!ifs)
+		return "";
+	else if (!oss)
+		return "";
+	else
+	{
+		oss << ifs.rdbuf();
+		ifs.close();
+		return (oss.str());
+	}
+}
+
+// ********************************************* binary conversion *********************************************
 
 std::string itos(int nb)
 {
@@ -77,34 +126,4 @@ std::string binary_to_string(std::string s)
 		i = 0;
 	}
 	return oss.str();
-}
-
-std::string		get_extension(std::string path)
-{
-	size_t pos;
-	std::string sub;
-	pos = path.rfind("/");
-	sub = path.substr(pos + 1, path.length() - (pos + 1));
-	pos = sub.rfind(".");
-	if (pos == std::string::npos)
-		return ("");
-	else
-		return (sub.substr(pos + 1, sub.length() - (pos + 1)));
-}
-
-std::string get_file_content(std::string filename)
-{
-	std::ifstream ifs(filename);
-	std::ostringstream oss;
-
-	if (!ifs)
-		return "";
-	else if (!oss)
-		return "";
-	else
-	{
-		oss << ifs.rdbuf();
-		ifs.close();
-		return (oss.str());
-	}
 }
