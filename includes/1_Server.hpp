@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   1_Server.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 19:34:49 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/04 20:23:37 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ class Server
 		struct sockaddr_in	_address;
 
 	public:
-		Server();
+		Server(void);
+		Server(const Config & config);
 		Server(const Server & src);
 		virtual ~Server();
 

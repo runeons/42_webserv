@@ -73,7 +73,7 @@ int				RequestParser::eat(int to_eat)
 	if (this->_request_raw[this->_head] == '\0')
 	{
 		// std::cerr << C_G_MAGENTA << "warning:" << C_G_WHITE << " end of _request_raw reached ! (head: " << this->_head << ")" << C_RES << std::endl;
-		throw (LexerException("eat ending"));
+		throw (Exceptions::LexerException("eat ending"));
 	}
 	if (this->_request_raw[this->_head] == to_eat)
 	{

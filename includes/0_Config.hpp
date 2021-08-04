@@ -18,11 +18,12 @@ class Config
 		std::string							_root_dir;
 		int									_max_body_size;
 		std::map<int, std::string>			_error_pages;
-		std::map<std::string, Location *>	_locations;
+		std::map<std::string, Location>		_locations;
 	public:
 		Config();
 		Config(const Config & src);
 		virtual ~Config();
+		void	clear(void);
 
 		std::string							getHost(void) const;
 		void								setHost(const std::string host);
@@ -36,14 +37,14 @@ class Config
 		void								setRootDir(const std::string root_dir);
 		int									getMaxBodySize(void) const;
 		void								setMaxBodySize(const int max_body_size);
-		std::map<int, std::string>			getErrorPages(void) const;
+		const std::map<int, std::string>		&	getErrorPages(void) const;
 		void								setErrorPages(const std::map<int, std::string> error_pages);
-		std::map<std::string, Location *>	getLocations(void) const;
-		void								setLocations(const std::map<std::string, Location *> locations);
+		const std::map<std::string, Location>	& getLocations(void) const;
+		void								setLocations(const std::map<std::string, Location> locations);
 		Config								&operator=(const Config & src);
 
-		std::map<int, std::string>			init_map_error_pages();
-		std::map<std::string, Location *>	init_map_locations();
+		// std::map<int, std::string>			init_map_error_pages();
+		// std::map<std::string, Location>	init_map_locations();
 
 };
 

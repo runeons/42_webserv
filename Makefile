@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/22 13:24:55 by tharchen          #+#    #+#              #
-#    Updated: 2021/07/31 11:10:13 by tsantoni         ###   ########.fr        #
+#    Updated: 2021/08/03 12:33:02 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,17 +57,18 @@ HEADER_DIR				=	\
 							./includes/
 
 HEADER					=	\
-							2_Client.hpp \
-							5_Cgi.hpp \
-							4_Response.hpp \
+							webserv.hpp \
+							ConfigParser.hpp \
 							0_Config.hpp \
 							0_Location.hpp \
-							Exceptions.hpp \
-							3_RequestParser.class.hpp \
 							1_Server.hpp \
+							2_Client.hpp \
+							3_RequestParser.hpp \
+							4_Response.hpp \
+							5_Cgi.hpp \
+							Exceptions.hpp \
 							color.hpp \
 							utils.hpp \
-							webserv.hpp \
 
 # *** SRCS ******************************************************************* #
 
@@ -81,6 +82,15 @@ SRCS_REQUESTPARSER		=	\
 							3_RequestParser/RequestParser.ovop.class.cpp \
 							3_RequestParser/RequestParser.parser.class.cpp \
 							3_RequestParser/RequestParser.maps.class.cpp \
+
+SRCS_CONFIGPARSER		=	\
+							ConfigParser/ConfigParser.cd.class.cpp \
+							ConfigParser/ConfigParser.class.cpp \
+							ConfigParser/ConfigParser.gs.class.cpp \
+							ConfigParser/ConfigParser.lexer.class.cpp \
+							ConfigParser/ConfigParser.ovop.class.cpp \
+							ConfigParser/ConfigParser.parser.class.cpp \
+							ConfigParser/ConfigParser.tokens.class.cpp \
 
 SRCS_SERVER				=	\
 							1_Server/Server_basics.cpp \
@@ -113,6 +123,7 @@ SRCS_UTILS			=	\
 
 SRCS_LIST				=	\
 							main.cpp \
+							$(SRCS_CONFIGPARSER) \
 							$(SRCS_REQUESTPARSER) \
 							$(SRCS_SERVER) \
 							$(SRCS_CGI) \

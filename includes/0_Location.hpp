@@ -10,32 +10,33 @@ class Location
 		std::string								_root_loc;
 		std::string								_index;
 		bool									_autoindex;
+		std::vector<std::string>				_alias;
 		std::vector<std::string>				_methods;
 		std::string								_upload;
-		std::vector<std::string>				_alias;
 		// std::map<std::string, std::map<std::string, std::string> >	_cgi;
-		Location();
-		Location(const Location & src);
 
 	public:
+		Location(void);
+		Location(const Location & src);
 		Location(std::string uri, std::string root_loc, std::string index, bool autoindex,
 			std::vector<std::string> methods, std::string upload, std::vector<std::string> alias); // tmp constructor
 		virtual ~Location();
+		void	clear(void);
 
-		std::string													getUri(void) const;
-		void														setUri(const std::string uri);
-		std::string													getRootLoc(void) const;
-		void														setRootLoc(const std::string root_loc);
-		std::string													getIndex(void) const;
-		void														setIndex(const std::string index);
-		bool														getAutoindex(void) const;
-		void														setAutoindex(const bool autoindex);
-		std::vector<std::string>									getMethods(void) const;
-		void														setMethods(const std::vector<std::string> methods);
-		std::string													getUpload(void) const;
-		void														setUpload(const std::string upload);
-		std::vector<std::string>									getAlias(void) const;
-		void														setAlias(const std::vector<std::string> alias);
+		std::string					getUri(void) const;
+		void						setUri(const std::string uri);
+		std::string					getRootLoc(void) const;
+		void						setRootLoc(const std::string root_loc);
+		std::string					getIndex(void) const;
+		void						setIndex(const std::string index);
+		bool						getAutoindex(void) const;
+		void						setAutoindex(const bool autoindex);
+		const std::vector<std::string>	& getMethods(void) const;
+		void						setMethods(const std::vector<std::string> methods);
+		std::string					getUpload(void) const;
+		void						setUpload(const std::string upload);
+		const std::vector<std::string>	& getAlias(void) const;
+		void						setAlias(const std::vector<std::string> alias);
 		// std::map<std::string, std::map<std::string, std::string> >	getCgi(void) const;
 		// void														setCgi(const std::map<std::string, std::map<std::string, std::string> > cgi);
 

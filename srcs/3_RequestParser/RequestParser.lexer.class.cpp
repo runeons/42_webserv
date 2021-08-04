@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/07/24 23:36:13 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/02 17:47:47 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,12 @@
 
 //// lexer
 
-// test one char
-
-// static std::string	convchar(int c)
-// {
-// 	std::string r("~");
-// 	if (c == '\r')
-// 		return (std::string("\\r"));
-// 	if (c == '\n')
-// 		return (std::string("\\n"));
-// 	if (c == '\t')
-// 		return (std::string("\\t"));
-// 	r[0] = c;
-// 	return (r);
-// }
-
 void	RequestParser::CHAR(char c)
 {
 	if (eat(c) == FAILURE)
 	{
 		bc_s();
-		throw (LexerException("CHAR expected"));
+		throw (Exceptions::LexerException("CHAR expected"));
 	}
 }
 
@@ -44,7 +29,7 @@ void	RequestParser::CR(void)
 	if (eat(0x0D) == FAILURE)
 	{
 		bc_s();
-		throw (LexerException("CR expected"));
+		throw (Exceptions::LexerException("CR expected"));
 	}
 }
 
@@ -54,7 +39,7 @@ void	RequestParser::LF(void)
 	if (eat(0x0A) == FAILURE)
 	{
 		bc_s();
-		throw (LexerException("LF expected"));
+		throw (Exceptions::LexerException("LF expected"));
 	}
 }
 
@@ -64,7 +49,7 @@ void	RequestParser::SP(void)
 	if (eat(0x20) == FAILURE)
 	{
 		bc_s();
-		throw (LexerException("SP expected"));
+		throw (Exceptions::LexerException("SP expected"));
 	}
 }
 
@@ -74,7 +59,7 @@ void	RequestParser::HTAB(void)
 	if (eat(0x09) == FAILURE)
 	{
 		bc_s();
-		throw (LexerException("HTAB expected"));
+		throw (Exceptions::LexerException("HTAB expected"));
 	}
 }
 
@@ -88,7 +73,7 @@ void	RequestParser::RANGE(char start, char end)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (LexerException("RANGE expected"));
+	bc_s(); throw (Exceptions::LexerException("RANGE expected"));
 }
 
 
@@ -105,7 +90,7 @@ void	RequestParser::ALPHA(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (LexerException("ALPHA expected"));
+	bc_s(); throw (Exceptions::LexerException("ALPHA expected"));
 }
 
 // DIGIT = 0x30-39
@@ -116,7 +101,7 @@ void	RequestParser::DIGIT(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (LexerException("DIGIT expected"));
+	bc_s(); throw (Exceptions::LexerException("DIGIT expected"));
 }
 
 // HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
@@ -128,7 +113,7 @@ void	RequestParser::HEXDIG(void)
 			if (eat(i) == SUCCESS)
 				return ;
 		}
-		bc_s(); throw (LexerException("HEXDIG expected"));
+		bc_s(); throw (Exceptions::LexerException("HEXDIG expected"));
 	}
 }
 
@@ -140,7 +125,7 @@ void	RequestParser::OCTET(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (LexerException("OCTET expected"));
+	bc_s(); throw (Exceptions::LexerException("OCTET expected"));
 }
 
 // VCHAR = 0x21-7E
@@ -152,7 +137,7 @@ void	RequestParser::VCHAR(void)
 			return ;
 	}
 	// std::cout << "[ FAIL VCHAR ] head: " << this->_head << " [" << static_cast<int>(this->_request_raw[this->_head]) << "]" << " \'" << convchar(this->_request_raw[this->_head]) << "\'" << std::endl;
-	bc_s(); throw (LexerException("VCHAR expected"));
+	bc_s(); throw (Exceptions::LexerException("VCHAR expected"));
 }
 
 // VCHAR = 0x21-7E
@@ -168,7 +153,7 @@ void	RequestParser::field_char(void)
 	if (eat(' ') == SUCCESS)
 		return ;
 	// std::cout << "[ FAIL VCHAR ] head: " << this->_head << " [" << static_cast<int>(this->_request_raw[this->_head]) << "]" << " \'" << convchar(this->_request_raw[this->_head]) << "\'" << std::endl;
-	bc_s(); throw (LexerException("VCHAR expected"));
+	bc_s(); throw (Exceptions::LexerException("VCHAR expected"));
 }
 
 
@@ -183,7 +168,7 @@ void	RequestParser::sub_delims(void)
 		if (eat(set[i]) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (LexerException("sub_delims expected"));
+	bc_s(); throw (Exceptions::LexerException("sub_delims expected"));
 }
 
 // tchar = "!" / "#" / "$" / "%" / "&" / "\'" / "*" / "+" / "-" / "." / "^" / "_" / "\`" / "|" / "~" / DIGIT / ALPHA
@@ -200,7 +185,7 @@ void	RequestParser::tchar(void)
 	catch (std::exception &) {
 		try { ALPHA(); }
 		catch (std::exception &) {
-			bc_s(); throw (LexerException("tchar expected"));
+			bc_s(); throw (Exceptions::LexerException("tchar expected"));
 		}
 	}
 }
@@ -213,5 +198,5 @@ void	RequestParser::obs_text(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (LexerException("obs_text expected"));
+	bc_s(); throw (Exceptions::LexerException("obs_text expected"));
 }

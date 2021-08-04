@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:10:57 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/04 20:25:38 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,30 @@ Server::Server(void)
 	try
 	{
 		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0)
+			throw Exceptions::InvalidAddress();
+		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
+	}
+	catch (Exceptions::InvalidAddress & e)
+	{
+		std::cerr << RED << e.what() <<  C_RES << std::endl;
+	}
+	_address.sin_port = htons(_config->getPort());
+	_socket = 0;
+	return ;
+}
+
+Server::Server(const Config & config)
+{
+	std::cout << GREY << "Server creation..." << C_RES << std::endl;
+	// TO DO parse config
+	_config = (Config *)(&config); // parametree avec le parsing
+	_client = new Client(*_config); // dans lequel j'envoie Config
+	// _client = NULL;
+	_address.sin_family = AF_INET;
+	_address.sin_addr.s_addr = INADDR_ANY;
+	try
+	{
+		if (inet_aton(_config->getHost().c_str(), &_address.sin_addr) <= 0)
 			throw Exceptions::InvalidAddress();
 		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
 	}

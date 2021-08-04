@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:58:34 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/04 18:38:51 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ void	Client::check_method(void)
 		if (this->_request_parser->get__method() == *it)
 			return ;
 	}
-	throw (HTTP_ErrorStatusException(501)); // Not Implemented
+	throw (Exceptions::HTTP_ErrorStatusException(501)); // Not Implemented
 }
 void	Client::check_http_version(void)
 {
 	if (this->_request_parser->get__http_version() != "1.1")
-		throw (HTTP_ErrorStatusException(505)); // HTTP Version Not Supported
+		throw (Exceptions::HTTP_ErrorStatusException(505)); // HTTP Version Not Supported
 }
 
 void	Client::check_request(void)
@@ -61,11 +61,11 @@ void	Client::check_request(void)
 	if (_status_code == 200)
 	{
 		try { check_method(); }
-		catch (HTTP_ErrorStatusException & e) {
+		catch (Exceptions::HTTP_ErrorStatusException & e) {
 			_status_code = e.get__status();
 		}
 		try { check_http_version(); }
-		catch (HTTP_ErrorStatusException & e) {
+		catch (Exceptions::HTTP_ErrorStatusException & e) {
 			_status_code = e.get__status();
 		}
 	}
@@ -93,15 +93,15 @@ void		Client::apply_location(void)
 {
 	// si path contient location, lier _applied location à la location
 	std::string							rsc = _request_parser->get__resource();
-	std::map<std::string, Location *>	m = _config.getLocations();
+	std::map<std::string, Location>	m = _config.getLocations();
 	Location 							*l = NULL;;
 
 	// TO PRECISE iterate through maps && search from end to beginning
 	std::size_t found = rsc.find("/documents");
 	if (found == 0)
-		l = m["/documents"];
+		l = &m["/documents"];
 	else if (rsc.front() == '/')
-		l = m["/"];
+		l = &m["/"];
 	_applied_location = l;
 	// if (_applied_location)
 	// {
@@ -131,7 +131,7 @@ void		Client::construct_full_path(void)
 		_query_string = rsc.substr(rsc.find("?") + 1);
 		rsc.erase(rsc.find("?"));
 	}
-	rsc = "./html" + rsc;
+	rsc = "html" + rsc;
 	// if directory
 	if (rsc.back() == '/')
 	{
