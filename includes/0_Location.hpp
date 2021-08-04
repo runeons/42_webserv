@@ -13,7 +13,6 @@ class Location
 		std::vector<std::string>				_alias;
 		std::vector<std::string>				_methods;
 		std::string								_upload;
-		std::vector<std::string>				_alias;
 		std::string								_redir_301;
 		// std::map<std::string, std::map<std::string, std::string> >	_cgi;
 

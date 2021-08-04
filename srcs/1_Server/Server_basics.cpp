@@ -45,7 +45,8 @@ Server::Server(const Config & config)
 {
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	// TO DO parse config
-	_config = (Config *)(&config); // parametree avec le parsing
+	_config = const_cast<Config *>(&config); // parametree avec le parsing
+	_config->setRootDir("./" + _config->getRootDir());
 	_client = new Client(*_config); // dans lequel j'envoie Config
 	// _client = NULL;
 	_address.sin_family = AF_INET;
@@ -61,7 +62,7 @@ Server::Server(const Config & config)
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
 	_address.sin_port = htons(_config->getPort());
-	_socket = 0;
+	_master_socket = 0;
 	return ;
 }
 
@@ -77,8 +78,8 @@ Server::Server(const Server& src)
 Server::~Server(void)
 {
 	delete _config;
-	// if (_client)
-	// 	delete _client;
+	if (_client)
+		delete _client;
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;
 }

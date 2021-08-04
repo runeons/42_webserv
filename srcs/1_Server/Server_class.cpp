@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/03 15:04:13 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/04 20:54:40 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,49 +147,50 @@ void Server::treat_incoming_connection_for_writing(int socket)
 
 void Server::select_and_treat_connections(void)
 {
-	int			nb_fd_ready = 0;
-	//
-	// while (0)
-	// {
-	// 	FD_ZERO(&_active_fds);
-	// 	FD_SET(_master_socket, &_active_fds);
-	// 	// accept() ne renvoie pas d'exception car renvoie -1 en continu
-	// 	_client->setSocket(::accept(_master_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>(&addrlen)));
-	// 	if (_client->getSocket() >= 0)
-	// 	{
-	// 		std::cout << GREEN_B << "Connexion received from " << _client->getSocket() << C_RES << std::endl;
-	// 		_client->treat_client();
-	// 		_client->close();
-	// 	}
-	// }
-	while (1) // rework example GNU READ ONLY
+	// int			nb_fd_ready = 0;
+	socklen_t	addrlen = sizeof(_address);
+
+	while (1)
 	{
 		FD_ZERO(&_active_fds);
 		FD_SET(_master_socket, &_active_fds);
-		// Block until input arrives on one or more active sockets
-		_read_fds = _active_fds;
-		// _write_fds = _active_fds;
-		nb_fd_ready = select(FD_SETSIZE, &_read_fds, NULL, NULL, NULL);
-		// nb_fd_ready = select(FD_SETSIZE, &_read_fds, &_write_fds, NULL, NULL);
-		if (nb_fd_ready < 0)
+		// accept() ne renvoie pas d'exception car renvoie -1 en continu
+		_client->setSocket(::accept(_master_socket, reinterpret_cast<struct sockaddr *>(&_address), reinterpret_cast<socklen_t *>(&addrlen)));
+		if (_client->getSocket() >= 0)
 		{
-			perror("___select___");
-			exit (EXIT_FAILURE);
-		}
-		// Service all the sockets with input pending
-		for (int i = 0; i < FD_SETSIZE; i++)
-		{
-			if (FD_ISSET(i, &_read_fds)) // incoming connection
-			{
-				if (i == _master_socket) // Connection request on original socket
-					treat_incoming_new_connection_for_reading(i);
-				else // Data arriving on an already-connected socket
-					treat_incoming_existing_connection_for_reading(i);
-			}
-			else if (FD_ISSET(i, &_write_fds))
-				treat_incoming_connection_for_writing(i);
+			std::cout << GREEN_B << "Connexion received from " << _client->getSocket() << C_RES << std::endl;
+			_client->treat_client();
+			_client->close();
 		}
 	}
+	// while (0) // rework example GNU READ ONLY
+	// {
+	// 	FD_ZERO(&_active_fds);
+	// 	FD_SET(_master_socket, &_active_fds);
+	// 	// Block until input arrives on one or more active sockets
+	// 	_read_fds = _active_fds;
+	// 	// _write_fds = _active_fds;
+	// 	nb_fd_ready = select(FD_SETSIZE, &_read_fds, NULL, NULL, NULL);
+	// 	// nb_fd_ready = select(FD_SETSIZE, &_read_fds, &_write_fds, NULL, NULL);
+	// 	if (nb_fd_ready < 0)
+	// 	{
+	// 		perror("___select___");
+	// 		exit (EXIT_FAILURE);
+	// 	}
+	// 	// Service all the sockets with input pending
+	// 	for (int i = 0; i < FD_SETSIZE; i++)
+	// 	{
+	// 		if (FD_ISSET(i, &_read_fds)) // incoming connection
+	// 		{
+	// 			if (i == _master_socket) // Connection request on original socket
+	// 				treat_incoming_new_connection_for_reading(i);
+	// 			else // Data arriving on an already-connected socket
+	// 				treat_incoming_existing_connection_for_reading(i);
+	// 		}
+	// 		else if (FD_ISSET(i, &_write_fds))
+	// 			treat_incoming_connection_for_writing(i);
+	// 	}
+	// }
 }
 
 // ********************************************* main - launch() *********************************************

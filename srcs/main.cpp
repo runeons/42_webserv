@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:12:44 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/04 20:22:53 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/04 20:43:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ std::string	get_config_file(char *filename)
 		ifs.close();
 	return (file);
 }
+
 void		clean_comments_config_file(std::string & config_file)
 {
 	while (1)

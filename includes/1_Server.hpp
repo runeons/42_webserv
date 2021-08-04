@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 20:32:55 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/04 20:52:30 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Server
 {
 	private:
 		Config *				_config;
-		// Client *				_client;
+		Client *				_client;
 		std::vector<Client *>	_clients;
 		SOCKET					_master_socket;
 		struct sockaddr_in		_address;
