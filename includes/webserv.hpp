@@ -28,6 +28,13 @@ typedef int SOCKET;
 # define SUCCESS	0
 # define FAILURE	-1
 
+
+# define MAX_CLIENTS 50
+# define CHUNK 512
+
+# define PATH_AUTOINDEX "autoindex_res"
+
+
 # include <Exceptions.hpp>
 # include <0_Config.hpp>
 # include <0_Location.hpp>

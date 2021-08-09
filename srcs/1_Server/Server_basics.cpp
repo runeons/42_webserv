@@ -1,6 +1,4 @@
-
 # include <webserv.hpp>
-
 
 /*
 	struct sockaddr_in {
@@ -22,8 +20,6 @@ Server::Server(void)
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	// TO DO parse config
 	_config = new Config; // parametree avec le parsing
-	// _client = new Client(*_config); // dans lequel j'envoie Config
-	// _client = NULL;
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
@@ -47,8 +43,6 @@ Server::Server(const Config & config)
 	// TO DO parse config
 	_config = const_cast<Config *>(&config); // parametree avec le parsing
 	_config->setRootDir("./" + _config->getRootDir());
-	_client = new Client(*_config); // dans lequel j'envoie Config
-	// _client = NULL;
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
@@ -78,8 +72,7 @@ Server::Server(const Server& src)
 Server::~Server(void)
 {
 	delete _config;
-	if (_client)
-		delete _client;
+	// TO DO delete all clients
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;
 }
@@ -107,17 +100,6 @@ void Server::setConfig(Config * config)
 	_config = config;
 	return ;
 }
-//
-// Client * Server::getClient(void) const
-// {
-// 	return (_client);
-// }
-//
-// void Server::setClient(Client * client)
-// {
-// 	_client = client;
-// 	return ;
-// }
 
 SOCKET Server::getSocket(void) const
 {

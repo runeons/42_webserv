@@ -3,16 +3,6 @@
 
 // ********************************************* ::recv => request en std::string *********************************************
 
-void Client::receive_first(void)
-{
-	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
-	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
-	if (_bytes_read == -1)
-		throw Exceptions::RecvFailure();
-	_chunk[_bytes_read] = '\0';
-
-}
-
 size_t		Client::retrieve_request_content_length(std::string buf_str)
 {
 	std::string	content_length_line;
@@ -42,38 +32,39 @@ int		Client::calculate_total_bytes_expected(std::string buf_str)
 
 void Client::receive_with_content_length(void)
 {
-	std::cerr << C_G_RED << "[ DEBUG receive_with_content_length ] " << C_RES << std::endl;
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
 	if (_bytes_read == -1)
 		throw Exceptions::RecvFailure();
 	_chunk[_bytes_read] = '\0';
 
 	std::string buf_str(_chunk);
-	// si Content-Length can be found in request
-	if (buf_str.find("Content-Length", 0) != std::string::npos)
+	if (buf_str.find("Content-Length", 0) != std::string::npos) // si Content-Length can be found in request
 	{ // I LOVE YOU
 		_total_bytes_expected = calculate_total_bytes_expected(buf_str);
 		_remaining_bytes_to_recv = _total_bytes_expected - _bytes_read;
-		// std::cerr << C_G_RED << "[ DEBUG _total_bytes_expected ] " << C_RES << _total_bytes_expected << std::endl;
-		// std::cerr << C_G_RED << "[ DEBUG _remaining_bytes_to_recv ] " << C_RES << _remaining_bytes_to_recv << std::endl;
 		if (_total_bytes_expected == _bytes_read)
 			std::cout << C_G_BLUE << "Request fully received !" << std::endl;
 		else
-		{
 			std::cout << C_G_BLUE << _remaining_bytes_to_recv << " remaining to read w/ recv" << std::endl;
-		}
 	}
 	else
 	{
-		std::cout << C_G_BLUE << "no Content-Length found in request" << C_RES << std::endl;
+		std::cout << C_G_BLUE << "Content-Length not found in request" << C_RES << std::endl;
 		if (_total_bytes_expected == 0) // s'il n'y a pas eu de Content-Length du tout, set _total_bytes_expected puisque envoyé à RequestParser
 			_total_bytes_expected = _bytes_read;
 		if (_remaining_bytes_to_recv > 0)
 			_remaining_bytes_to_recv -= _bytes_read;
 	}
+	std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
+}
 
-	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
-
+void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
+{
+	// print current request chunk
+	std::cout << "[";
+	for (ssize_t i = 0; i < bytes_read; i++)
+		std::cout << chunk[i] ;
+	std::cout << "]" << std::endl;
 }
 
 void Client::receive_request(void)
@@ -81,18 +72,10 @@ void Client::receive_request(void)
 	// fcntl(_socket, F_SETFL, O_NONBLOCK);
 	try
 	{
-		// receive_first();
 		receive_with_content_length();
-		// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
-		std::cout << GREEN << "___Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
-		// print request
-		// std::cout << "[";
-		// for (ssize_t i = 0; i < _bytes_read; i++)
-		// 	std::cout << _chunk[i] ;
-		// std::cout << "]" << std::endl;
+		// print_request_chunk(_bytes_read, _chunk);
 		_request.append(_chunk, _bytes_read);
-		std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
-		// _request.assign(_chunk, _bytes_read);
+		// std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
 	}
 	catch (Exceptions::RecvFailure & e)
 	{
@@ -122,7 +105,6 @@ void	Client::check_http_version(void)
 
 void	Client::check_request(void)
 {
-	std::cerr << C_G_RED << "[ DEBUG _total_bytes_expected ] " << C_RES << _total_bytes_expected << std::endl;
 	_request_parser = new RequestParser(_request, _total_bytes_expected + 1); // delete in generate_response :) // TOCHECK
 	_request_parser->print_request_info();
 	_status_code = _request_parser->get__status();
@@ -161,7 +143,7 @@ void		Client::apply_location(void)
 {
 	// si path contient location, lier _applied location à la location
 	std::string							rsc = _request_parser->get__resource();
-	std::map<std::string, Location>	m = _config.getLocations();
+	std::map<std::string, Location>		m = _config.getLocations();
 	Location 							*l = NULL;;
 
 	// TO PRECISE iterate through maps && search from end to beginning
@@ -300,7 +282,7 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-		// attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
+		// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
@@ -331,25 +313,29 @@ void Client::send_response(void)
 
 // ********************************************* main - treat client *********************************************
 
-void Client::client_receive_request(void)
+void Client::print_response_header(void)
 {
-	receive_request();
-	check_request();
+	std::cout <<  _response->getResponseHeader() << std::endl;
 }
 
-void Client::client_send_response(void)
+void Client::print_response_body(void)
 {
-	translate_path();
-	read_resource();
-	generate_response();
-	send_response();
+	std::cout <<  _response->getResponseHeader() << std::endl;
+	std::cout <<  _response->getResponseBody() << std::endl;
+}
 
-	// std::cout <<  _response->getResponseHeader() << std::endl;
-	// std::cout <<  _response->getResponseBody() << std::endl;
+void Client::print_response(void)
+{
+	print_response_header();
+	print_response_body();
 }
 
 void Client::treat_client(void)
 {
-	client_receive_request();
-	client_send_response();
+	receive_request();
+	check_request();
+	translate_path();
+	read_resource();
+	generate_response();
+	send_response();
 }
