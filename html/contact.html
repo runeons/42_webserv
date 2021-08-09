@@ -1,13 +1,3 @@
-<!--
-                                                          :::      ::::::::
-     contact.html                                       :+:      :+:    :+:
-                                                      +:+ +:+         +:+
-     By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+
-                                                  +#+#+#+#+#+   +#+
-     Created: 2021/07/25 04:23:36 by tharchen          #+#    #+#
-     Updated: 2021/07/27 13:30:53 by tharchen         ###   ########.fr
--->
-
 <!doctype html>
 <html lang="en">
 	<head>
@@ -18,13 +8,22 @@
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-		<title>Hello, world!</title>
+		<title>Contact</title>
 		<style media="screen">
 			body {
-				/* background-image: url('images/wallpaper_large.jpeg');
+				background-image: url('images/wallpaper_large.jpeg');
 				background-attachment: fixed;
-  				background-size: 100% 100%;*/
-				background-color: #7e7e7e;
+  				background-size: 100% 100%;
+				background-color: black;
+			}
+			.nav {
+				margin-top: 2%;
+				font-size: 42px;
+				margin-left: 2%;
+				margin-right: 2%;
+			}
+			.nav-link {
+				color: #a3a205;
 			}
 			.form1 {
 				text-align: center;
@@ -34,94 +33,85 @@
 				margin-left: 30%;
 			}
 			.subform {
-				border: 5px solid black;
+				border: 5px solid #e3e3e3;
 				border-radius: 20%;
 				padding: 3%;
 				padding-left: 5%;
 				padding-right: 5%;
 			}
-			/* .form2 {
+			.subform2 {
+				border: 5px solid #e3e3e3;
+				border-radius: 20%;
+				padding: 3%;
+				padding-left: 5%;
+				padding-right: 5%;
+			}
+			.getpost
+			{
 				text-align: center;
-				margin-top: 10%;
-				font-size: 30px;
-			} */
+				margin-right: 10%;
+				margin-left: 10%;
+				margin-top: 5%;
+				width: 80%;
+				font-size: 20px;
+				display: table;
+			}
+			.getpost form
+			{
+				text-align: center;
+				display: table-cell;
+			}
+			.labels
+			{
+				color: cyan;
+			}
 		</style>
 	</head>
 	<body>
+		<ul class="nav">
+			<li class="nav-item">
+				<a class="nav-link active" href="/">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/contact.html">Contact</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/documents/">Documents/</a>
+			</li>
+		</ul>
+			<div class="getpost">
+				<form action="/contact.html" method="get" class="subform">
+					<label class="labels" for="id1">GET</label>
+					<div class="form-group">
+						<textarea class="form-control" name="first_name">Voltaire</textarea>
+					</div>
+					<div class="form-group">
+						<textarea class="form-control" name="last_name">Filoutier</textarea>
+					</div>
+					<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
+					<button class="btn btn-primary">Send data with GET request</button>
+				</form>
+				<form action="/contact.html" method="post" class="subform">
+					<label class="labels">POST</label>
+					<div class="form-group">
+						<textarea class="form-control" name="first_name">Prairie</textarea>
+					</div>
+					<div class="form-group">
+						<textarea class="form-control" name="last_name">OA</textarea>
+					</div>
+					<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
+					<button class="btn btn-primary">Send data with POST request</button>
+				</form>
+			</div>
 		<div class="form1">
-			<form action="/contact.html" method="get" class="subform">
-				<label for="id1">GET</label>
-				<div class="form-group">
-					<textarea class="form-control" name="first_name">Voltaire</textarea>
-				</div>
-				<div class="form-group">
-					<textarea class="form-control" name="last_name">Filoutier</textarea>
-				</div>
-				<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
-				<button class="btn btn-primary">Send data with GET request</button>
-			</form>
-			<br>
-			<form action="/contact.html" method="post" class="subform">
-				<label>POST</label>
-				<div class="form-group">
-					<textarea class="form-control" name="first_name">Prairie</textarea>
-				</div>
-				<div class="form-group">
-					<textarea class="form-control" name="last_name">OA</textarea>
-				</div>
-				<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
-				<button class="btn btn-primary">Send data with POST request</button>
-			</form>
-			<br>
 			<form class="subform" action="/contact.html" method="post" enctype="multipart/form-data">
-				<label for="id_1">FILE</label>
+				<label class="labels" for="id_1">FILE</label>
 				<br>
 				<input class="subform" type="file" id="file" name="myFile" label="hello">
 				<br>
 				<button class="btn btn-primary">Send file with POST request</button>
 			</form>
 		</div>
-		<!--
-		<div class="form2">
-			<form action="#" method="get">
-			  <div>
-			    <label for="say">var 1</label>
-			    <input name="say" id="say" value="FOO">
-			  </div>
-			  <div>
-			    <label for="to">var 2</label>
-			    <input name="to" value="BAR">
-			  </div>
-			  <div>
-			    <button>Envoyer mes salutations [GET]</button>
-			  </div>
-			</form>
-			<br /><br />
-			<form action="#" method="POST">
-			  <div>
-			    <label for="say">var 1</label>
-			    <input name="say" id="say" value="FOO">
-			  </div>
-			  <div>
-			    <label for="to">var 2</label>
-			    <input name="to" id="to" value="BAR">
-			  </div>
-			  <div>
-			    <button>Envoyer mes salutations [POST]</button>
-			  </div>
-			</form>
-			<br /><br />
-			<form action="#" method="post" enctype="multipart/form-data">
-			  <div>
-			    <label for="file">File: </label>
-			    <input type="file" id="file" name="myFile" label="hello">
-			  </div>
-			  <div>
-			    <button>Send file</button>
-			  </div>
-			</form>
-		</div>
-		-->
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

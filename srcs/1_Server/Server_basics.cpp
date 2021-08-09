@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server_basics.cpp                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/03 13:16:14 by tsantoni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
 
@@ -52,6 +41,31 @@ Server::Server(void)
 	return ;
 }
 
+Server::Server(const Config & config)
+{
+	std::cout << GREY << "Server creation..." << C_RES << std::endl;
+	// TO DO parse config
+	_config = const_cast<Config *>(&config); // parametree avec le parsing
+	_config->setRootDir("./" + _config->getRootDir());
+	_client = new Client(*_config); // dans lequel j'envoie Config
+	// _client = NULL;
+	_address.sin_family = AF_INET;
+	_address.sin_addr.s_addr = INADDR_ANY;
+	try
+	{
+		if (inet_aton(_config->getHost().c_str(), &_address.sin_addr) <= 0)
+			throw Exceptions::InvalidAddress();
+		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
+	}
+	catch (Exceptions::InvalidAddress & e)
+	{
+		std::cerr << RED << e.what() <<  C_RES << std::endl;
+	}
+	_address.sin_port = htons(_config->getPort());
+	_master_socket = 0;
+	return ;
+}
+
 // Copy constructor
 Server::Server(const Server& src)
 {
@@ -64,8 +78,8 @@ Server::Server(const Server& src)
 Server::~Server(void)
 {
 	delete _config;
-	// if (_client)
-	// 	delete _client;
+	if (_client)
+		delete _client;
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;
 }
@@ -93,7 +107,7 @@ void Server::setConfig(Config * config)
 	_config = config;
 	return ;
 }
-// 
+//
 // Client * Server::getClient(void) const
 // {
 // 	return (_client);

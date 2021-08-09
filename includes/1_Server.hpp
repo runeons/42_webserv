@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   1_Server.hpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:42:48 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/09 16:20:23 by tsantoni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
@@ -25,7 +14,7 @@ class Server
 {
 	private:
 		Config *				_config;
-		// Client *				_client;
+		Client *				_client;
 		std::vector<Client *>	_clients;
 		std::map<int, Client *>	_clients_map;
 		SOCKET					_master_socket;
@@ -37,7 +26,8 @@ class Server
 		int						_max_fd;
 
 	public:
-		Server();
+		Server(void);
+		Server(const Config & config);
 		Server(const Server & src);
 		virtual ~Server();
 

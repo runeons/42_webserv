@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   RequestParser.parser.class.cpp                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/01 15:16:54 by tsantoni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include <webserv.hpp>
 
@@ -27,7 +16,7 @@ void	RequestParser::CRLF(void)
 	}
 	catch (std::exception &) {
 		this->_head = head_save;
-		bc_s(); throw (LexerException("CRLF expected"));
+		bc_s(); throw (Exceptions::LexerException("CRLF expected"));
 	}
 }
 
@@ -80,7 +69,7 @@ void	RequestParser::dec_octet(void)
 					} // "25" 0-5
 					catch (std::exception &) {
 						this->_head = head_save;
-						bc_s(); throw (LexerException("dec_octet expected"));
+						bc_s(); throw (Exceptions::LexerException("dec_octet expected"));
 					}
 				}
 			}
@@ -116,7 +105,7 @@ void	RequestParser::IPvFuture(void)
 				try { CHAR(':'); }
 				catch (std::exception & e) {
 					this->_head = head_save;
-					throw (LexerException(e.what()));
+					throw (Exceptions::LexerException(e.what()));
 				}
 			}
 		}
@@ -139,7 +128,7 @@ void	RequestParser::IPvFuture(void)
 	}
 	catch (std::exception & e) {
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -161,7 +150,7 @@ void	RequestParser::h16(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -184,7 +173,7 @@ void	RequestParser::IPv4address(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -213,7 +202,7 @@ void	RequestParser::ls32(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -448,7 +437,7 @@ void	RequestParser::IPv6address(void)
 										catch (std::exception & e)
 										{
 											this->_head = head_save;
-											throw (LexerException(e.what()));
+											throw (Exceptions::LexerException(e.what()));
 										}
 									}
 								}
@@ -462,7 +451,7 @@ void	RequestParser::IPv6address(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -484,7 +473,7 @@ void	RequestParser::segment_nz(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -546,7 +535,7 @@ void	RequestParser::IP_literal(void)
 			try { IPvFuture(); }
 			catch (std::exception & e) {
 				this->_head = head_save;
-				throw (LexerException(e.what()));
+				throw (Exceptions::LexerException(e.what()));
 			}
 		}
 		CHAR(']');
@@ -554,7 +543,7 @@ void	RequestParser::IP_literal(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -580,7 +569,7 @@ void	RequestParser::path_rootless(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -600,7 +589,7 @@ void	RequestParser::path_absolute(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -630,7 +619,7 @@ void	RequestParser::pct_encoded(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -649,7 +638,7 @@ void	RequestParser::unreserved(void)
 					catch (std::exception &) {
 						try { CHAR('~'); }
 						catch (std::exception &) {
-							bc_s(); throw (LexerException("unreserved expected"));
+							bc_s(); throw (Exceptions::LexerException("unreserved expected"));
 						}
 					}
 				}
@@ -683,7 +672,7 @@ void	RequestParser::host(void)
 			try { reg_name(); }
 			catch (std::exception &) {
 				this->_head = head_start;
-				bc_s(); throw (LexerException("host expected"));
+				bc_s(); throw (Exceptions::LexerException("host expected"));
 			}
 		}
 	}
@@ -755,7 +744,7 @@ void	RequestParser::hier_part(void)
 	catch (std::exception &)
 	{
 		this->_head = head_start;
-		bc_s(); throw (LexerException("hier_part expected"));
+		bc_s(); throw (Exceptions::LexerException("hier_part expected"));
 	}
 }
 
@@ -789,7 +778,7 @@ void	RequestParser::scheme(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 
 }
@@ -815,7 +804,7 @@ void	RequestParser::pchar(void)
 					try { CHAR('@'); }
 					catch (std::exception &) {
 						this->_head = head_start;
-						bc_s(); throw (LexerException("pchar expected"));
+						bc_s(); throw (Exceptions::LexerException("pchar expected"));
 					}
 				}
 			}
@@ -859,7 +848,7 @@ void	RequestParser::authority(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -884,7 +873,7 @@ void	RequestParser::absolute_URI(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -932,7 +921,7 @@ void	RequestParser::absolute_path(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -952,7 +941,7 @@ void	RequestParser::HTTP_name(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -966,7 +955,7 @@ void	RequestParser::asterisk_form(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -980,7 +969,7 @@ void	RequestParser::authority_form(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -994,7 +983,7 @@ void	RequestParser::absolute_form(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1018,7 +1007,7 @@ void	RequestParser::origin_form(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1041,7 +1030,7 @@ void	RequestParser::obs_fold(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1057,7 +1046,7 @@ void	RequestParser::field_vchar(void)
 		catch (std::exception &)
 		{
 			this->_head = head_start;
-			bc_s(); throw (LexerException("field_vchar expected"));
+			bc_s(); throw (Exceptions::LexerException("field_vchar expected"));
 		}
 	}
 }
@@ -1086,7 +1075,7 @@ void	RequestParser::field_content(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1108,7 +1097,7 @@ void	RequestParser::token(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1130,7 +1119,7 @@ void	RequestParser::HTTP_version(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 	digest(this->_http_version);
 }
@@ -1154,7 +1143,7 @@ void	RequestParser::request_target(void)
 				try { asterisk_form(); }
 				catch (std::exception &) {
 					this->_head = head_start;
-					bc_s(); throw (LexerException("request_target expected"));
+					bc_s(); throw (Exceptions::LexerException("request_target expected"));
 				}
 			}
 		}
@@ -1174,7 +1163,7 @@ void	RequestParser::method(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 	digest(this->_method);
 }
@@ -1209,7 +1198,7 @@ void	RequestParser::field_name(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1231,7 +1220,7 @@ void	RequestParser::request_line(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1273,7 +1262,7 @@ void	RequestParser::header_field(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 	// TOCHECK maybe push back entries instead of push front to keep order
 	headers_iterator it = this->_header_fields.begin();
@@ -1290,7 +1279,7 @@ void	RequestParser::start_line(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }
 
@@ -1324,6 +1313,6 @@ void	RequestParser::HTTP_message(void)
 	catch (std::exception & e)
 	{
 		this->_head = head_start;
-		throw (LexerException(e.what()));
+		throw (Exceptions::LexerException(e.what()));
 	}
 }

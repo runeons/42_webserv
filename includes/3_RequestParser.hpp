@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_RequestParser.class.hpp                          :+:      :+:    :+:   */
+/*   3_RequestParser.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/01 14:35:00 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/04 20:33:42 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,6 @@
 # define PAT_CRLF	PAT_CR""PAT_LF
 
 // DEBUG BACKTRACE
-
-class LexerException: public std::exception
-{
-	private:
-		std::string _msg;
-	public:
-		LexerException(std::string msg): _msg(msg) {}  // constructor
-		virtual ~LexerException(void) throw() {} // destructor
-		virtual const char *what() const throw() { return (this->_msg.c_str()); }
-};
-
-class HTTP_ErrorStatusException: public std::exception
-{
-	private:
-		int _status_code;
-	public:
-		HTTP_ErrorStatusException(int status_code): _status_code(status_code) {}  // constructor
-		virtual ~HTTP_ErrorStatusException(void) throw() {} // destructor
-		virtual const char *what() const throw() {
-			std::cout << _status_code << std::endl;
-			return ("error http generated");
-		}
-		int get__status(void) const
-		{
-			return (_status_code);
-		}
-};
 
 class RequestParser
 {

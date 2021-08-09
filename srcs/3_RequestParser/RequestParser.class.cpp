@@ -75,7 +75,7 @@ int				RequestParser::eat(int to_eat)
 	if (this->_head == static_cast<size_t>(this->_bytes_read))
 	{
 		// std::cerr << C_G_MAGENTA << "warning:" << C_G_WHITE << " end of _request_raw reached ! (head: " << this->_head << ")" << C_RES << std::endl;
-		throw (LexerException("eat ending"));
+		throw (Exceptions::LexerException("eat ending"));
 	}
 	if (this->_request_raw[this->_head] == to_eat)
 	{

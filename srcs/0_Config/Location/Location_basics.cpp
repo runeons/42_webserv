@@ -1,21 +1,16 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Location_basics.cpp                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/31 11:12:24 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 10:52:41 by tsantoni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
+
+Location::Location(void)
+{
+	// std::cout << GREY << "Location creation..." << C_RES << std::endl;
+	this->clear();
+}
 
 // Parametric constructor
 Location::Location(std::string uri, std::string root_loc, std::string index, bool autoindex, std::vector<std::string> methods, std::string upload, std::vector<std::string> alias, std::string redir_301)
 {
-	std::cout << GREY << "Location creation..." << C_RES << std::endl;
+	// std::cout << GREY << "Location creation..." << C_RES << std::endl;
 	_uri = uri;
 	_root_loc = root_loc;
 	_index = index;
@@ -27,12 +22,35 @@ Location::Location(std::string uri, std::string root_loc, std::string index, boo
 	return ;
 }
 
+Location::Location(const Location & src)
+{
+	_uri = src.getUri();
+	_root_loc = src.getRootLoc();
+	_index = src.getIndex();
+	_autoindex = src.getAutoindex();
+	_methods = src.getMethods();
+	_upload = src.getUpload();
+	_alias = src.getAlias();
+}
+
 // Destructor
 Location::~Location(void)
 {
-	std::cout << GREY << "Location destruction..." << C_RES << std::endl;
+	// std::cout << GREY << "Location destruction..." << C_RES << std::endl;
 	return;
 }
+
+void	Location::clear(void)
+{
+	this->_uri = "";
+	this->_root_loc = "";
+	this->_index = "";
+	this->_autoindex = false;
+	this->_methods.clear();
+	this->_upload = "";
+	this->_alias.clear();
+}
+
 
 // Assignation operator
 Location &	Location::operator=(const Location& rhs)
@@ -98,7 +116,7 @@ void Location::setAutoindex(const bool autoindex)
 	return ;
 }
 
-std::vector<std::string> Location::getMethods(void) const
+const std::vector<std::string> & Location::getMethods(void) const
 {
 	return (_methods);
 }
@@ -131,7 +149,7 @@ void Location::setRedir301(const std::string redir_301)
 	return ;
 }
 
-std::vector<std::string> Location::getAlias(void) const
+const std::vector<std::string> & Location::getAlias(void) const
 {
 	return (_alias);
 }

@@ -61,7 +61,7 @@ class LexerException: public std::exception
 
 void fun_g(void)
 {
-	bc(); throw (LexerException("fuck, it\'s wrong !"));
+	bc(); throw (Exceptions::LexerException("fuck, it\'s wrong !"));
 }
 
 void fun_f(void) { fun_g(); }
