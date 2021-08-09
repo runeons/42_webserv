@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:33 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/09 17:37:59 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/09 19:48:46 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ Client::Client(Config & config) : _config(config)
 	_applied_location = NULL;
 	_remaining_bytes_to_recv = 0;
 	_total_bytes_expected = 0;
+	_remaining_bytes_to_send = 0;
+	_total_bytes_to_send = 0;
 	memset(_chunk, 0, MAX_RCV);	//clear the variable
 
 	// _parameters_map = ();
@@ -86,6 +88,28 @@ int Client::get_total_bytes_expected(void) const
 void Client::set_total_bytes_expected(const int bytes)
 {
 	_total_bytes_expected = bytes;
+	return ;
+}
+
+int Client::get_remaining_bytes_to_send(void) const
+{
+	return (_remaining_bytes_to_send);
+}
+
+void Client::set_remaining_bytes_to_send(const int bytes)
+{
+	_remaining_bytes_to_send = bytes;
+	return ;
+}
+
+int Client::get_total_bytes_to_send(void) const
+{
+	return (_total_bytes_to_send);
+}
+
+void Client::set_total_bytes_to_send(const int bytes)
+{
+	_total_bytes_to_send = bytes;
 	return ;
 }
 

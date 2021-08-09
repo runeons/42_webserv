@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/09 19:02:52 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/09 20:44:07 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ class Client
 		// response
 		Response					*_response;
 		std::string					_page_content;
+		int							_total_bytes_to_send;
+		int							_remaining_bytes_to_send;
+		std::vector<char>			_response_vector;
 
 		Client();
 		Client(const Client & src);
@@ -62,6 +65,11 @@ class Client
 		void 			set_remaining_bytes_to_recv(const int bytes);
 		int 			get_total_bytes_expected(void) const;
 		void 			set_total_bytes_expected(const int bytes);
+
+		int 			get_remaining_bytes_to_send(void) const;
+		void 			set_remaining_bytes_to_send(const int bytes);
+		int 			get_total_bytes_to_send(void) const;
+		void 			set_total_bytes_to_send(const int bytes);
 
 		Client			&operator=(const Client & src);
 

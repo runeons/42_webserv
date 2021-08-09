@@ -53,6 +53,7 @@ void		Server::bind_address_and_port()
 void Server::listen_connections(void)
 {
 	// MAX CLIENTS = plutot MAX PENDING CONNECTIONS ?
+	// fcntl(_master_socket, F_SETFL, O_NONBLOCK);
 	if (::listen(_master_socket, MAX_CLIENTS) == -1)
 		throw Exceptions::ServerListen();
 	std::cout << GREEN << "Server waiting for connections..." <<  C_RES << std::endl;
@@ -69,6 +70,7 @@ void Server::accept_new_connection(int server_socket)
 		exit(EXIT_FAILURE);
 	}
 	cl->setSocket(client_socket);
+	fcntl(client_socket, F_SETFL, O_NONBLOCK);
 	_clients_map[client_socket] = cl;
 	std::cout << YELLOW << "New connection accepted from fd " << C_G_YELLOW << client_socket << C_RES << YELLOW << " to " << inet_ntoa(_address.sin_addr) << ":" << ntohs(_address.sin_port) << C_RES << std::endl;
 	FD_SET(client_socket, &_read_fds);
@@ -108,11 +110,16 @@ void Server::prepare_and_send_response(int client_socket)
 {
 	std::cerr << GREEN << "prepare_and_send_response " << C_G_GREEN << " (writing)" << C_RES << GREEN << " on socket " << C_G_GREEN << client_socket << C_RES << std::endl;
 	_clients_map[client_socket]->send_response();
-	FD_CLR(client_socket, &_write_fds);
-	FD_CLR(client_socket, &_read_fds);
-	if (_max_fd == client_socket)
+	// std::cerr << C_G_RED << "[ DEBUG _total_bytes_to_send     ] " << C_RES << _clients_map[client_socket]->get_total_bytes_to_send() << std::endl;
+	// std::cerr << C_G_RED << "[ DEBUG _remaining_bytes_to_send ] " << C_RES << _clients_map[client_socket]->get_remaining_bytes_to_send() << std::endl;
+	if (_clients_map[client_socket]->get_remaining_bytes_to_send() <= 0)
+	{
+		FD_CLR(client_socket, &_read_fds);
+		FD_CLR(client_socket, &_write_fds);
+		if (_max_fd == client_socket)
 		_max_fd--;
-	close(client_socket);
+		close(client_socket);
+	}
 }
 
 void Server::select_and_treat_connections(void)

@@ -69,7 +69,6 @@ void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
 
 void Client::receive_request(void)
 {
-	// fcntl(_socket, F_SETFL, O_NONBLOCK);
 	try
 	{
 		receive_with_content_length();
@@ -282,11 +281,15 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-		// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
+	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
 		delete _request_parser;
+	_total_bytes_to_send = _response->getResponse().length() + 1;
+	// copy response in _response_vector vector - may simplify
+	_response_vector.resize(_total_bytes_to_send);
+	memcpy(&_response_vector[0], _response->getResponse().c_str(), _total_bytes_to_send);
 }
 
 // ********************************************* ::send response *********************************************
@@ -294,16 +297,16 @@ void Client::generate_response(void)
 void Client::send_response(void)
 {
 	int	bytes_sent = 0;
-	int len = (_response->getResponse().length() + 1);
-
-	char buffer[len];
-	memcpy(buffer, _response->getResponse().c_str(), len);
+	if (_remaining_bytes_to_send == 0)
+		_remaining_bytes_to_send = _total_bytes_to_send;
 	try
 	{
-		bytes_sent = ::send(_socket, buffer, len, 0);
+		bytes_sent = ::send(_socket, &_response_vector[0], _response_vector.size(), 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
 		std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
+		_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
+		_remaining_bytes_to_send -= bytes_sent;
 	}
 	catch (Exceptions::SendFailure & e)
 	{
