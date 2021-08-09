@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:52 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/02 10:13:23 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/09 16:51:01 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string>
 # include <netinet/ip.h>
 # include <sys/socket.h>
+# include <sys/select.h>
 # include <arpa/inet.h>
 # include <fcntl.h>
 # include <unistd.h>
