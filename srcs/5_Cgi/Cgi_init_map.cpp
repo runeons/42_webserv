@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:12:07 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:12:49 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/10 11:30:35 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,23 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	m["REDIRECT_STATUS"] = "200";		// nécessaire si utilise php-cgi
 
 	// MUST (RFC)
-	m["GATEWAY_INTERFACE"] = "CGI/1.1";	// CGI/1.1
-	m["QUERY_STRING"] = "";				// parametres
-	m["REMOTE_ADDR"] = "127.0.0.1";				//
-	m["REQUEST_METHOD"] = "GET";			// methode
-	m["SCRIPT_NAME"] = "scripts/bonjour.php";				// ROOT-RELATIVE path to script (peut être un alias dans certains cas, par ex quand on utilise Apache)
-	m["SERVER_NAME"] = "webserv";				//
-	m["SERVER_PORT"] = "8000";				//
-	m["SERVER_PROTOCOL"] = "HTTP/1.1";			//
-	m["SERVER_SOFTWARE"] = "";			//
+	m["GATEWAY_INTERFACE"] = "CGI/1.1";
+	m["QUERY_STRING"]      = "";
+	m["REMOTE_ADDR"]       = "127.0.0.1";
+	m["REQUEST_METHOD"]    = _request.get__method();
+	// m["SCRIPT_NAME"]       = "./scripts/displayenv.pl";	// ROOT-RELATIVE path to script (peut être un alias dans certains cas, par ex quand on utilise Apache)
+	m["SCRIPT_NAME"]       = _script_name;
+	m["SERVER_NAME"]       = "webserv";
+	m["SERVER_PORT"]       = "8000";
+	m["SERVER_PROTOCOL"]   = "HTTP/" + _request.get__http_version();
+	m["SERVER_SOFTWARE"]   = "";
 
 	// CONDITIONAL (RFC)
 	// m["CONTENT_LENGTH"] = "";			// if no body, MUST NOT be set
 	// m["CONTENT_TYPE"] = "";				// if no body, can be NULL
 
 	// PROBABLY (RFC)
-	// m["PATH_INFO"] = "uploads/to_upload";	// SCRIPT_FILENAME will not be available if PATH_INFO is not (=$SCRIPT_FILENAME in some examples) : contient le path réel du script à exécuter
+	m["PATH_INFO"] = _script_name;	// SCRIPT_FILENAME will not be available if PATH_INFO is not (=$SCRIPT_FILENAME in some examples) : contient le path réel du script à exécuter
 	// m["PATH_TRANSLATED"] = "";			//
 	// m["REMOTE_HOST"] = "";
 

@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 21:08:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/10 11:02:42 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	Response::GET_create_body(void)
 void	Response::GET_handle(void)
 {
 	GET_create_body();
+	generate_response_header(); // from status_code, page_content and translated_path
+	concatenate_response();
 
 	// if CGI (dans quels cas ?? A reflechir)
 	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
@@ -61,23 +63,25 @@ void	Response::POST_create_body(void)
 	_response_body = _page_content;
 }
 
+void	Response::POST_create_body_cgi(void)
+{
+	std::cout << C_G_YELLOW << "Let's start with upload cgi !" << C_RES << std::endl;
+	Cgi *cgi = new Cgi(_request, "." + _request.get__resource());
+	cgi->launch();
+	_response_body = cgi->getFullBuf();
+	delete cgi;
+	std::cout << C_G_YELLOW << "We are finished with upload cgi !" << C_RES << std::endl;
+}
+
 void	Response::POST_handle(void)
 {
 	POST_create_body();
-
 	// check POST types
 	std::string request_content_type = _request.get__header_value("Content-Type");
-	if (request_content_type == "application/x-www-form-urlencoded")
-		; // POST formulaire
-	else if (request_content_type.find("multipart/form-data;", 0) == 0)
-		; // POST upload
-	// if CGI (dans quels cas ?? A reflechir)
-	// std::cout << C_G_YELLOW << "Let's start with cgi !" << C_RES << std::endl;
-	// Cgi *cgi = new Cgi(_request);
-	// cgi->launch();
-	// delete cgi;
-	// std::cout << C_G_YELLOW << "We are finished with cgi !" << C_RES << std::endl;
-
+	if (request_content_type.find("multipart/form-data;", 0) == 0)
+		POST_create_body_cgi();
+	generate_response_header(); // from status_code, page_content and translated_path
+	concatenate_response();
 }
 
 // ********************************************* generate response headers *********************************************
@@ -111,7 +115,4 @@ void	Response::generate(void)
 		GET_handle(); // from page_content
 	else if (_request.get__method() == "POST")
 		POST_handle(); // from page_content
-	generate_response_header(); // from status_code, page_content and translated_path
-	concatenate_response();
 }
-

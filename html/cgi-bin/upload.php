@@ -1,5 +1,3 @@
-#!/usr/bin/php
-
 <?php
 $uploaddir = '/Users/user/42_webserv/uploads/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);

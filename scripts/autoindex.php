@@ -1,3 +1,5 @@
+#!/usr/bin/php
+
 <?php
 echo "Here are our files";
 $path = ".";

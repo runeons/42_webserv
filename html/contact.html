@@ -104,12 +104,13 @@
 				</form>
 			</div>
 		<div class="form1">
-			<form class="subform" action="/contact.html" method="post" enctype="multipart/form-data">
+			<!-- <form class="subform" action="scripts/displayenv.pl" method="post" enctype="multipart/form-data"> -->
+			<form class="subform" action="html/cgi-bin/upload.cgi" method="POST" enctype="multipart/form-data">
 				<label class="labels" for="id_1">FILE</label>
 				<br>
-				<input class="subform" type="file" id="file" name="myFile" label="hello">
+				<input class="subform" type="file" name="file">
 				<br>
-				<button class="btn btn-primary">Send file with POST request</button>
+				<button class="btn btn-primary" name="submit" type="submit">Send file with POST request</button>
 			</form>
 		</div>
 		<!-- Optional JavaScript -->

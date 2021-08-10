@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:12:05 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:12:50 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/10 10:53:46 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	Cgi::exec_script(void)
 	pid_t	child;
 	int		status;
 
-	std::string script = "./scripts/displayenv.pl";
+	std::string script = _env_map["SCRIPT_NAME"];
 	char *av[3] = {
 		(char *)script.c_str(),
 		(char *)script.c_str(),
@@ -133,6 +133,7 @@ void	Cgi::exec_script(void)
 			bufcat(full_buf, &buf[0]);
 		}
 		std::cout << "full_buf: [" << full_buf << "]" << std::endl;
+		_full_buf = full_buf;
 		// TO DO : if body: treat header + body
 		close(cgi_fd);
 	}

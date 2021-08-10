@@ -9,7 +9,7 @@ print "<meta charset='UTF-8'>\n";
 print "<title>Variables d'environnement</title>\n";
 print "</head>\n";
 print "<body>\n";
-print "<h1>Environment variable by perl scrip</h1>\n";
+print "<h1>Environment variable by perl script</h1>\n";
 
 foreach $key (sort(keys %ENV)) {
   print "<strong>$key</strong> = $ENV{$key}<br>\n";
