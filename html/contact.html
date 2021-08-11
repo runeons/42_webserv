@@ -104,15 +104,27 @@
 				</form>
 			</div>
 		<div class="form1">
-			<!-- <form class="subform" action="scripts/displayenv.pl" method="post" enctype="multipart/form-data"> -->
+			<!-- <form class="subform" enctype="multipart/form-data" action="html/cgi-bin/displayenv.pl" method="post"> -->
+			<form class="subform" enctype="multipart/form-data" action="html/cgi-bin/upload.php" method="post">
+			<!-- <form class="subform" enctype="multipart/form-data" action="html/cgi-bin/upload_correc.php" method="post"> -->
+				<!-- MAX_FILE_SIZE doit précéder le champ input de type file -->
+				<!-- <input type="hidden" name="MAX_FILE_SIZE" value="30000" /> -->
+				<!-- Le nom de l'élément input détermine le nom dans le tableau $_FILES -->
+				Envoyez ce fichier : <input class="subform" name="userfile" type="file" />
+				<input type="submit" value="Envoyer le fichier" />
+			</form>
+		</div>
+		<!-- <div class="form1">
+			<form class="subform" action="scripts/displayenv.pl" method="post" enctype="multipart/form-data">
 			<form class="subform" action="html/cgi-bin/upload.cgi" method="POST" enctype="multipart/form-data">
+			<form class="subform" action="html/cgi-bin/upload.php" method="POST" enctype="multipart/form-data">
 				<label class="labels" for="id_1">FILE</label>
 				<br>
 				<input class="subform" type="file" name="file">
 				<br>
 				<button class="btn btn-primary" name="submit" type="submit">Send file with POST request</button>
 			</form>
-		</div>
+		</div> -->
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

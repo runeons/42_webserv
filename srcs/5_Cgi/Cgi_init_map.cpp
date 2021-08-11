@@ -6,38 +6,53 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:12:07 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/10 11:30:35 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/11 09:55:54 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
+// this->_env_map["CONTENT_LENGTH"]    =    iToString(this->_req.body_size);// content-length de la requete
+// this->_env_map["CONTENT_TYPE"]        =    headers["content-type"];    // content-type de la requete (POST)
+//
+// this->_env_map["PATH_INFO"]            =    this->_req.req_line.target;    // derniere partie de l'URI apres le host
+// this->_env_map["PATH_TRANSLATED"]    =    this->_res.getTarget();    // adresse reelle du script (idem PATH_INFO pour nous)
+//
+// this->_env_map["SCRIPT_NAME"]        =    this->_res.getTarget();    // full path du fichier de script
+// this->_env_map["SCRIPT_FILENAME"]    =    this->_res.getTarget();    // full path du fichier de script
+// this->_env_map["UPLOAD_DIR"]        =    this->_req.config.upload_dir;
+
 std::map<std::string, std::string>	Cgi::init_map_env()
 {
-	std::map<std::string, std::string> m;
+	std::map<std::string, std::string>	m;
 
 	// MUST (discord)
-	m["REDIRECT_STATUS"] = "200";		// nécessaire si utilise php-cgi
+	m["REDIRECT_STATUS"]	= "200";		// nécessaire si utilise php-cgi
 
 	// MUST (RFC)
-	m["GATEWAY_INTERFACE"] = "CGI/1.1";
-	m["QUERY_STRING"]      = "";
-	m["REMOTE_ADDR"]       = "127.0.0.1";
-	m["REQUEST_METHOD"]    = _request.get__method();
+	m["GATEWAY_INTERFACE"]	= "CGI/1.1";
+	m["QUERY_STRING"]		= "";
+	m["REMOTE_ADDR"]		= "127.0.0.1";
+	m["REQUEST_METHOD"]		= _request.get__method();
 	// m["SCRIPT_NAME"]       = "./scripts/displayenv.pl";	// ROOT-RELATIVE path to script (peut être un alias dans certains cas, par ex quand on utilise Apache)
-	m["SCRIPT_NAME"]       = _script_name;
-	m["SERVER_NAME"]       = "webserv";
-	m["SERVER_PORT"]       = "8000";
-	m["SERVER_PROTOCOL"]   = "HTTP/" + _request.get__http_version();
-	m["SERVER_SOFTWARE"]   = "";
+	m["SCRIPT_NAME"]		= "/Users/user/42_webserv" + _request.get__resource();     // full path du fichier de script
+	m["SERVER_NAME"]		= "webserv";
+	m["SERVER_PORT"]		= "8000";
+	m["SERVER_PROTOCOL"]	= "HTTP/" + _request.get__http_version();
+	m["SERVER_SOFTWARE"]	= "webserv";
 
 	// CONDITIONAL (RFC)
-	// m["CONTENT_LENGTH"] = "";			// if no body, MUST NOT be set
-	// m["CONTENT_TYPE"] = "";				// if no body, can be NULL
+	m["CONTENT_LENGTH"]		= _request.get__header_value("Content-Length");			// if no body, MUST NOT be set
+	m["CONTENT_TYPE"]		= _request.get__header_value("Content-Type");				// if no body, can be NULL
+
+	// added
+	m["UPLOAD_DIR"]			= "/Users/user/42_webserv/html/cgi-bin/upload/";
+	m["PATH_INFO"]			= "/Users/user/42_webserv" + _request.get__resource();	// SCRIPT_FILENAME will not be available if PATH_INFO is not (=$SCRIPT_FILENAME in some examples) : contient le path réel du script à exécuter
+	m["PATH_TRANSLATED"]	= "/Users/user/42_webserv" + _request.get__resource();		// adresse reelle du script (idem PATH_INFO pour nous)
+	m["SCRIPT_FILENAME"]	= "/Users/user/42_webserv" + _request.get__resource();		// full path du fichier de script
+	m["QUERY_STRING"]		= "";			//
 
 	// PROBABLY (RFC)
-	m["PATH_INFO"] = _script_name;	// SCRIPT_FILENAME will not be available if PATH_INFO is not (=$SCRIPT_FILENAME in some examples) : contient le path réel du script à exécuter
-	// m["PATH_TRANSLATED"] = "";			//
 	// m["REMOTE_HOST"] = "";
 
 	// PROBABLY NOT (RFC)
