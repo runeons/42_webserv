@@ -1,615 +1,626 @@
 
 #include <webserv.hpp>
 
-//// parser
+// int				deep = 0;
+// std::string		g_tmp;
 
 // CRLF = CR LF
 void	RequestParser::CRLF(void)
-{
-	size_t	head_save = 0;
-
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		head_save = this->_head;
 		CR();
 		LF();
 	}
-	catch (std::exception &) {
-		this->_head = head_save;
-		bc_s(); throw (Exceptions::LexerException("CRLF expected"));
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("CRLF expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
+
 
 // OWS = *( SP / HTAB )
 void	RequestParser::OWS(void)
-{
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		try { SP(); }
-		catch (std::exception &) {
-			try { HTAB(); }
-			catch (std::exception &) { return ; }
+		while (1)
+		{
+			try { SP(); continue ; }
+			catch (std::exception & e) { }
+			try { HTAB(); continue ; }
+			catch (std::exception & e) { break ; }
 		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("OWS expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
-// dec_octet   = DIGIT                 ; 0-9
-// 			/ 0x31-39 DIGIT         ; 10-99   ; 1-9 0-9
-// 			/ "1" 2DIGIT            ; 100-199 ; "1" 0-9 0-9
-// 			/ "2" 0x30-34 DIGIT     ; 200-249 ; "2" 0-4 0-9
-// 			/ "25" 0x30-35          ; 250-255 ; "25" 0-5
-
+// dec_octet	= DIGIT                 ; 0-9
+// 				/ 0x31-39 DIGIT         ; 10-99   ; 1-9 0-9
+// 				/ "1" 2DIGIT            ; 100-199 ; "1" 0-9 0-9
+// 				/ "2" 0x30-34 DIGIT     ; 200-249 ; "2" 0-4 0-9
+// 				/ "25" 0x30-35          ; 250-255 ; "25" 0-5
 void	RequestParser::dec_octet(void)
-{
-	size_t	head_save = 0;
-
-	head_save = this->_head;
-	try {
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		CHAR('2');
+		CHAR('5');
+		RANGE(0x30, 0x35);
+		RESET_ERROR;
+		END_FUN(SUCCESS); return ;
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	try
+	{
+		CHAR('2');
+		RANGE(0x30, 0x34);
 		DIGIT();
-	} // 0-9
-	catch (std::exception &) {
-		this->_head = head_save;
-		try {
-			RANGE(0x31, 0x39); DIGIT();
-		} // 1-9 0-9
-		catch (std::exception &) {
-			this->_head = head_save;
-			try {
-				CHAR('1'); DIGIT(); DIGIT();
-			} // "1" 0-9 0-9
-			catch (std::exception &) {
-				this->_head = head_save;
-				try {
-					CHAR('2'); RANGE(0x30, 0x34); DIGIT();
-				} // "2" 0-4 0-9
-				catch (std::exception &) {
-					this->_head = head_save;
-					try {
-						CHAR('2'); CHAR('5'); RANGE(0x30, 0x35);
-					} // "25" 0-5
-					catch (std::exception &) {
-						this->_head = head_save;
-						bc_s(); throw (Exceptions::LexerException("dec_octet expected"));
-					}
-				}
-			}
-		}
+		RESET_ERROR;
+		END_FUN(SUCCESS); return ;
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	try
+	{
+		CHAR('1');
+		DIGIT();
+		DIGIT();
+		RESET_ERROR;
+		END_FUN(SUCCESS); return ;
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	try
+	{
+		RANGE(0x31, 0x39);
+		DIGIT();
+		RESET_ERROR;
+		END_FUN(SUCCESS); return ;
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	try
+	{
+		DIGIT();
+		RESET_ERROR;
+		END_FUN(SUCCESS); return ;
+	}
+	catch (std::exception & e) {
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("dec_octet expected"));
 	}
 }
 
 // IPvFuture     = "v" 1*HEXDIG "." 1*( unreserved / sub_delims / ":" )
 void	RequestParser::IPvFuture(void)
-{
-	size_t	head_save = 0;
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	head_save = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CHAR('v');
-		HEXDIG();
-		while (1)
+		for (int i = 0; 1; i++)
 		{
 			try { HEXDIG(); }
-			catch (std::exception &) { break ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
 		}
 		CHAR('.');
-		head_save = this->_head;
-		try { unreserved(); }
-		catch (std::exception &) {
-			this->_head = head_save;
-			try { sub_delims(); }
-			catch (std::exception &) {
-				this->_head = head_save;
-				try { CHAR(':'); }
-				catch (std::exception & e) {
-					this->_head = head_save;
-					throw (Exceptions::LexerException(e.what()));
-				}
-			}
-		}
-		while (1)
+		for (int i = 0; 1; i++)
 		{
-			try { unreserved(); }
-			catch (std::exception &) {
-				this->_head = head_save;
-				try { sub_delims(); }
-				catch (std::exception &) {
-					this->_head = head_save;
-					try { CHAR(':'); }
-					catch (std::exception & e) {
-						this->_head = head_save;
-						break ;
-					}
-				}
-			}
+			try { unreserved(); continue ; }
+			catch (std::exception & e) {}
+			try { sub_delims(); continue ; }
+			catch (std::exception & e) {}
+			try { CHAR(':'); continue ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
 		}
 	}
-	catch (std::exception & e) {
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("IPvFuture expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // h16           = 1*4( HEXDIG )
 void	RequestParser::h16(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		HEXDIG();
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			try { HEXDIG(); }
-			catch (std::exception &) { return ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
 		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("h16 expected"));
 	}
-}
-
-// IPv4address = dec_octet "." dec_octet "." dec_octet "." dec_octet
-void	RequestParser::IPv4address(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try
-	{
-		dec_octet();
-		CHAR('.');
-		dec_octet();
-		CHAR('.');
-		dec_octet();
-		CHAR('.');
-		dec_octet();
-	}
-	catch (std::exception & e)
-	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
-	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // ls32          = ( h16 ":" h16 ) / IPv4address
 void	RequestParser::ls32(void)
-{
-	size_t	head_start = 0;
-	size_t	head_save = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		head_save = this->_head;
-		try
-		{
-			h16();
-			CHAR(':');
-			h16();
-		}
-		catch (std::exception &)
-		{
-			this->_head = head_save;
-			IPv4address();
-		}
+		h16();
+		CHAR(':');
+		h16();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	try
+	{
+		IPv4address();
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("ls32 expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
-// IPv6address =                            6( h16 ":" ) ls32
-// 			/                       "::" 5( h16 ":" ) ls32
-// 			/ [               h16 ] "::" 4( h16 ":" ) ls32
-// 			/ [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
-// 			/ [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
-// 			/ [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
-// 			/ [ *4( h16 ":" ) h16 ] "::"              ls32
-// 			/ [ *5( h16 ":" ) h16 ] "::"              h16
-// 			/ [ *6( h16 ":" ) h16 ] "::"
-
+// IPv6address	=                            6( h16 ":" ) ls32
+// 				/                       "::" 5( h16 ":" ) ls32
+// 				/ [               h16 ] "::" 4( h16 ":" ) ls32
+// 				/ [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+// 				/ [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+// 				/ [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
+// 				/ [ *4( h16 ":" ) h16 ] "::"              ls32
+// 				/ [ *5( h16 ":" ) h16 ] "::"              h16
+// 				/ [ *6( h16 ":" ) h16 ] "::"
 void	RequestParser::IPv6address(void)
-{
-	size_t	head_start = 0;
-	size_t	head_save = 0;
-	size_t	head_save2 = 0;
-	size_t	head_save3 = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
+	// 6( h16 ":" ) ls32
 	try
 	{
-		head_save = this->_head;
+		for (int i = 0; i < 6; i++)
+		{
+			SAVE_HEAD(1);
+			try { h16(); CHAR(':'); }
+			catch (std::exception & e) { LOAD_HEAD(1); if (i < 6) throw (e); else break ; }
+		}
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// "::" 5( h16 ":" ) ls32
+	try
+	{
+		CHAR(':');
+		CHAR(':');
+		for (int i = 0; i < 5; i++)
+		{
+			SAVE_HEAD(1);
+			try { h16(); CHAR(':'); }
+			catch (std::exception & e) { LOAD_HEAD(1); if (i < 5) throw (e); else break ; }
+		}
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ h16 ] "::" 4( h16 ":" ) ls32
+	try
+	{
+		try { h16(); }
+		catch (std::exception & e) {}
+		CHAR(':');
+		CHAR(':');
+		for (int i = 0; i < 4; i++)
+		{
+			SAVE_HEAD(1);
+			try { h16(); CHAR(':'); }
+			catch (std::exception & e) { LOAD_HEAD(1); if (i < 4) throw (e); else break ; }
+		}
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+	try
+	{
+		SAVE_HEAD(1);
+		try
+		{
+			for (int i = 0; i < 1; i++)
+			{
+				SAVE_HEAD(2);
+				try { h16(); CHAR(':'); }
+				catch (std::exception & e) { LOAD_HEAD(2); break ; }
+			}
+			h16();
+		}
+		catch (std::exception & e) { LOAD_HEAD(1); }
+		CHAR(':');
+		CHAR(':');
+		for (int i = 0; i < 3; i++)
+		{
+			SAVE_HEAD(1);
+			try { h16(); CHAR(':'); }
+			catch (std::exception & e) { LOAD_HEAD(1); if (i < 3) throw (e); else break ; }
+		}
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+	try
+	{
+		SAVE_HEAD(1);
+		try
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				SAVE_HEAD(2);
+				try { h16(); CHAR(':'); }
+				catch (std::exception & e) { LOAD_HEAD(2); break ; }
+			}
+			h16();
+		}
+		catch (std::exception & e) { LOAD_HEAD(1); }
+		CHAR(':');
+		CHAR(':');
+		for (int i = 0; i < 2; i++)
+		{
+			SAVE_HEAD(1);
+			try { h16(); CHAR(':'); }
+			catch (std::exception & e) { LOAD_HEAD(1); if (i < 2) throw (e); else break ; }
+		}
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ *3( h16 ":" ) h16 ] "::" h16 ":" ls32
+	try
+	{
+		SAVE_HEAD(1);
+		try
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				SAVE_HEAD(2);
+				try { h16(); CHAR(':'); }
+				catch (std::exception & e) { LOAD_HEAD(2); break ; }
+			}
+			h16();
+		}
+		catch (std::exception & e) { LOAD_HEAD(1); }
+		CHAR(':');
+		CHAR(':');
+		h16();
+		CHAR(':');
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ *4( h16 ":" ) h16 ] "::" ls32
+	try
+	{
+		SAVE_HEAD(1);
+		try
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				SAVE_HEAD(2);
+				try { h16(); CHAR(':'); }
+				catch (std::exception & e) { LOAD_HEAD(2); break ; }
+			}
+			h16();
+		}
+		catch (std::exception & e) { LOAD_HEAD(1); }
+		CHAR(':');
+		CHAR(':');
+		ls32();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ *5( h16 ":" ) h16 ] "::" h16
+	try
+	{
+		SAVE_HEAD(1);
+		try
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				SAVE_HEAD(2);
+				try { h16(); CHAR(':'); }
+				catch (std::exception & e) { LOAD_HEAD(2); break ; }
+			}
+			h16();
+		}
+		catch (std::exception & e) { LOAD_HEAD(1); }
+		CHAR(':');
+		CHAR(':');
+		h16();
+	}
+	catch (std::exception & e) { LOAD_HEAD(0); }
+	// [ *6( h16 ":" ) h16 ] "::"
+	try
+	{
+		SAVE_HEAD(1);
 		try
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				h16();
-				CHAR(':');
+				SAVE_HEAD(2);
+				try { h16(); CHAR(':'); }
+				catch (std::exception & e) { LOAD_HEAD(2); break ; }
 			}
-			ls32();
+			h16();
 		}
-		catch (std::exception &)
-		{
-			this->_head = head_save;
-			try
-			{
-				CHAR(':');
-				CHAR(':');
-				for (int i = 0; i < 5; i++)
-				{
-					h16();
-					CHAR(':');
-				}
-				ls32();
-			}
-			catch (std::exception &)
-			{
-				this->_head = head_save;
-				try
-				{
-					try
-					{
-						head_save2 = this->_head;
-						h16();
-					}
-					catch (std::exception &) { this->_head = head_save2; }
-					CHAR(':');
-					CHAR(':');
-					for (int i = 0; i < 4; i++)
-					{
-						h16();
-						CHAR(':');
-					}
-					ls32();
-				}
-				catch (std::exception &)
-				{
-					this->_head = head_save;
-					try
-					{
-						try
-						{
-							head_save2 = this->_head;
-							try
-							{
-								for (int i = 0; i < 1; i++)
-								{
-									head_save3 = this->_head;
-									h16();
-									CHAR(':');
-								}
-							}
-							catch (std::exception &) { this->_head = head_save3; }
-							h16();
-						}
-						catch (std::exception &) { this->_head = head_save2; }
-						CHAR(':');
-						CHAR(':');
-						for (int i = 0; i < 3; i++)
-						{
-							h16();
-							CHAR(':');
-						}
-						ls32();
-					}
-					catch (std::exception &)
-					{
-						this->_head = head_save;
-						try
-						{
-							try
-							{
-								head_save2 = this->_head;
-								try
-								{
-									for (int i = 0; i < 2; i++)
-									{
-										head_save3 = this->_head;
-										h16();
-										CHAR(':');
-									}
-								}
-								catch (std::exception &) { this->_head = head_save3; }
-								h16();
-							}
-							catch (std::exception &) { this->_head = head_save2; }
-							CHAR(':');
-							CHAR(':');
-							for (int i = 0; i < 2; i++)
-							{
-								h16();
-								CHAR(':');
-							}
-							ls32();
-						}
-						catch (std::exception &)
-						{
-							this->_head = head_save;
-							try
-							{
-								try
-								{
-									head_save2 = this->_head;
-									try
-									{
-										for (int i = 0; i < 3; i++)
-										{
-											head_save3 = this->_head;
-											h16();
-											CHAR(':');
-										}
-									}
-									catch (std::exception &) { this->_head = head_save3; }
-									h16();
-								}
-								catch (std::exception &) { this->_head = head_save2; }
-								CHAR(':');
-								CHAR(':');
-								for (int i = 0; i < 1; i++)
-								{
-									h16();
-									CHAR(':');
-								}
-								ls32();
-							}
-							catch (std::exception &)
-							{
-								this->_head = head_save;
-								try
-								{
-									try
-									{
-										head_save2 = this->_head;
-										try
-										{
-											for (int i = 0; i < 4; i++)
-											{
-												head_save3 = this->_head;
-												h16();
-												CHAR(':');
-											}
-										}
-										catch (std::exception &) { this->_head = head_save3; }
-										h16();
-									}
-									catch (std::exception &) { this->_head = head_save2; }
-									CHAR(':');
-									CHAR(':');
-									ls32();
-								}
-								catch (std::exception &)
-								{
-									this->_head = head_save;
-									try
-									{
-										try
-										{
-											head_save2 = this->_head;
-											try
-											{
-												for (int i = 0; i < 5; i++)
-												{
-													head_save3 = this->_head;
-													h16();
-													CHAR(':');
-												}
-											}
-											catch (std::exception &) { this->_head = head_save3; }
-											h16();
-										}
-										catch (std::exception &) { this->_head = head_save2; }
-										CHAR(':');
-										CHAR(':');
-										h16();
-									}
-									catch (std::exception &)
-									{
-										this->_head = head_save;
-										try
-										{
-											try
-											{
-												head_save2 = this->_head;
-												try
-												{
-													for (int i = 0; i < 6; i++)
-													{
-														head_save3 = this->_head;
-														h16();
-														CHAR(':');
-													}
-												}
-												catch (std::exception &) { this->_head = head_save3; }
-												h16();
-											}
-											catch (std::exception &) { this->_head = head_save2; }
-											CHAR(':');
-											CHAR(':');
-										}
-										catch (std::exception & e)
-										{
-											this->_head = head_save;
-											throw (Exceptions::LexerException(e.what()));
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		catch (std::exception & e) { LOAD_HEAD(1); }
+		CHAR(':');
+		CHAR(':');
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("IPv6address expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
+}
+
+
+// IPv4address = dec_octet "." dec_octet "." dec_octet "." dec_octet
+void	RequestParser::IPv4address(void)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		dec_octet();
+		CHAR('.');
+		dec_octet();
+		CHAR('.');
+		dec_octet();
+		CHAR('.');
+		dec_octet();
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("IPv4address expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // segment_nz = 1*(pchar)
 void	RequestParser::segment_nz(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		pchar();
-		while (1)
+		for (int i = 0; 1; i++)
 		{
 			try { pchar(); }
-			catch (std::exception &) { break ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
 		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("segment_nz expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // reg_name = *( unreserved / pct_encoded / sub_delims )
 void	RequestParser::reg_name(void)
-{
-	size_t	head_save = this->_head;
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		try { unreserved(); }
-		catch (std::exception &)
+		while (1)
 		{
-			this->_head = head_save;
-			try { pct_encoded();}
-			catch (std::exception &)
-			{
-				this->_head = head_save;
-				try { sub_delims();}
-				catch (std::exception &) { break ; }
-			}
+			try { unreserved(); continue ; }
+			catch (std::exception & e) {}
+			try { pct_encoded(); continue ; }
+			catch (std::exception & e) {}
+			try { sub_delims(); continue ; }
+			catch (std::exception & e) { break ; }
 		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("reg_name expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
-
-/*
-	Salut le theo du matin, c'est le theo du soir :)
-
-	bon, il faut check les head_save, quand une fonction qui utilise se system
-	de save quit, il faut peut-etre reset le head a son origine pour que si la
-	fonction appelante catch elle meme l'erreur et continue, elle ai bien un head
-	au bon endroit.
-
-	J'etais sur la fonction du dessous en train de check si j'avais bien mis les
-	saves :) j'avais oublié de les mettre dans les fonction avec des ou.
-
-	pense s'il te plait a bien recheck toute les fonction que j'ai codé cette
-	nuit. La fatigue de la fin ma peut etre fait faire des erreurs.
-
-	CHECK TOUT ! merci bb :) j'ai estimé le fichier a 1500 lignes a la fin. :p
-
-	enjoy :D
-
-*/
 
 // IP_literal = "[" ( IPv6address / IPvFuture  ) "]"
 void	RequestParser::IP_literal(void)
-{
-	size_t	head_start = 0;
-	size_t	head_save = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CHAR('[');
-		head_save = this->_head;
-		try { IPv6address(); }
-		catch (std::exception &) {
-			this->_head = head_save;
-			try { IPvFuture(); }
-			catch (std::exception & e) {
-				this->_head = head_save;
-				throw (Exceptions::LexerException(e.what()));
-			}
+		for (int i = 0; i < 1; i++) // tp_or
+		{
+			try { IPv6address(); break ; }
+			catch (std::exception & e) {}
+			try { IPvFuture(); break ; }
+			catch (std::exception & e) { throw (e); }
 		}
 		CHAR(']');
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("IP_literal expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // path_rootless = segment_nz *( "/" segment )
 void	RequestParser::path_rootless(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		segment_nz();
 		while (1)
 		{
-			try
-			{
-				CHAR('/');
-				segment();
-			}
-			catch (std::exception &) { break ; }
+			SAVE_HEAD(1);
+			try { CHAR('/'); segment(); }
+			catch (std::exception & e) { LOAD_HEAD(1); break ; }
 		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("path_rootless expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // path_absolute = "/" [ segment_nz *( "/" segment ) ]
-// or -> path_absolute = "/" [ path_rootless ]
 void	RequestParser::path_absolute(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CHAR('/');
-		try { path_rootless(); }
-		catch (std::exception &) { }
+		for (int i = 0; i < 1; i++)
+		{
+			SAVE_HEAD(1);
+			try
+			{
+				segment_nz();
+				while (1)
+				{
+					SAVE_HEAD(2);
+					try { CHAR('/'); segment(); }
+					catch (std::exception & e) { LOAD_HEAD(2); break ; }
+				}
+			}
+			catch (std::exception & e) { LOAD_HEAD(1); break ; }
+		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("path_absolute expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // path_abempty = *( "/" segment )
 void	RequestParser::path_abempty(void)
-{
-
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		try { CHAR('/'); segment(); }
-		catch (std::exception &) { return ; }
+		while (1)
+		{
+			SAVE_HEAD(1);
+			try { CHAR('/'); segment(); }
+			catch (std::exception & e) { LOAD_HEAD(1); break ; }
+		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("path_abempty expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
+}
+
+// sub_delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+void	RequestParser::sub_delims(void)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (int i = 0; i < 1; i++)
+		{
+			try { CHAR('!'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('$'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('&'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('\''); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('('); break ; }
+			catch (std::exception & e) {}
+			try { CHAR(')'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('*'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('+'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR(','); break ; }
+			catch (std::exception & e) {}
+			try { CHAR(';'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('='); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
+		}
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("sub_delims expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // pct_encoded = "%" HEXDIG HEXDIG
 void	RequestParser::pct_encoded(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CHAR('%');
@@ -618,319 +629,420 @@ void	RequestParser::pct_encoded(void)
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("pct_encoded expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 void	RequestParser::unreserved(void)
-{
-	try { ALPHA(); }
-	catch (std::exception &) {
-		try { DIGIT(); }
-		catch (std::exception &) {
-			try { CHAR('-'); }
-			catch (std::exception &) {
-				try { CHAR('.'); }
-				catch (std::exception &) {
-					try { CHAR('_'); }
-					catch (std::exception &) {
-						try { CHAR('~'); }
-						catch (std::exception &) {
-							bc_s(); throw (Exceptions::LexerException("unreserved expected"));
-						}
-					}
-				}
-			}
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (int i = 0; i < 1; i++)
+		{
+			try { ALPHA(); break ; }
+			catch (std::exception & e) {}
+			try { DIGIT(); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('-'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('.'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('_'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('~'); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
 		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("unreserved expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // port = *DIGIT
 void	RequestParser::port(void)
-{
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		try { DIGIT(); }
-		catch (std::exception &) { break ; }
+		while (1)
+		{
+			try { DIGIT(); }
+			catch (std::exception & e) { break ; }
+		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("port expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // host = IP_literal / IPv4address / reg_name
 void	RequestParser::host(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { IP_literal(); }
-	catch (std::exception &) {
-		this->_head = head_start;
-		try { IPv4address(); }
-		catch (std::exception &) {
-			this->_head = head_start;
-			try { reg_name(); }
-			catch (std::exception &) {
-				this->_head = head_start;
-				bc_s(); throw (Exceptions::LexerException("host expected"));
-			}
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (int i = 0; i < 1; i++)
+		{
+			try { IP_literal(); break ; }
+			catch (std::exception & e) {}
+			try { IPv4address(); break ; }
+			catch (std::exception & e) {}
+			try { reg_name(); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
 		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("host expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // userinfo = *( unreserved / pct_encoded / sub_delims / ":" )
 void	RequestParser::userinfo(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		try { unreserved(); }
-		catch (std::exception & e)
+		while (1)
 		{
-			this->_head = head_start;
-			try { pct_encoded(); }
-			catch (std::exception & e)
-			{
-				this->_head = head_start;
-				try { sub_delims(); }
-				catch (std::exception & e)
-				{
-					this->_head = head_start;
-					try { CHAR(':'); }
-					catch (std::exception & e)
-					{
-						this->_head = head_start;
-						break ;
-					}
-				}
-			}
+			try { unreserved(); continue ; }
+			catch (std::exception & e) { break ; }
+			try { pct_encoded(); continue ; }
+			catch (std::exception & e) { break ; }
+			try { sub_delims(); continue ; }
+			catch (std::exception & e) { break ; }
+			try { CHAR(':'); continue ; }
+			catch (std::exception & e) { break ; }
 		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("userinfo expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // hier_part = "//" [ authority / path_abempty / path_absolute / path_rootless ]
 void	RequestParser::hier_part(void)
-{
-	size_t	head_start = 0;
-	size_t	head_save = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CHAR('/');
 		CHAR('/');
-		head_save = this->_head;
-		try { authority(); }
-		catch (std::exception & e)
+		for (int i = 0; i < 1; i++)
 		{
-			this->_head = head_save;
-			try { path_abempty(); }
-			catch (std::exception & e)
-			{
-				this->_head = head_save;
-				try { path_absolute(); }
-				catch (std::exception & e)
-				{
-					this->_head = head_save;
-					try { path_rootless(); }
-					catch (std::exception & e)
-					{ this->_head = head_save; }
-				}
-			}
+			try { authority(); break ; }
+			catch (std::exception & e) {}
+			try { path_abempty(); break ; }
+			catch (std::exception & e) {}
+			try { path_absolute(); break ; }
+			catch (std::exception & e) {}
+			try { path_rootless(); break ; }
+			catch (std::exception & e) {}
 		}
 	}
-	catch (std::exception &)
+	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		bc_s(); throw (Exceptions::LexerException("hier_part expected"));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("hier_part expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 void	RequestParser::scheme(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		ALPHA();
 		while (1)
 		{
-			try { ALPHA(); }
-			catch (std::exception & e) {
-				try { DIGIT(); }
-				catch (std::exception & e) {
-					try { CHAR('+'); }
-					catch (std::exception & e) {
-						try { CHAR('-'); }
-						catch (std::exception & e) {
-							try { CHAR('.'); }
-							catch (std::exception & e) { break ; }
-						}
-					}
-				}
-			}
+			try { ALPHA(); continue ; }
+			catch (std::exception & e) { break ; }
+			try { DIGIT(); continue ; }
+			catch (std::exception & e) { break ; }
+			try { CHAR('+'); continue ; }
+			catch (std::exception & e) { break ; }
+			try { CHAR('-'); continue ; }
+			catch (std::exception & e) { break ; }
+			try { CHAR('.'); continue ; }
+			catch (std::exception & e) { break ; }
 		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("scheme expected"));
 	}
-
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // pchar = unreserved / pct_encoded / sub_delims / ":" / "@"
 void	RequestParser::pchar(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { unreserved(); }
-	catch (std::exception &) {
-		this->_head = head_start;
-		try { pct_encoded(); }
-		catch (std::exception &) {
-			this->_head = head_start;
-			try { sub_delims(); }
-			catch (std::exception &) {
-				this->_head = head_start;
-				try { CHAR(':'); }
-				catch (std::exception &) {
-					this->_head = head_start;
-					try { CHAR('@'); }
-					catch (std::exception &) {
-						this->_head = head_start;
-						bc_s(); throw (Exceptions::LexerException("pchar expected"));
-					}
-				}
-			}
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (int i = 0; i < 1; i++)
+		{
+			try { unreserved(); break ; }
+			catch (std::exception & e) {}
+			try { pct_encoded(); break ; }
+			catch (std::exception & e) {}
+			try { sub_delims(); break ; }
+			catch (std::exception & e) {}
+			try { CHAR(':'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('@'); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
 		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("pchar expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
-
 
 // segment = *pchar
 void	RequestParser::segment(void)
-{
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		try { pchar(); }
-		catch (std::exception &) { break ; }
+		while (1)
+		{
+			try { pchar(); }
+			catch (std::exception & e) { break ; }
+		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("segment expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // authority = [ userinfo "@" ] host [ ":" port ]
 void	RequestParser::authority(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
+		SAVE_HEAD(1);
 		try
 		{
 			userinfo();
 			CHAR('@');
 		}
-		catch (std::exception &) {}
+		catch (std::exception & e) { LOAD_HEAD(1); }
 		host();
+		RESAVE_HEAD(1);
 		try
 		{
 			CHAR(':');
 			port();
 		}
-		catch (std::exception &) {}
+		catch (std::exception & e) { LOAD_HEAD(1); }
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("authority expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // absolute_URI  = scheme ":" hier_part [ "?" query ]
 void	RequestParser::absolute_URI(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		scheme();
 		CHAR(':');
 		hier_part();
+		SAVE_HEAD(1);
 		try
 		{
 			CHAR('?');
 			query();
 		}
-		catch (std::exception &) { }
+		catch (std::exception & e) { LOAD_HEAD(1); }
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("absolute_URI expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // query = *( pchar / "/" / "?" )
 void	RequestParser::query(void)
-{
-	while (1)
-	{
-		try { pchar(); }
-		catch (std::exception & e) {
-			try { CHAR('/'); }
-			catch (std::exception & e) {
-				try { CHAR('?'); }
-				catch (std::exception &) { break ; }
-			}
-		}
-	}
-}
-
-// absolute_path = 1*( "/" segment )
-void	RequestParser::absolute_path(void)
-{
-	size_t	head_start = 0;
-	size_t	head_save = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		CHAR('/');
-		segment();
 		while (1)
 		{
-			head_save = this->_head;
-			try
-			{
-				CHAR('/');
-				segment();
-			}
-			catch (std::exception &) {
-				this->_head = head_save;
-				break ;
-			}
+			try { pchar(); continue ; }
+			catch (std::exception & e) {}
+			try { CHAR('/'); continue ; }
+			catch (std::exception & e) {}
+			try { CHAR('?'); continue ; }
+			catch (std::exception & e) { break ; }
 		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("query expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
+}
+
+// absolute_path = 1*( "/" segment )
+void	RequestParser::absolute_path(void)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (int i = 0; 1; i++)
+		{
+			SAVE_HEAD(1);
+			try { CHAR('/'); segment(); }
+			catch (std::exception & e) { LOAD_HEAD(1); if (i < 1) throw (e); else break ; }
+		}
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("absolute_path expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
+}
+
+// tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
+void	RequestParser::tchar(void)
+{
+	// START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (int i = 0; i < 1; i++)
+		{
+			try { CHAR('!'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('#'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('$'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('%'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('&'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('\''); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('*'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('+'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('-'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('.'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('^'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('_'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('`'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('|'); break ; }
+			catch (std::exception & e) {}
+			try { CHAR('~'); break ; }
+			catch (std::exception & e) {}
+			try { DIGIT(); break ; }
+			catch (std::exception & e) {}
+			try { ALPHA(); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
+		}
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		// END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("tchar expected"));
+	}
+		RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // HTTP_name = 0x48.54.54.50 ; HTTP
 void	RequestParser::HTTP_name(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CHAR('H');
@@ -940,173 +1052,212 @@ void	RequestParser::HTTP_name(void)
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("HTTP_name expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // asterisk_form = "*"
 void	RequestParser::asterisk_form(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { CHAR('*'); }
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		CHAR('*');
+	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("asterisk_form expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // authority_form = authority
 void	RequestParser::authority_form(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { authority(); }
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		authority();
+	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("authority_form expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // absolute_form = absolute_URI
 void	RequestParser::absolute_form(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { absolute_URI(); }
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		absolute_URI();
+	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("absolute_form expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
-
 
 // origin_form = absolute_path [ "?" query ]
 void	RequestParser::origin_form(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		absolute_path();
+		SAVE_HEAD(1);
 		try
 		{
 			CHAR('?');
 			query();
 		}
-		catch (std::exception &) { }
+		catch (std::exception & e) { LOAD_HEAD(1); }
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("origin_form expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
-// obs_fold = CRLF ( SP / HTAB ) OWS
+// obs_fold = CRLF 1*( SP / HTAB )
 void	RequestParser::obs_fold(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		CRLF();
-		try { SP(); }
-		catch (std::exception &) {
-			try { HTAB(); }
-			catch (std::exception &) { }
+		for (int i = 0; 1; i++)
+		{
+			try { SP(); continue ; }
+			catch (std::exception & e) {}
+			try { HTAB(); continue ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
 		}
-		OWS();
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("obs_fold expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // field_vchar = VCHAR / obs_text
 void	RequestParser::field_vchar(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { VCHAR(); }
-	catch (std::exception &) {
-		try { obs_text(); }
-		catch (std::exception &)
-		{
-			this->_head = head_start;
-			bc_s(); throw (Exceptions::LexerException("field_vchar expected"));
-		}
-	}
-}
-
-// field_content = field_vchar [ ( SP / HTAB ) OWS field_vchar ]
-void	RequestParser::field_content(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		field_vchar();
-		try
+		for (size_t i = 0; i < 1; i++)
 		{
-			try { SP(); }
-			catch (std::exception &) {
-				try { HTAB(); }
-				catch (std::exception &) { }
-			}
-			OWS();
-			field_vchar();
+			try { VCHAR(); break ; }
+			catch (std::exception & e) {}
+			try { obs_text(); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
 		}
-		catch (std::exception &) { }
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("field_vchar expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
+}
+
+// field_content = field_vchar [ 1*( SP / HTAB ) field_vchar ]
+void	RequestParser::field_content(void)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		field_vchar();
+		for (int i = 0; i < 1; i++)
+		{
+			SAVE_HEAD(1);
+			try
+			{
+				for (int i = 0; 1; i++)
+				{
+					try { SP(); continue ; }
+					catch (std::exception & e) {}
+					try { HTAB(); continue ; }
+					catch (std::exception & e) { if (i < 1) throw (e); else break ; }
+				}
+				field_vchar();
+			}
+			catch (std::exception & e) { LOAD_HEAD(1); break ; }
+		}
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("field_content expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // token = 1*tchar
 void	RequestParser::token(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
-		tchar();
-		while (1)
+		for (int i = 0; 1; i++)
 		{
 			try { tchar(); }
-			catch (std::exception &) { break ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
 		}
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("token expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // HTTP_version = HTTP_name "/" DIGIT "." DIGIT
 void	RequestParser::HTTP_version(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		HTTP_name();
@@ -1115,138 +1266,172 @@ void	RequestParser::HTTP_version(void)
 		DIGIT();
 		CHAR('.');
 		DIGIT();
+		digest(this->_http_version);
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("HTTP_version expected"));
 	}
-	digest(this->_http_version);
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // request_target = origin_form / absolute_form / authority_form / asterisk_form
 void	RequestParser::request_target(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	init_digest();
-	try { origin_form(); }
-	catch (std::exception &) {
-		this->_head = head_start;
-		try { absolute_form(); }
-		catch (std::exception &) {
-			this->_head = head_start;
-			try { authority_form(); }
-			catch (std::exception &) {
-				this->_head = head_start;
-				try { asterisk_form(); }
-				catch (std::exception &) {
-					this->_head = head_start;
-					bc_s(); throw (Exceptions::LexerException("request_target expected"));
-				}
-			}
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		for (size_t i = 0; i < 1; i++)
+		{
+			try { origin_form(); break ; }
+			catch (std::exception & e) {}
+			try { absolute_form(); break ; }
+			catch (std::exception & e) {}
+			try { authority_form(); break ; }
+			catch (std::exception & e) {}
+			try { asterisk_form(); break ; }
+			catch (std::exception & e) {}
+			throw(Exceptions::ParserException(""));
 		}
 	}
-	digest(this->_resource);
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("request_target expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // method = token
 void	RequestParser::method(void)
-{
-	size_t	head_start = 0;
-
-	// debug_print_line();
-	head_start = this->_head;
-	init_digest();
-	try { token(); }
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		init_digest();
+		token();
+		digest(this->_method);
+	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("method expected"));
 	}
-	digest(this->_method);
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // field_value = *( field_content / obs_fold )
 void	RequestParser::field_value(void)
-{
-	// size_t	head_start = 0;
-
-	while (1)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
 	{
-		// head_start = this->_head;
-		// try { field_content(); }
-		// catch (std::exception &)
-		// {
-		// 	this->_head = head_start;
-		// 	try { obs_fold(); }
-		// 	catch (std::exception &) { break ; }
-		// }
-		try { field_char(); }
-		catch (std::exception &) { break ; }
+		while (1)
+		{
+			// try { field_content(); }
+			// catch (std::exception & e) {}
+			// try { obs_fold(); }
+			// catch (std::exception & e) { break ; }
+			try { field_char(); }
+			catch (std::exception &) { break ; }
+		}
 	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("field_value expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // field_name = token
 void	RequestParser::field_name(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { token(); }
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		token();
+	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("field_name expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // request_line = method SP request_target SP HTTP_version CRLF
 void	RequestParser::request_line(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		method();
 		SP();
+		init_digest();
 		request_target();
+		digest(this->_resource);
 		SP();
 		HTTP_version();
 		CRLF();
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (e);
+		// throw (Exceptions::ParserException("request_line expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // message_body = *OCTET
 void	RequestParser::message_body(void)
-{
-	init_digest();
-	if (this->_head != static_cast<size_t>(this->_bytes_read))
-		this->_head = this->_bytes_read - 1;
-	this->_body_size = this->_head - this->_head_last_digest;
-	// while (1)
-	// {
-	// 	try { OCTET(); }
-	// 	catch (std::exception &) { break ; }
-	// }
-	digest(this->_body);
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		init_digest();
+		if (this->_head != static_cast<size_t>(this->_bytes_read))
+			this->_head = this->_bytes_read - 1;
+		this->_body_size = this->_head - this->_head_last_digest;
+		digest(this->_body);
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("message_body expected"));
+	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // header_field = field_name ":" OWS field_value OWS
 void	RequestParser::header_field(void)
-{
-	size_t	head_start = 0;
-	std::string	key;
-	std::string	value;
-
-	head_start = this->_head;
+{START_FUN;
+	std::string		key;
+	std::string		value;
+	SAVE_HEAD(0);
 	try
 	{
 		init_digest();
@@ -1261,58 +1446,64 @@ void	RequestParser::header_field(void)
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (Exceptions::ParserException("header_field expected"));
 	}
-	// TOCHECK maybe push back entries instead of push front to keep order
-	headers_iterator it = this->_header_fields.begin();
-	this->_header_fields.insert (it, std::pair<std::string, std::string>(key, value));
+	// headers_iterator it = this->_header_fields.begin();
+	// this->_header_fields.insert(it, std::pair<std::string, std::string>(key, value));
+	this->_header_fields[key] = value;
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // start_line = request_line
 void	RequestParser::start_line(void)
-{
-	size_t	head_start = 0;
-
-	head_start = this->_head;
-	try { request_line(); }
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		request_line();
+	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (e);
+		// throw (Exceptions::ParserException("start_line expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }
 
 // HTTP_message = start_line *( header_field CRLF ) CRLF [ message_body ]
 void	RequestParser::HTTP_message(void)
-{
-	size_t	head_start = 0;
-	size_t	head_save = 0;
-
-	head_start = this->_head;
+{START_FUN;
+	SAVE_HEAD(0);
 	try
 	{
 		start_line();
 		while (1)
 		{
-			head_save = this->_head;
-			try
-			{
-				header_field();
-				CRLF();
-			}
-			catch (std::exception &) {
-				this->_head = head_save;
-				break ;
-			}
+			SAVE_HEAD(1);
+			try { header_field(); CRLF(); }
+			catch (std::exception & e) { LOAD_HEAD(1); break ; }
 		}
 		CRLF();
+		SAVE_HEAD(1);
 		try { message_body(); }
-		catch (std::exception &) { }
+		catch (std::exception & e) { LOAD_HEAD(1); }
 	}
 	catch (std::exception & e)
 	{
-		this->_head = head_start;
-		throw (Exceptions::LexerException(e.what()));
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		SET_ERROR;
+		throw (e);
+		// throw (Exceptions::ParserException("HTTP_message expected"));
 	}
+	RESET_ERROR;
+	END_FUN(SUCCESS);
 }

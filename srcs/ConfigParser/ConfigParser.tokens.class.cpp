@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/02 15:25:32 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/03 12:33:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/08 11:46:18 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,43 @@ void	ConfigParser::server_token(void)
 	{
 		LOAD_HEAD(0);
 		throw (Exceptions::ParserException("server_token expected"));
+	}
+}
+
+// return_token			= 'r' 'e' 't' 'u' 'r' 'n' ; "return"
+void	ConfigParser::return_token(void)
+{
+	SAVE_HEAD(0);
+	try
+	{
+		CHAR('r');
+		CHAR('e');
+		CHAR('t');
+		CHAR('u');
+		CHAR('r');
+		CHAR('n');
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		throw (Exceptions::ParserException("return_token expected"));
+	}
+}
+
+// token_301			= '3' '0' '1' ; "301"
+void	ConfigParser::token_301(void)
+{
+	SAVE_HEAD(0);
+	try
+	{
+		CHAR('3');
+		CHAR('0');
+		CHAR('1');
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		throw (Exceptions::ParserException("token_301 expected"));
 	}
 }
 

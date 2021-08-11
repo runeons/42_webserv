@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:53 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 20:54:40 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/09 12:01:44 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void		Server::stop_server()
 void Server::print_config(void)
 {
 	std::cout	<< ORANGE
-				<< "[Host : " <<  _config->getHost() << "] "
-				<< "[Port : " <<  _config->getPort() << "] "
-				<< "[Dir  : " <<  _config->getRootDir() << "]"
+				<< "[Host : " <<  _config->get__host() << "] "
+				<< "[Port : " <<  _config->get__port() << "] "
+				<< "[Dir  : " <<  _config->get__root_dir() << "]"
 				<< C_RES << std::endl;
 	return ;
 }
@@ -57,7 +57,7 @@ void		Server::bind_address_and_port()
 		perror("___bind___");
 		throw Exceptions::BindServer();
 	}
-	std::cout << GREEN << "Address " << inet_ntoa(_address.sin_addr) << " and port " << _config->getPort() << " bound !" <<  C_RES << std::endl;
+	std::cout << GREEN << "Address " << inet_ntoa(_address.sin_addr) << " and port " << _config->get__port() << " bound !" <<  C_RES << std::endl;
 }
 
 // ********************************************* ::accept() + Client.treat_client() *********************************************

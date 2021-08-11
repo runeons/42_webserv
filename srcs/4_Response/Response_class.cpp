@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:45 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/04 21:08:32 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/09 13:20:06 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	Response::check_if_method_allowed(void)
 {
-	std::vector<std::string> v_methods = _applied_location.getMethods();
+	std::vector<std::string> v_methods = _applied_location.get__methods();
 	std::vector<std::string>::iterator it;
 
 	for (it = v_methods.begin(); it != v_methods.end(); it++)

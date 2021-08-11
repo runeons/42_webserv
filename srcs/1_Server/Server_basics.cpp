@@ -36,7 +36,7 @@ Server::Server(void)
 	{
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
-	_address.sin_port = htons(_config->getPort());
+	_address.sin_port = htons(_config->get__port());
 	_master_socket = 0;
 	return ;
 }
@@ -46,14 +46,14 @@ Server::Server(const Config & config)
 	std::cout << GREY << "Server creation..." << C_RES << std::endl;
 	// TO DO parse config
 	_config = const_cast<Config *>(&config); // parametree avec le parsing
-	_config->setRootDir("./" + _config->getRootDir());
+	_config->set__root_dir("./" + _config->get__root_dir());
 	_client = new Client(*_config); // dans lequel j'envoie Config
 	// _client = NULL;
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (inet_aton(_config->getHost().c_str(), &_address.sin_addr) <= 0)
+		if (inet_aton(_config->get__host().c_str(), &_address.sin_addr) <= 0)
 			throw Exceptions::InvalidAddress();
 		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
 	}
@@ -61,7 +61,7 @@ Server::Server(const Config & config)
 	{
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
-	_address.sin_port = htons(_config->getPort());
+	_address.sin_port = htons(_config->get__port());
 	_master_socket = 0;
 	return ;
 }

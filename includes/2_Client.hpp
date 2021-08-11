@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:42:35 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/03 11:52:23 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/06 18:45:21 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ class Client
 		void			parse_parameters();
 		std::string		apply_alias(std::string);
 		void			apply_location();
-		std::string		decode_url(std::string);
+		std::string		decode_url(std::string &);
 		void			translate_path();
 		std::string		generate_autoindex(std::string rsc);
 		void			read_resource();

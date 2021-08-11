@@ -6,7 +6,7 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:41:57 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 14:55:55 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/09 13:33:34 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,4 +126,52 @@ std::string binary_to_string(std::string s)
 		i = 0;
 	}
 	return oss.str();
+}
+
+void	print_char_printf(char c)
+{
+	if (c == '\r')
+		dprintf(1, "\\r");
+	else if (c == '\n')
+		dprintf(1, "\\n");
+	else if (c == '\t')
+		dprintf(1, "\\t");
+	else if (c == '\0')
+		dprintf(1, "\\0");
+	else if (c == '\v')
+		dprintf(1, "\\v");
+	else if (c == '\f')
+		dprintf(1, "\\f");
+	else if (c == '\a')
+		dprintf(1, "\\a");
+	else if (c == '\b')
+		dprintf(1, "\\b");
+	else if (c == '\e')
+		dprintf(1, "\\e");
+	else
+		dprintf(1, "%c", c);
+}
+
+void	print_char(char c)
+{
+	if (c == '\r')
+		std::cout << "\\r";
+	else if (c == '\n')
+		std::cout << "\\n";
+	else if (c == '\t')
+		std::cout << "\\t";
+	else if (c == '\0')
+		std::cout << "\\0";
+	else if (c == '\v')
+		std::cout << "\\v";
+	else if (c == '\f')
+		std::cout << "\\f";
+	else if (c == '\a')
+		std::cout << "\\a";
+	else if (c == '\b')
+		std::cout << "\\b";
+	else if (c == '\e')
+		std::cout << "\\e";
+	else
+		std::cout << c;
 }

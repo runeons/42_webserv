@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 15:33:57 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/04 20:33:42 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/11 11:35:50 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@
 # define PAT_CRLF	PAT_CR""PAT_LF
 
 // DEBUG BACKTRACE
+
+typedef struct		s_error
+{
+	std::string		msg;
+	size_t			head;
+}					t_error;
 
 class RequestParser
 {
@@ -47,8 +53,10 @@ class RequestParser
 		std::string		_body;
 		ssize_t			_body_size;
 		int				_status_code;
+
 		std::map<std::string, std::string>	_header_fields;
 
+		struct s_error	_error;
 
 		// PRIVATE MEMBERS FUNCTION : PRIMF
 		RequestParser(void);  // constructor
@@ -56,6 +64,7 @@ class RequestParser
 		// debug
 		void	bc_s(void);
 		void	bc_p(void);
+		void	print_center_line(int fn, int msg);
 		void	debug_print_line(void);
 
 		// maps/vectors initiators
@@ -85,7 +94,6 @@ class RequestParser
 		void	sub_delims(void);
 		void	tchar(void);
 		void	obs_text(void);
-
 		void	field_char(void);
 
 		// parsing functions

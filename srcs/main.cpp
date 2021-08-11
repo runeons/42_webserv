@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/24 18:12:44 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/04 20:43:41 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/06 18:40:14 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int			main(int ac, char **av)
 		}
 	}
 	ConfigParser cp(config_file);
-	cp.print_info_config();
+	cp.print_info();
 
 	Server server(cp.get__servers_config()[0]);
 

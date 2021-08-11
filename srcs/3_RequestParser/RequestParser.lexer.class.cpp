@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 19:36:15 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/02 17:47:47 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/10 11:54:41 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	RequestParser::VCHAR(void)
 	bc_s(); throw (Exceptions::LexerException("VCHAR expected"));
 }
 
-// VCHAR = 0x21-7E
+// field_char = 0x21-7E
 void	RequestParser::field_char(void)
 {
 	for (char i = 0x21; i <= 0x7E; i++)
@@ -156,47 +156,17 @@ void	RequestParser::field_char(void)
 	bc_s(); throw (Exceptions::LexerException("VCHAR expected"));
 }
 
-
-// sub_delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-
-void	RequestParser::sub_delims(void)
-{
-	std::string	set("!$&\'()*+,;=");
-
-	for (int i = 0; set[i]; i++)
-	{
-		if (eat(set[i]) == SUCCESS)
-			return ;
-	}
-	bc_s(); throw (Exceptions::LexerException("sub_delims expected"));
-}
-
-// tchar = "!" / "#" / "$" / "%" / "&" / "\'" / "*" / "+" / "-" / "." / "^" / "_" / "\`" / "|" / "~" / DIGIT / ALPHA
-void	RequestParser::tchar(void)
-{
-	std::string	set("!#$%&\'*+-.^_`|~");
-
-	for (int i = 0; set[i]; i++)
-	{
-		if (eat(set[i]) == SUCCESS)
-			return ;
-	}
-	try { DIGIT(); }
-	catch (std::exception &) {
-		try { ALPHA(); }
-		catch (std::exception &) {
-			bc_s(); throw (Exceptions::LexerException("tchar expected"));
-		}
-	}
-}
-
 // obs_text = 0x80-FF
 void	RequestParser::obs_text(void)
-{
+{START_FUN;
 	for (int i = 0x80; i <= 0xFF; i++)
 	{
 		if (eat(i) == SUCCESS)
+		{
+			END_FUN(SUCCESS);
 			return ;
+		}
 	}
-	bc_s(); throw (Exceptions::LexerException("obs_text expected"));
+	throw (Exceptions::LexerException("obs_text expected"));
+	END_FUN(FAILURE);
 }

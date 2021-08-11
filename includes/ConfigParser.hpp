@@ -6,7 +6,7 @@
 /*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/02 15:12:22 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/04 20:20:52 by tharchen         ###   ########.fr       */
+/*   Updated: 2021/08/09 14:26:27 by tharchen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@
 #ifndef CONFIG_HPP
 class Config;
 #endif
-
-# define SVN(X) "head_save_"#X
-# define VN(X) head_save_##X
-# define SAVE_HEAD(X) size_t VN(X) = this->_head
-# define RESAVE_HEAD(X) VN(X) = this->_head
-# define LOAD_HEAD(X) this->_head = VN(X)
 
 extern int deep;
 
@@ -62,6 +56,8 @@ class ConfigParser
 
 		// tokens functions
 		void	server_token(void);
+		void	return_token(void);
+		void	token_301(void);
 		void	host_token(void);
 		void	port_token(void);
 		void	server_name_token(void);
@@ -102,6 +98,7 @@ class ConfigParser
 		void	location_root(void);
 		void	autoindex(void);
 		void	alias(void);
+		void	return301(void);
 		void	method(void);
 		void	upload(void);
 		void	item_location(void);
@@ -118,7 +115,7 @@ class ConfigParser
 		ConfigParser(std::string file);  // params constructor
 		~ConfigParser(void); // destructor
 		void	start_parsing(void); // entry point
-		void	print_info_config(void);
+		void	print_info(void) const;
 		const std::vector<Config> & get__servers_config(void) const;
 };
 

@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ConfigParser.parser.class.cpp                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/02 15:25:32 by tharchen          #+#    #+#             */
-/*   Updated: 2021/08/04 19:19:55 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include <webserv.hpp>
 
@@ -19,14 +8,6 @@ Config								tmp_server;
 Location							tmp_location;
 std::map<int, std::string>			tmp_error_pages;
 std::map<std::string, Location>		tmp_map_locations;
-
-// # define START_FUN deep++; dprintf(1, "%*s[ %s%s%s ] "C_G_CYAN"start"C_RES"", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen("start"))
-// # define DEBUG_MSG(X) dprintf(1, "%*s[ %s%s%s ] "C_G_WHITE"%s on \'%c\'"C_RES"\n", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X, _config_raw[_head])
-// # define END_FUN(X) dprintf(1, "%*s[ %s%s%s ] %s", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X == FAILURE ? C_G_RED"FAILURE"C_RES : X == SUCCESS ? C_G_GREEN"SUCCESS"C_RES : "code "#X); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen(X == FAILURE ? "FAILURE" : X == SUCCESS ? "SUCCESS" : "code "#X)); deep--
-
-# define START_FUN // deep++; dprintf(1, "%*s[ %s%s%s ] "C_G_CYAN"start"C_RES"", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen("start"))
-# define DEBUG_MSG(X) // dprintf(1, "%*s[ %s%s%s ] "C_G_WHITE"%s on \'%c\'"C_RES"\n", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X, _config_raw[_head])
-# define END_FUN(X) // dprintf(1, "%*s[ %s%s%s ] %s", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X == FAILURE ? C_G_RED"FAILURE"C_RES : X == SUCCESS ? C_G_GREEN"SUCCESS"C_RES : "code "#X); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen(X == FAILURE ? "FAILURE" : X == SUCCESS ? "SUCCESS" : "code "#X)); deep--
 
 int	ft_atoi(std::string s)
 {
@@ -546,7 +527,7 @@ void	ConfigParser::index(void)
 		init_digest();
 		file();
 		digest(g_tmp);
-		tmp_location.setIndex(g_tmp);
+		tmp_location.set__index(g_tmp);
 		OWSON();
 		CHAR(';');
 	}
@@ -572,7 +553,7 @@ void	ConfigParser::uri(void)
 		init_digest();
 		path();
 		digest(g_tmp);
-		tmp_location.setUri(g_tmp);
+		tmp_location.set__uri(g_tmp);
 		OWSON();
 		CHAR(';');
 	}
@@ -598,7 +579,7 @@ void	ConfigParser::server_root(void)
 		init_digest();
 		path();
 		digest(g_tmp);
-		tmp_server.setRootDir(g_tmp);
+		tmp_server.set__root_dir(g_tmp);
 		OWSON();
 		CHAR(';');
 	}
@@ -624,7 +605,7 @@ void	ConfigParser::location_root(void)
 		init_digest();
 		path();
 		digest(g_tmp);
-		tmp_location.setRootLoc(g_tmp);
+		tmp_location.set__root_loc(g_tmp);
 		OWSON();
 		CHAR(';');
 	}
@@ -651,14 +632,14 @@ void	ConfigParser::autoindex(void)
 			// init_digest();
 			on_token();
 			// digest(g_tmp);
-			tmp_location.setAutoindex(true);
+			tmp_location.set__autoindex(true);
 		}
 		catch (std::exception & e) {
 			try {
 				// init_digest();
 				off_token();
 				// digest(g_tmp);
-				tmp_location.setAutoindex(false);
+				tmp_location.set__autoindex(false);
 			}
 			catch (std::exception & e) { throw(Exceptions::ParserException("token [on / off] expected")); }
 		}
@@ -674,43 +655,22 @@ void	ConfigParser::autoindex(void)
 	END_FUN(SUCCESS);
 }
 
-// alias			= alias_token OWSON ':' OWSON '[' OWSON [ path OWSON *( ',' OWSON path ) OWSON ] ']'
+// alias			= alias_token OWSON ':' OWSON path OWSON ';'
 void	ConfigParser::alias(void)
 {START_FUN;
 	SAVE_HEAD(0);
-	std::vector<std::string> tmp_alias;
 	try
 	{
 		alias_token();
 		OWSON();
 		CHAR(':');
 		OWSON();
-		CHAR('[');
+		init_digest();
+		path();
+		digest(g_tmp);
+		tmp_location.set__alias(g_tmp);
 		OWSON();
-		SAVE_HEAD(1);
-		try { // optional
-			init_digest();
-			path();
-			digest(g_tmp);
-			tmp_alias.push_back(g_tmp);
-			OWSON();
-			while (1)
-			{
-				SAVE_HEAD(2);
-				try {
-					CHAR(',');
-					OWSON();
-					init_digest();
-					path();
-					digest(g_tmp);
-					tmp_alias.push_back(g_tmp);
-				}
-				catch (std::exception & e) { LOAD_HEAD(2); break ;}
-			}
-			OWSON();
-		}
-		catch (std::exception & e) { LOAD_HEAD(1); }
-		CHAR(']');
+		CHAR(';');
 	}
 	catch (std::exception & e)
 	{
@@ -718,7 +678,6 @@ void	ConfigParser::alias(void)
 		END_FUN(FAILURE);
 		throw (Exceptions::ParserException("alias expected"));
 	}
-	tmp_location.setAlias(tmp_alias);
 	END_FUN(SUCCESS);
 }
 
@@ -766,7 +725,7 @@ void	ConfigParser::method(void)
 		END_FUN(FAILURE);
 		throw (Exceptions::ParserException("method expected"));
 	}
-	tmp_location.setMethods(tmp_method);
+	tmp_location.set__methods(tmp_method);
 	END_FUN(SUCCESS);
 }
 
@@ -787,7 +746,7 @@ void	ConfigParser::upload(void)
 			init_digest();
 			path();
 			digest(g_tmp);
-			tmp_location.setUpload(g_tmp);
+			tmp_location.set__upload(g_tmp);
 		}
 		catch (std::exception & e) {
 			LOAD_HEAD(1);
@@ -806,7 +765,35 @@ void	ConfigParser::upload(void)
 	END_FUN(SUCCESS);
 }
 
-// item_location	= uri / root / index / autoindex / alias / method / upload
+// return301		= return_token OWSON token_301 OWSON ':' OWSON path OWSON ';'
+void	ConfigParser::return301(void)
+{START_FUN;
+	SAVE_HEAD(0);
+	try
+	{
+		return_token();
+		OWSON();
+		token_301();
+		OWSON();
+		CHAR(':');
+		OWSON();
+		init_digest();
+		path();
+		digest(g_tmp);
+		tmp_location.set__redir301(g_tmp);
+		OWSON();
+		CHAR(';');
+	}
+	catch (std::exception & e)
+	{
+		LOAD_HEAD(0);
+		END_FUN(FAILURE);
+		throw (Exceptions::ParserException("return301 expected"));
+	}
+	END_FUN(SUCCESS);
+}
+
+// item_location	= uri / root / alias / index / autoindex / return301 / method / upload
 void	ConfigParser::item_location(void)
 {START_FUN;
 	SAVE_HEAD(0);
@@ -821,6 +808,8 @@ void	ConfigParser::item_location(void)
 		try { autoindex(); END_FUN(SUCCESS); return ; }
 		catch (std::exception & e) { LOAD_HEAD(0); }
 		try { alias(); END_FUN(SUCCESS); return ; }
+		catch (std::exception & e) { LOAD_HEAD(0); }
+		try { return301(); END_FUN(SUCCESS); return ; }
 		catch (std::exception & e) { LOAD_HEAD(0); }
 		try { method(); END_FUN(SUCCESS); return ; }
 		catch (std::exception & e) { LOAD_HEAD(0); }
@@ -850,7 +839,7 @@ void	ConfigParser::host(void)
 		init_digest();
 		IPv4address();
 		digest(g_tmp);
-		tmp_server.setHost(g_tmp);
+		tmp_server.set__host(g_tmp);
 		OWSON();
 		CHAR(';');
 	}
@@ -876,7 +865,7 @@ void	ConfigParser::port(void)
 		init_digest();
 		port_no();
 		digest(g_tmp);
-		tmp_server.setPort(ft_atoi(g_tmp));
+		tmp_server.set__port(ft_atoi(g_tmp));
 		OWSON();
 		CHAR(';');
 	}
@@ -902,7 +891,7 @@ void	ConfigParser::server_name(void)
 		init_digest();
 		name();
 		digest(g_tmp);
-		tmp_server.setServerName(g_tmp);
+		tmp_server.set__server_name(g_tmp);
 		OWSON();
 		CHAR(';');
 	}
@@ -928,7 +917,7 @@ void	ConfigParser::max_client_body(void)
 		init_digest();
 		number();
 		digest(g_tmp);
-		tmp_server.setMaxBodySize(ft_atoi(g_tmp));
+		tmp_server.set__max_body_size(ft_atoi(g_tmp));
 		OWSON();
 		CHAR(';');
 	}
@@ -968,7 +957,7 @@ void	ConfigParser::error(void)
 		END_FUN(FAILURE);
 		throw (Exceptions::ParserException("error expected"));
 	}
-	tmp_server.setErrorPages(tmp_error_pages);
+	tmp_server.set__error_pages(tmp_error_pages);
 	END_FUN(SUCCESS);
 }
 
@@ -1002,7 +991,7 @@ void	ConfigParser::location(void)
 		END_FUN(FAILURE);
 		throw (Exceptions::ParserException("location expected"));
 	}
-	tmp_map_locations.insert(std::pair<std::string, Location>(tmp_location.getUri(), tmp_location));
+	tmp_map_locations.insert(std::pair<std::string, Location>(tmp_location.get__uri(), tmp_location));
 	END_FUN(SUCCESS);
 }
 
@@ -1067,7 +1056,7 @@ void	ConfigParser::server(void)
 		END_FUN(FAILURE);
 		throw (Exceptions::ParserException("server expected"));
 	}
-	tmp_server.setLocations(tmp_map_locations);
+	tmp_server.set__locations(tmp_map_locations);
 	this->_servers_config.push_back(tmp_server);
 	END_FUN(SUCCESS);
 }

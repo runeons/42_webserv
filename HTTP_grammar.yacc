@@ -58,17 +58,10 @@ OCTET = 0x00-FF
 VCHAR = 0x21-7E
                     ; visible (printing) characters
 
-DEC_NUMBER = *( DIGIT )
-
-HEX_NUMBER = HEX_SUFFIX *( HEXDIG )
-
-HEX_CHAR = HEX_SUFFIX HEXDIG HEXDIG
+//// parser
 
 OWS = *( SP / HTAB )
 
-
-
-//// parser
 
 dec_octet   = DIGIT                 ; 0-9
 			/ 0x31-39 DIGIT         ; 10-99   ; 1-9 0-9

@@ -24,24 +24,33 @@ class Config
 		Config(const Config & src);
 		virtual ~Config();
 		void	clear(void);
+		void	print_info(void) const;
 
-		std::string							getHost(void) const;
-		void								setHost(const std::string host);
-		int									getPort(void) const;
-		void								setPort(const int port);
-		std::string							getServerName(void) const;
-		void								setServerName(const std::string server_name);
-		std::string							getHostName(void) const;
-		void								setHostName(const std::string host_name);
-		std::string							getRootDir(void) const;
-		void								setRootDir(const std::string root_dir);
-		int									getMaxBodySize(void) const;
-		void								setMaxBodySize(const int max_body_size);
-		const std::map<int, std::string>		&	getErrorPages(void) const;
-		void								setErrorPages(const std::map<int, std::string> error_pages);
-		const std::map<std::string, Location>	& getLocations(void) const;
-		void								setLocations(const std::map<std::string, Location> locations);
-		Config								&operator=(const Config & src);
+		const std::string &						get__host(void) const;
+		void									set__host(const std::string host);
+
+		const int &								get__port(void) const;
+		void									set__port(const int port);
+
+		const std::string &						get__server_name(void) const;
+		void									set__server_name(const std::string server_name);
+
+		const std::string &						get__host_name(void) const;
+		void									set__host_name(const std::string host_name);
+
+		const std::string &						get__root_dir(void) const;
+		void									set__root_dir(const std::string root_dir);
+
+		const int &								get__max_body_size(void) const;
+		void									set__max_body_size(const int max_body_size);
+
+		const std::map<int, std::string> &		get__error_pages(void) const;
+		void									set__error_pages(const std::map<int, std::string> error_pages);
+
+		const std::map<std::string, Location> &	get__locations(void) const;
+		void									set__locations(const std::map<std::string, Location> locations);
+
+		Config									&operator=(const Config & src);
 
 		// std::map<int, std::string>			init_map_error_pages();
 		// std::map<std::string, Location>	init_map_locations();

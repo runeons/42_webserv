@@ -106,7 +106,7 @@ std::map<int, std::string>	Response::init_map_body()
 	std::map<int, std::string> m;
 	std::map<int, std::string>::iterator it;
 
-	std::map<int, std::string> m_config_errors_path = _config.getErrorPages();
+	std::map<int, std::string> m_config_errors_path = _config.get__error_pages();
 	std::map<int, std::string>::iterator it_config;
 
 	std::string path;

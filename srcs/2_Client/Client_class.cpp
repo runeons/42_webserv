@@ -141,38 +141,6 @@ void	Client::parse_parameters(void)
 	}
 }
 
-void		Client::apply_location(void)
-{
-	// si path contient location, lier _applied location à la location
-	std::string							rsc = _request_parser->get__resource();
-	std::map<std::string, Location>	m = _config.getLocations();
-	Location 							*l = NULL;;
-
-	// TO PRECISE iterate through maps && search from end to beginning
-	std::size_t found = rsc.find("/documents");
-	if (found == 0)
-		l = &m["/documents"];
-	else if (rsc.front() == '/')
-		l = &m["/"];
-	_applied_location = l;
-	if (_applied_location && 0)
-	{
-		std::cerr << C_G_BLUE << "[ DEBUG Uri       ] " << C_RES << _applied_location->getUri() << std::endl;
-		std::cerr << C_G_BLUE << "[ DEBUG RootLoc   ] " << C_RES << _applied_location->getRootLoc() << std::endl;
-		std::cerr << C_G_BLUE << "[ DEBUG Index     ] " << C_RES << _applied_location->getIndex() << std::endl;
-		std::cerr << C_G_BLUE << "[ DEBUG Autoindex ] " << C_RES << _applied_location->getAutoindex() << std::endl;
-		std::cerr << C_G_BLUE << "[ DEBUG Upload    ] " << C_RES << _applied_location->getUpload() << std::endl;
-		std::cerr << C_G_BLUE << "[ DEBUG Redir301  ] " << C_RES << _applied_location->getRedir301() << std::endl;
-		std::vector<std::string> v = _applied_location->getMethods();
-		std::vector<std::string>::iterator it;
-		for (it = v.begin(); it != v.end(); it++)
-			std::cerr << C_G_BLUE << "[ DEBUG methods   ] " << C_RES << *it << std::endl;
-		v = _applied_location->getAlias();
-		for (it = v.begin(); it != v.end(); it++)
-			std::cerr << C_G_BLUE << "[ DEBUG alias     ] " << C_RES << *it << std::endl;
-	}
-}
-
 std::string	Client::generate_autoindex(std::string rsc)
 {
 	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
@@ -180,7 +148,7 @@ std::string	Client::generate_autoindex(std::string rsc)
 	return res;
 }
 
-std::string		Client::decode_url(std::string s)
+std::string		Client::decode_url(std::string & s)
 {
 	std::string	ret;
 	char		ch;
@@ -218,6 +186,83 @@ std::string		Client::apply_alias(std::string s)
 	return s;
 }
 
+// void		Client::apply_location(void)
+// {
+// 	// si path contient location, lier _applied location à la location
+// 	std::string							rsc = _request_parser->get__resource();
+// 	std::map<std::string, Location>		m = _config.get__locations();
+// 	Location 							*l = NULL;;
+//
+// 	// TO PRECISE iterate through maps && search from end to beginning
+// 	std::size_t found = rsc.find("/documents");
+// 	if (found == 0)
+// 		l = &m["/documents"];
+// 	else if (rsc.front() == '/')
+// 		l = &m["/"];
+// 	_applied_location = l;
+// 	if (_applied_location && 0)
+// 		_applied_location->print_info();
+// }
+
+// target: /documents/photos/435/lolo.jpeg
+//
+// location:
+// 	uri  : /
+// 	root : X
+// 	alias: X
+// location:
+// 	uri  : /photos
+// 	root : X
+// 	alias: X
+// location:
+// 	uri  : /document/photos/
+// 	root : /tmp
+// 	alias: X
+// location:
+// 	uri  : /document/photos/
+// 	root : X
+// 	alias: /photos/
+// location:
+// 	uri  : /images
+// 	root : X
+// 	alias: X
+
+void		Client::apply_location(void)
+{
+	std::string	rsc = _request_parser->get__resource();
+
+	std::map<std::string, Location>::const_iterator it;
+	std::map<std::string, Location> m = _config.get__locations();
+
+
+	while (rsc.size() >= 1)
+	{
+		it = _config.get__locations().begin();
+
+		while (it != _config.get__locations().end())
+		{
+			// std::cout << "compare: \"" << it->first << "\" with \"" << rsc << "\"" << std::endl;
+			if (it->first == rsc)
+			{
+				_applied_location = const_cast<Location *>(&it->second);
+				return ;
+			}
+			it++;
+		}
+		std::string sub = rsc.substr(0, rsc.size() - 1);
+		size_t	pos_last_slash = sub.rfind('/');
+		if (pos_last_slash == std::string::npos)
+			break ; // TODO exception
+		// std::cout << C_G_RED << "pos_last_slash : " << pos_last_slash << C_RES << std::endl;
+		if (rsc == "/")
+			_applied_location = &m["/"];
+		rsc.erase(pos_last_slash + 1);
+		// std::cout << "rsc after erase: \"" << rsc << "\"" << std::endl;
+	}
+	std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
+	exit(FAILURE);
+}
+
 void		Client::translate_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
@@ -229,7 +274,6 @@ void		Client::translate_path(void)
 	/*
 		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
 	*/
-	apply_location();
 	rsc = decode_url(rsc);
 	// Theo remaster - // remplir query_string
 	if (rsc.find("?") < rsc.length())
@@ -242,13 +286,13 @@ void		Client::translate_path(void)
 	if (rsc.back() == '/')
 	{
 		struct stat buffer;
-		std::string index_path = rsc + _applied_location->getIndex();
+		std::string index_path = rsc + _applied_location->get__index();
 		if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
 		 ; // ne change rien au translated_path
-		else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->getAutoindex() == 1) // if index.html not found + auto
-			_page_content = generate_autoindex(rsc);// rsc += _applied_location->getIndex();
+		else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->get__autoindex() == 1) // if index.html not found + auto
+			_page_content = generate_autoindex(rsc);// rsc += _applied_location->get__index();
 		else // if (ret == 0) ou -1 et autoindex off
-			rsc += _applied_location->getIndex();
+			rsc += _applied_location->get__index();
 	}
 	_translated_path = rsc;
 	// std::cerr << C_G_RED << "[ DEBUG PATH ] " << C_RES << _translated_path << std::endl;
@@ -323,13 +367,15 @@ void Client::client_receive_request(void)
 
 void Client::client_send_response(void)
 {
+	apply_location();
+	_applied_location->print_info();
 	translate_path();
 	read_resource();
 	generate_response();
 	send_response();
 
-	// std::cout <<  _response->getResponseHeader() << std::endl;
-	// std::cout <<  _response->getResponseBody() << std::endl;
+	// std::cout <<  _response->get__responseHeader() << std::endl;
+	// std::cout <<  _response->get__responseBody() << std::endl;
 }
 
 void Client::treat_client(void)
