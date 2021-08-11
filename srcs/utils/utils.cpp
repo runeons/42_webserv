@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.cpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:41:57 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/09 13:33:34 by tharchen         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
 
@@ -50,9 +39,16 @@ std::string get_file_content(std::string filename)
 	std::ostringstream oss;
 
 	if (!ifs)
+	{
+		// std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "error ifs get_file_content : " << filename << std::endl;
+		// std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << strerror(errno) << std::endl;
 		return "";
+	}
 	else if (!oss)
+	{
+		// std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "error oss get_file_content" << std::endl;
 		return "";
+	}
 	else
 	{
 		oss << ifs.rdbuf();

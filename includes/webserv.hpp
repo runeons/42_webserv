@@ -8,6 +8,7 @@
 # include <string>
 # include <netinet/ip.h>
 # include <sys/socket.h>
+# include <sys/select.h>
 # include <arpa/inet.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -50,6 +51,10 @@ typedef int SOCKET;
 # define MAX(X, Y) X > Y ? X : Y
 # define ABS(X) X < 0 ? -X : X
 # define PATTERNLINE "---------------------------------------------------------------------------------------------"
+# define MAX_CLIENTS 50
+# define CHUNK 512
+
+# define PATH_AUTOINDEX "autoindex_res"
 
 
 # include <Exceptions.hpp>

@@ -1,7 +1,7 @@
 #!/usr/bin/php
 
 <?php
-$uploaddir = '/Users/user/42_webserv/uploads/';
+$uploaddir = '/Users/user/42_webserv/html/cgi-bin/upload/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 
 echo '<pre>';

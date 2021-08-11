@@ -6,14 +6,14 @@
 /*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:12:04 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/31 11:12:51 by tsantoni         ###   ########.fr       */
+/*   Updated: 2021/08/10 10:55:10 by tsantoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <webserv.hpp>
 
 // Parameter constructor
-Cgi::Cgi(RequestParser & request) : _request(request)
+Cgi::Cgi(RequestParser & request, std::string script_name) : _request(request), _script_name(script_name)
 {
 	std::cout << GREY << "Cgi creation..." << C_RES << std::endl;
 	_env_map = init_map_env();
@@ -34,10 +34,10 @@ Cgi &	Cgi::operator=(const Cgi& rhs)
 	std::cout << GREY << "Cgi Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
-		this->_env_map = rhs.getEnvMap();
-		this->_env_arr = rhs.getEnvArr();
-		this->_request = rhs.getRequest();
-		// this->_config = rhs.getConfig();
+		_env_map = rhs.getEnvMap();
+		_env_arr = rhs.getEnvArr();
+		_request = rhs.getRequest();
+		// _config = rhs.getConfig();
 	}
 	return (*this);
 }
@@ -45,44 +45,49 @@ Cgi &	Cgi::operator=(const Cgi& rhs)
 // getters and setters (non static attributes)
 std::map<std::string, std::string> Cgi::getEnvMap(void) const
 {
-	return (this->_env_map);
+	return (_env_map);
 }
 
 void Cgi::setEnvMap(const std::map<std::string, std::string> env_map)
 {
-	this->_env_map = env_map;
+	_env_map = env_map;
+	return ;
+}
+
+std::string Cgi::getFullBuf(void) const
+{
+	return (_full_buf);
+}
+
+void Cgi::setFullBuf(const std::string full_buf)
+{
+	_full_buf = full_buf;
 	return ;
 }
 
 char ** Cgi::getEnvArr(void) const
 {
-	return (this->_env_arr);
+	return (_env_arr);
 }
 
-// void Cgi::setEnvArr(const char ** env_arr)
-// {
-// 	this->_env_arr = env_arr;
-// 	return ;
-// }
-//
 RequestParser & Cgi::getRequest(void) const
 {
-	return (this->_request);
+	return (_request);
 }
 
 void Cgi::setRequest(const RequestParser & request)
 {
-	this->_request = request;
+	_request = request;
 	return ;
 }
 
 // Config & Cgi::getConfig(void) const
 // {
-// 	return (this->_config);
+// 	return (_config);
 // }
 //
 // void Cgi::setConfig(const Config & config)
 // {
-// 	this->_config = config;
+// 	_config = config;
 // 	return ;
 // }

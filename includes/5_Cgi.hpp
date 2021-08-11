@@ -15,21 +15,25 @@ class Cgi
 		Cgi(const Cgi & src);
 
 		RequestParser &						_request;
+		std::string							_script_name;
 		// Config &							_config;
+		std::string							_full_buf;
 
 		std::map<std::string, std::string>	_env_map;
 		char **								_env_arr;
 
 	public:
-		Cgi(RequestParser & request);
+		Cgi(RequestParser & request, std::string script_name);
 		virtual ~Cgi();
 
 		std::map<std::string, std::string>	getEnvMap(void) const;
 		void								setEnvMap(const std::map<std::string, std::string> env_map);
 		char **								getEnvArr(void) const;
-		// void								setEnvArr(const char ** env_arr);
 		RequestParser &						getRequest(void) const;
 		void								setRequest(const RequestParser & request);
+		std::string							getFullBuf(void) const;
+		void								setFullBuf(const std::string full_buf);
+
 		// Config &							getConfig(void) const;
 		// void								setConfig(const Config & config);
 		Cgi									&operator=(const Cgi & src);

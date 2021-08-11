@@ -3,14 +3,31 @@
 
 // ********************************************* ::recv => request en std::string *********************************************
 
-void Client::receive_first(void)
+size_t		Client::retrieve_request_content_length(std::string buf_str)
 {
-	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
-	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
-	if (_bytes_read == -1)
-		throw Exceptions::RecvFailure();
-	_chunk[_bytes_read] = '\0';
+	std::string	content_length_line;
+	std::string	content_length_val;
+	size_t		content_length_int;
 
+	// retrieve and convert content-length to size_t
+	content_length_line = buf_str.substr(buf_str.find("Content-Length", 0), buf_str.find(PAT_CRLF, buf_str.find("Content-Length", 0)) - buf_str.find("Content-Length", 0));
+	content_length_val = content_length_line.substr(strlen("Content-Length: "));
+	content_length_int = atol(content_length_val.c_str());
+	return (content_length_int);
+}
+
+int		Client::calculate_total_bytes_expected(std::string buf_str)
+{
+	size_t		content_length;
+	int			end_headers_pos;
+	int			total_bytes_expected;
+	std::string	delim = PAT_CRLF""PAT_CRLF;
+
+	content_length = retrieve_request_content_length(buf_str);
+	end_headers_pos = buf_str.find(delim);
+	// si (end of headers position + delim length + content-length) == size recv, alors tout recu
+	total_bytes_expected = end_headers_pos + delim.length() + content_length;
+	return (total_bytes_expected);
 }
 
 void Client::receive_with_content_length(void)
@@ -21,63 +38,43 @@ void Client::receive_with_content_length(void)
 	_chunk[_bytes_read] = '\0';
 
 	std::string buf_str(_chunk);
-	// std::cerr << C_G_RED << "[ DEBUG buf ] " << C_RES << " [" << buf_str << "]" << std::endl;
-	// si Content-Length can be found in request
-	if (buf_str.find("Content-Length", 0) != std::string::npos)
-	{
-		// convert content-length to int
-		std::string cl = buf_str.substr(buf_str.find("Content-Length", 0), buf_str.find(PAT_CRLF, buf_str.find("Content-Length", 0)) - buf_str.find("Content-Length", 0));
-		std::cerr << C_G_RED << "[ DEBUG content-length  ] " << C_RES << " [" << cl << "]" << std::endl;
-		std::string cl_val = cl.substr(strlen("Content-Length: "));
-		// std::cerr << C_G_RED << "[ DEBUG clv ] " << C_RES << " [" << cl_val << "]" << std::endl;
-		size_t cl_int = atol(cl_val.c_str());
-		std::cerr << C_G_RED << "[ DEBUG content-length int ] " << C_RES << " [" << cl_int << "]" << std::endl;
-		// find end of headers position
-		std::string delim = PAT_CRLF""PAT_CRLF;
-		int end_headers = buf_str.find(delim);
-		std::cerr << C_G_RED << "[ DEBUG PAT_CRLF ] " << C_RES << end_headers << std::endl;
-		// si (end of headers position + delim length + content-length) == size recv, alors tout recu
-		int total_bytes_expected = end_headers + delim.length() + cl_int;
-		std::cerr << C_G_RED << "[ DEBUG total_bytes_expected ] " << C_RES << total_bytes_expected << std::endl;
-		int	remaining_bytes_to_recv = total_bytes_expected - _bytes_read;
-		if (total_bytes_expected == _bytes_read)
+	if (buf_str.find("Content-Length", 0) != std::string::npos) // si Content-Length can be found in request
+	{ // I LOVE YOU
+		_total_bytes_expected = calculate_total_bytes_expected(buf_str);
+		_remaining_bytes_to_recv = _total_bytes_expected - _bytes_read;
+		if (_total_bytes_expected == _bytes_read)
 			std::cout << C_G_BLUE << "Request fully received !" << std::endl;
 		else
-		{
-			std::cout << C_G_BLUE << remaining_bytes_to_recv << " remaining to read w/ recv" << std::endl;
-			// char tmp[remaining_bytes_to_recv];
-			// int	bytes_read2 = ::recv(_socket, tmp, remaining_bytes_to_recv - 1, 0);
-			// std::cout << "tmp : " << tmp << std::endl;
-			// std::cout << "bytes_read2 : " << bytes_read2 << std::endl;
-			// for (int i = _bytes_read; i < (_bytes_read + bytes_read2 - 1); i++)
-			// {
-			// 	_chunk[i] = tmp[i - _bytes_read];
-			// 	/* code */
-			// }
-			// _bytes_read += bytes_read2;
-			// _chunk[_bytes_read] = '\0';
-
-		}
+			std::cout << C_G_BLUE << _remaining_bytes_to_recv << " remaining to read w/ recv" << std::endl;
 	}
-	// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
+	else
+	{
+		std::cout << C_G_BLUE << "Content-Length not found in request" << C_RES << std::endl;
+		if (_total_bytes_expected == 0) // s'il n'y a pas eu de Content-Length du tout, set _total_bytes_expected puisque envoyé à RequestParser
+			_total_bytes_expected = _bytes_read;
+		if (_remaining_bytes_to_recv > 0)
+			_remaining_bytes_to_recv -= _bytes_read;
+	}
+	std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
+}
 
+void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
+{
+	// print current request chunk
+	std::cout << "[";
+	for (ssize_t i = 0; i < bytes_read; i++)
+		std::cout << chunk[i] ;
+	std::cout << "]" << std::endl;
 }
 
 void Client::receive_request(void)
 {
-	// fcntl(_socket, F_SETFL, O_NONBLOCK);
 	try
 	{
-		// receive_first();
 		receive_with_content_length();
-		// std::cerr << C_G_YELLOW << "[ DEBUG br ] " << C_RES << " [" << _bytes_read << "]" << std::endl;
-		std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
-		// print request
-		// std::cout << "[";
-		// for (ssize_t i = 0; i < _bytes_read; i++)
-		// 	std::cout << _chunk[i] ;
-		// std::cout << "]" << std::endl;
-		_request.assign(_chunk, _bytes_read);
+		// print_request_chunk(_bytes_read, _chunk);
+		_request.append(_chunk, _bytes_read);
+		// std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
 	}
 	catch (Exceptions::RecvFailure & e)
 	{
@@ -107,7 +104,7 @@ void	Client::check_http_version(void)
 
 void	Client::check_request(void)
 {
-	_request_parser = new RequestParser(_request, _bytes_read); // delete in generate_response :)
+	_request_parser = new RequestParser(_request, _total_bytes_expected + 1); // delete in generate_response :) // TOCHECK
 	_request_parser->print_request_info();
 	_status_code = _request_parser->get__status();
 	if (_status_code == 200)
@@ -186,47 +183,6 @@ std::string		Client::apply_alias(std::string s)
 	return s;
 }
 
-// void		Client::apply_location(void)
-// {
-// 	// si path contient location, lier _applied location à la location
-// 	std::string							rsc = _request_parser->get__resource();
-// 	std::map<std::string, Location>		m = _config.get__locations();
-// 	Location 							*l = NULL;;
-//
-// 	// TO PRECISE iterate through maps && search from end to beginning
-// 	std::size_t found = rsc.find("/documents");
-// 	if (found == 0)
-// 		l = &m["/documents"];
-// 	else if (rsc.front() == '/')
-// 		l = &m["/"];
-// 	_applied_location = l;
-// 	if (_applied_location && 0)
-// 		_applied_location->print_info();
-// }
-
-// target: /documents/photos/435/lolo.jpeg
-//
-// location:
-// 	uri  : /
-// 	root : X
-// 	alias: X
-// location:
-// 	uri  : /photos
-// 	root : X
-// 	alias: X
-// location:
-// 	uri  : /document/photos/
-// 	root : /tmp
-// 	alias: X
-// location:
-// 	uri  : /document/photos/
-// 	root : X
-// 	alias: /photos/
-// location:
-// 	uri  : /images
-// 	root : X
-// 	alias: X
-
 void		Client::apply_location(void)
 {
 	std::string	rsc = _request_parser->get__resource();
@@ -267,6 +223,8 @@ void		Client::translate_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
+	apply_location();
+	_applied_location->print_info();
 
 	// std::cerr << C_G_RED << "[ DEBUG RSC  ] " << C_RES << rsc << std::endl;
 	_page_content = ""; // vraiment utile ??
@@ -328,11 +286,15 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-		// attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
+	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
 		delete _request_parser;
+	_total_bytes_to_send = _response->getResponse().length() + 1;
+	// copy response in _response_vector vector - may simplify
+	_response_vector.resize(_total_bytes_to_send);
+	memcpy(&_response_vector[0], _response->getResponse().c_str(), _total_bytes_to_send);
 }
 
 // ********************************************* ::send response *********************************************
@@ -340,16 +302,16 @@ void Client::generate_response(void)
 void Client::send_response(void)
 {
 	int	bytes_sent = 0;
-	int len = (_response->getResponse().length() + 1);
-
-	char buffer[len];
-	memcpy(buffer, _response->getResponse().c_str(), len);
+	if (_remaining_bytes_to_send == 0)
+		_remaining_bytes_to_send = _total_bytes_to_send;
 	try
 	{
-		bytes_sent = ::send(_socket, buffer, len, 0);
+		bytes_sent = ::send(_socket, &_response_vector[0], _response_vector.size(), 0);
 		if (bytes_sent == -1)
 			throw Exceptions::SendFailure();
 		std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
+		_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
+		_remaining_bytes_to_send -= bytes_sent;
 	}
 	catch (Exceptions::SendFailure & e)
 	{
@@ -359,28 +321,29 @@ void Client::send_response(void)
 
 // ********************************************* main - treat client *********************************************
 
-void Client::client_receive_request(void)
+void Client::print_response_header(void)
 {
-	receive_request();
-	check_request();
+	std::cout <<  _response->getResponseHeader() << std::endl;
 }
 
-void Client::client_send_response(void)
+void Client::print_response_body(void)
 {
-	apply_location();
-	_applied_location->print_info();
-	translate_path();
-	read_resource();
-	generate_response();
-	send_response();
+	std::cout <<  _response->getResponseHeader() << std::endl;
+	std::cout <<  _response->getResponseBody() << std::endl;
+}
 
-	// std::cout <<  _response->get__responseHeader() << std::endl;
-	// std::cout <<  _response->get__responseBody() << std::endl;
+void Client::print_response(void)
+{
+	print_response_header();
+	print_response_body();
 }
 
 void Client::treat_client(void)
 {
-	client_receive_request();
-	client_send_response();
-
+	receive_request();
+	check_request();
+	translate_path();
+	read_resource();
+	generate_response();
+	send_response();
 }

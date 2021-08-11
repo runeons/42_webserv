@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Response_init_maps.cpp                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:41:51 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/08/01 12:56:50 by tsantoni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <webserv.hpp>
 
@@ -101,7 +90,7 @@ std::string Response::generate_error_page_content(int code)
 	return page;
 }
 
-std::map<int, std::string>	Response::init_map_body()
+std::map<int, std::string>	Response::init_map_body() // _error_content map
 {
 	std::map<int, std::string> m;
 	std::map<int, std::string>::iterator it;
@@ -118,7 +107,9 @@ std::map<int, std::string>	Response::init_map_body()
 		for (it_config = m_config_errors_path.begin(); it_config != m_config_errors_path.end(); it_config++)
 		{
 			if (it_config->first == it->first)
+			{
 				path = m_config_errors_path[it->first];
+			}
 		}
 		// sinon : path par défaut NB.html // A SUPPRIMER ?
 		if (path.length() == 0)
@@ -126,13 +117,16 @@ std::map<int, std::string>	Response::init_map_body()
 		if (it->first != 200)
 		{
 			// recup content du path
+			path = _config.get__root_dir() + "/" + path;
 			m[it->first] = get_file_content(path.c_str());
 			// si vide : genere
 			if (m[it->first].length() == 0)
+			{
 				m[it->first] = generate_error_page_content(it->first);
+			}
 		}
-	}
 
+	}
 	return m;
 }
 
