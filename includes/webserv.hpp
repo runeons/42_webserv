@@ -44,8 +44,8 @@ typedef int SOCKET;
 # define RESAVE_HEAD(X) VN(X) = this->_head
 # define LOAD_HEAD(X) this->_head = VN(X)
 
-# define SET_ERROR _error.msg = std::string(__FUNCTION__) + std::string(" > ") + _error.msg; _error.head = _head;
-# define RESET_ERROR _error.msg = "";
+# define SET_ERROR _error.msg = std::string(__FUNCTION__) + std::string(" > ") + _error.msg; _error.head = _error.head == -1 ? _head : _error.head;
+# define RESET_ERROR _error.msg = ""; _error.head = -1;
 
 # define MIN(X, Y) X < Y ? X : Y
 # define MAX(X, Y) X > Y ? X : Y
