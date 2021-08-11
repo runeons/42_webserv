@@ -97,6 +97,8 @@ void Server::receive_and_process_request(int client_socket)
 	{
 		_clients_map[client_socket]->check_request(); // check if request OK
 		// gerer les erreurs / exceptions
+		_clients_map[client_socket]->apply_location();
+		_clients_map[client_socket]->adjust_applied_location();
 		_clients_map[client_socket]->translate_path();
 		_clients_map[client_socket]->read_resource();
 		_clients_map[client_socket]->generate_response();

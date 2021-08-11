@@ -121,9 +121,7 @@ std::map<int, std::string>	Response::init_map_body() // _error_content map
 			m[it->first] = get_file_content(path.c_str());
 			// si vide : genere
 			if (m[it->first].length() == 0)
-			{
 				m[it->first] = generate_error_page_content(it->first);
-			}
 		}
 
 	}

@@ -175,12 +175,10 @@ std::string		Client::decode_url(std::string & s)
 	return ret;
 }
 
-std::string		Client::apply_alias(std::string s)
+void		Client::adjust_applied_location(void)
 {
-	// it through all locations in _config
-	// it through all alias vector in _config
-	// if found : apply
-	return s;
+	if (_applied_location->get__root_loc() == "")
+		_applied_location->set__root_loc(_config.get__root_dir());
 }
 
 void		Client::apply_location(void)
@@ -190,72 +188,82 @@ void		Client::apply_location(void)
 	std::map<std::string, Location>::const_iterator it;
 	std::map<std::string, Location> m = _config.get__locations();
 
-
 	while (rsc.size() >= 1)
 	{
 		it = _config.get__locations().begin();
-
 		while (it != _config.get__locations().end())
 		{
-			// std::cout << "compare: \"" << it->first << "\" with \"" << rsc << "\"" << std::endl;
 			if (it->first == rsc)
 			{
 				_applied_location = const_cast<Location *>(&it->second);
+				_applied_location->print_info();
 				return ;
 			}
 			it++;
 		}
 		std::string sub = rsc.substr(0, rsc.size() - 1);
 		size_t	pos_last_slash = sub.rfind('/');
-		if (pos_last_slash == std::string::npos)
-			break ; // TODO exception
-		// std::cout << C_G_RED << "pos_last_slash : " << pos_last_slash << C_RES << std::endl;
-		if (rsc == "/")
-			_applied_location = &m["/"];
+		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
+		{
+			std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
+			exit(FAILURE);
+		}
 		rsc.erase(pos_last_slash + 1);
-		// std::cout << "rsc after erase: \"" << rsc << "\"" << std::endl;
 	}
-	std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
-	exit(FAILURE);
+}
+
+std::string		Client::apply_alias(std::string s)
+{
+	// Si cette location a un alias, je vais remplacer le debut de l'URL "/URI/" par "/alias/", tout simplement
+	// TO CHECK : alias OU root ? Un seul des deux possibles dans la config ?
+	if (_applied_location->get__alias().size())
+	{
+		s.erase(0, _applied_location->get__uri().size());
+		s = _applied_location->get__alias() + s;
+	}
+	return s;
+}
+
+std::string		Client::remove_and_store_query(std::string s)
+{
+	// Theo remaster - // remplir query_string
+	if (s.find("?") < s.length())
+	{
+		_query_string = s.substr(s.find("?") + 1);
+		s.erase(s.find("?"));
+	}
+	return s;
+}
+
+// if directory : set up translated_path as index, unless don't exists and autoindex is on : generate_autoindex
+std::string		Client::apply_index_or_autoindex(std::string rsc)
+{
+	struct stat buffer;
+	std::string index_path = rsc + _applied_location->get__index();
+	if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
+	 ; // ne change rien au translated_path
+	else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->get__autoindex() == 1) // if index.html not found + auto
+		_page_content = generate_autoindex(rsc);// rsc += _applied_location->get__index();
+	else // if (ret == 0) ou -1 et autoindex off
+		rsc += _applied_location->get__index();
+	return rsc;
 }
 
 void		Client::translate_path(void)
 {
 	std::string rsc = _request_parser->get__resource();
 
-	apply_location();
-	_applied_location->print_info();
-
-	// std::cerr << C_G_RED << "[ DEBUG RSC  ] " << C_RES << rsc << std::endl;
-	_page_content = ""; // vraiment utile ??
 	rsc = apply_alias(rsc);
-	/*
-		si path contient alias, remplacer par location uri - grace a map d'alias-uri_location
-	*/
-	rsc = decode_url(rsc);
-	// Theo remaster - // remplir query_string
-	if (rsc.find("?") < rsc.length())
-	{
-		_query_string = rsc.substr(rsc.find("?") + 1);
-		rsc.erase(rsc.find("?"));
-	}
-	rsc = "html" + rsc;
-	// if directory : set up translated_path as index, unless don't exists and autoindex is on : generate_autoindex
+	rsc = decode_url(rsc); // TO CHECK avant ? gérer les accents dans les alias et fichiers de conf ? Too much I think
+	rsc = remove_and_store_query(rsc);
+	rsc = _applied_location->get__root_loc() + rsc;
 	if (rsc.back() == '/')
-	{
-		struct stat buffer;
-		std::string index_path = rsc + _applied_location->get__index();
-		if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
-		 ; // ne change rien au translated_path
-		else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->get__autoindex() == 1) // if index.html not found + auto
-			_page_content = generate_autoindex(rsc);// rsc += _applied_location->get__index();
-		else // if (ret == 0) ou -1 et autoindex off
-			rsc += _applied_location->get__index();
-	}
+		rsc = apply_index_or_autoindex(rsc);
 	_translated_path = rsc;
-	// std::cerr << C_G_RED << "[ DEBUG PATH ] " << C_RES << _translated_path << std::endl;
+	// std::cerr << C_G_YELLOW << "[ DEBUG _translated_path ] " << C_RES << _translated_path << std::endl;
 	if (!_query_string.empty())
 		parse_parameters();
+	// _request.set__resource(rsc);
 	return;
 }
 
@@ -337,13 +345,13 @@ void Client::print_response(void)
 	print_response_header();
 	print_response_body();
 }
-
-void Client::treat_client(void)
-{
-	receive_request();
-	check_request();
-	translate_path();
-	read_resource();
-	generate_response();
-	send_response();
-}
+//
+// void Client::treat_client(void)
+// {
+// 	receive_request();
+// 	check_request();
+// 	translate_path();
+// 	read_resource();
+// 	generate_response();
+// 	send_response();
+// }

@@ -72,13 +72,18 @@ class Client
 
 		void			check_request();
 
-		void			parse_parameters();
-		std::string		apply_alias(std::string);
+		void			adjust_applied_location();
 		void			apply_location();
+
+		std::string		apply_alias(std::string);
+
 		std::string		decode_url(std::string &);
+		void			parse_parameters();
+		std::string		remove_and_store_query(std::string);
+		std::string		generate_autoindex(std::string rsc);
+		std::string		apply_index_or_autoindex(std::string);
 		void			translate_path();
 
-		std::string		generate_autoindex(std::string rsc);
 		void			read_resource();
 
 		void			generate_response();
@@ -89,7 +94,7 @@ class Client
 		void 			print_response_body(void);
 		void 			print_response(void);
 
-		void			treat_client();
+		// void			treat_client();
 
 		// void			close(void)
 		// {

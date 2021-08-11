@@ -668,7 +668,9 @@ void	ConfigParser::alias(void)
 		init_digest();
 		path();
 		digest(g_tmp);
+		std::cout << "path g_tmp: [" << g_tmp << "]" << std::endl;
 		tmp_location.set__alias(g_tmp);
+		std::cout << "path get  : [" << tmp_location.get__alias() << "]" << std::endl;
 		OWSON();
 		CHAR(';');
 	}

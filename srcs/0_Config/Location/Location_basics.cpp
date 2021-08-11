@@ -85,7 +85,7 @@ const std::string &					Location::get__redir301(void) 	const { return (_redir_30
 
 void Location::set__uri			(const std::string uri)					{ _uri		 = uri;			}
 void Location::set__root_loc	(const std::string root_loc)			{ _root_loc	 = root_loc;	}
-void Location::set__alias	(const std::string alias)				{ _root_loc	 = alias;	}
+void Location::set__alias		(const std::string alias)				{ _alias	 = alias;		}
 void Location::set__index		(const std::string index)				{ _index	 = index;		}
 void Location::set__autoindex	(const bool autoindex)					{ _autoindex = autoindex;	}
 void Location::set__methods		(const std::vector<std::string> methods){ _methods	 = methods;		}
