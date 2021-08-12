@@ -179,6 +179,15 @@ void		Client::adjust_applied_location(void)
 {
 	if (_applied_location->get__root_loc() == "")
 		_applied_location->set__root_loc(_config.get__root_dir());
+	if (_applied_location->get__methods().empty())
+	{
+		std::vector<std::string> m;
+		m.push_back("GET");
+		m.push_back("POST");
+		m.push_back("DELETE");
+		_applied_location->set__methods(m);
+	}
+	_applied_location->print_info();
 }
 
 void		Client::apply_location(void)
@@ -196,7 +205,6 @@ void		Client::apply_location(void)
 			if (it->first == rsc)
 			{
 				_applied_location = const_cast<Location *>(&it->second);
-				_applied_location->print_info();
 				return ;
 			}
 			it++;
@@ -303,6 +311,8 @@ void Client::generate_response(void)
 	// copy response in _response_vector vector - may simplify
 	_response_vector.resize(_total_bytes_to_send);
 	memcpy(&_response_vector[0], _response->getResponse().c_str(), _total_bytes_to_send);
+	// print_response_header();
+	// print_response_body();
 }
 
 // ********************************************* ::send response *********************************************
@@ -325,6 +335,7 @@ void Client::send_response(void)
 	{
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
+	// std::cerr << C_G_YELLOW << "[ DEBUG RESPONSE SENT ] " << C_RES << "" << std::endl;
 }
 
 // ********************************************* main - treat client *********************************************

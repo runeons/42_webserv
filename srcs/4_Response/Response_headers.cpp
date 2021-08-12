@@ -7,7 +7,6 @@ std::string Response::generate_status_line(void)
 {
 	std::map<int, std::string>::iterator it_msg = _error_msg.find(_status_code);
 
-	// return ("HTTP/" + _request_parser->get__http_version() + PAT_SP + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 	return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 }
 
@@ -22,7 +21,8 @@ std::string		Response::formatted_header_response(enum e_resp_fields field)
 
 std::string		Response::r_header_server()
 {
-	_headers_response[R_SERVER] = SERVER_NAME;
+	_headers_response[R_SERVER] = _config.get__server_name();
+	// _headers_response[R_SERVER] = SERVER_NAME;
 	return (formatted_header_response(R_SERVER));
 }
 
@@ -61,6 +61,25 @@ std::string		Response::r_header_content_length()
 	return (formatted_header_response(R_CONTENT_LENGTH));
 }
 
+// ********************************************* Content-Length *********************************************
+
+std::string		Response::r_header_location()
+{
+	// if (_status_code == 301)
+	// {
+	// 	std::string loc = _applied_location.get__redir301();
+	// 	// std::string loc = _applied_location.get__root_loc() + _applied_location.get__redir301();
+	// 	loc.erase(0, 1);
+	// 	loc = "127.0.0.1:8000/" + loc;
+	// 	_headers_response[R_LOCATION] = loc;
+	// 	std::cerr << C_G_RED << "[ DEBUG 301 ] " << C_RES <<  _applied_location.get__redir301() << std::endl;
+	// 	std::cerr << C_G_RED << "[ DEBUG 301 ] " << C_RES << _headers_response[R_LOCATION] << std::endl;
+	// 	return (formatted_header_response(R_LOCATION));
+	// }
+	// else
+		return "";
+}
+
 // ********************************************* Content-Type *********************************************
 //
 // std::string		Response::exec_cmd(std::string cmd)
@@ -91,6 +110,12 @@ void		Response::retrieve_type_mime_charset(std::string str)
 	first = str.find("=") + 1;
 	last = str.find("\n");
 	_charset = str.substr(first, last - first);
+	if (_type_mime == "inode/x-empty" && _charset == "binary") // si empty file
+	{
+		_type_mime = "text/html";
+		_charset = "utf-8";
+		return ;
+	}
 }
 
 std::string		Response::r_header_content_type()
