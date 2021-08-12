@@ -65,18 +65,13 @@ std::string		Response::r_header_content_length()
 
 std::string		Response::r_header_location()
 {
-	// if (_status_code == 301)
-	// {
-	// 	std::string loc = _applied_location.get__redir301();
-	// 	// std::string loc = _applied_location.get__root_loc() + _applied_location.get__redir301();
-	// 	loc.erase(0, 1);
-	// 	loc = "127.0.0.1:8000/" + loc;
-	// 	_headers_response[R_LOCATION] = loc;
-	// 	std::cerr << C_G_RED << "[ DEBUG 301 ] " << C_RES <<  _applied_location.get__redir301() << std::endl;
-	// 	std::cerr << C_G_RED << "[ DEBUG 301 ] " << C_RES << _headers_response[R_LOCATION] << std::endl;
-	// 	return (formatted_header_response(R_LOCATION));
-	// }
-	// else
+	if (_status_code == 301)
+	{
+		_headers_response[R_LOCATION] = _applied_location.get__redir301();
+		// std::cerr << C_G_RED << "[ DEBUG 301 LOCATION ] " << C_RES << _headers_response[R_LOCATION] << std::endl;
+		return (formatted_header_response(R_LOCATION));
+	}
+	else
 		return "";
 }
 
@@ -110,7 +105,7 @@ void		Response::retrieve_type_mime_charset(std::string str)
 	first = str.find("=") + 1;
 	last = str.find("\n");
 	_charset = str.substr(first, last - first);
-	if (_type_mime == "inode/x-empty" && _charset == "binary") // si empty file
+	if (_charset == "binary" && (_type_mime == "inode/x-empty" || _type_mime == "inode/directory")) // si empty file || dir
 	{
 		_type_mime = "text/html";
 		_charset = "utf-8";

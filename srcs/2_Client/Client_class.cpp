@@ -311,7 +311,7 @@ void Client::generate_response(void)
 	// copy response in _response_vector vector - may simplify
 	_response_vector.resize(_total_bytes_to_send);
 	memcpy(&_response_vector[0], _response->getResponse().c_str(), _total_bytes_to_send);
-	// print_response_header();
+	print_response_header();
 	// print_response_body();
 }
 

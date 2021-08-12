@@ -86,7 +86,8 @@ void		Response::generate_response_header(void)
 	_response_header += r_header_connection();
 	_response_header += r_header_content_length();
 	_response_header += r_header_content_type();
-	// _response_header += r_header_location();
+	// if (_status_code == 301)
+		_response_header += r_header_location();
 	return ;
 }
 
@@ -102,11 +103,14 @@ void	Response::concatenate_response()
 void	Response::generate(void)
 {
 	check_if_method_allowed();
-	// check_if_redir_301();
-	if (_request.get__method() == "GET")
-		GET_handle(); // from page_content
-	else if (_request.get__method() == "POST")
-		POST_handle(); // from page_content
+	check_if_redir_301();
+	if (_status_code == 200)
+	{
+		if (_request.get__method() == "GET")
+			GET_handle(); // from page_content
+		else if (_request.get__method() == "POST")
+			POST_handle(); // from page_content
+	}
 	fill_body_if_error();
 	generate_response_header(); // from status_code, page_content and translated_path
 	concatenate_response();
