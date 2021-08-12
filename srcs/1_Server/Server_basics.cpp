@@ -25,7 +25,7 @@ Server::Server(void)
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0)
+		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0) // TOCHECK modifier avec host de config ??
 			throw Exceptions::InvalidAddress();
 		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
 	}

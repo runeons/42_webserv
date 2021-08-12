@@ -104,7 +104,6 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	"SERVER_SOFTWARE"
 */
 
-// env REDIRECT_STATUS="200" GATEWAY_INTERFACE="CGI/1.1" QUERY_STRING="" REMOTE_ADDR="127.0.0.1" REQUEST_METHOD="GET" SCRIPT_NAME="scripts/bonjour.php" SERVER_NAME="webserv" SERVER_PORT="8000" SERVER_PROTOCOL="HTTP/1.1" SERVER_SOFTWARE="" ./scripts/bonjour.php
 // m["CONTENT_LENGTH"] = "";			// if no body, MUST NOT be set
 // m["CONTENT_TYPE"] = "";				// if no body, can be NULL
 // m["PATH_INFO"] = "uploads/to_upload";
