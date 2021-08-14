@@ -41,6 +41,7 @@ class Server
 		void		receive_and_process_request(int client_socket);
 		void		prepare_and_send_response(int client_socket);
 
+		void 		shutdown_client_socket(int client_socket);
 		void		select_and_treat_connections();
 		int			launch();
 

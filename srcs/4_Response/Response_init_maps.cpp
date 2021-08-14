@@ -88,7 +88,6 @@ std::string Response::generate_error_page_content(int code)
 			</div>\
 		</body>\
 	</html>";
-	// std::cout << page << std::endl;
 	return page;
 }
 
@@ -113,7 +112,7 @@ std::map<int, std::string>	Response::init_map_body() // _error_content map
 				path = m_config_errors_path[it->first];
 			}
 		}
-		// sinon : path par défaut NB.html // A SUPPRIMER ?
+		// sinon : path par défaut NB.html // A SUPPRIMER ? TOCHECK
 		if (path.length() == 0)
 			path = DIR_ERROR_PAGES + itos(it->first) + ".html";
 		if (it->first != 200)

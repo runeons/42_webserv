@@ -8,46 +8,28 @@ class Exceptions
 {
 	public :
 
-		class ServerSocket : public std::exception
+		class ServerException: public std::exception
 		{
+			private:
+				std::string _msg;
 			public:
-				virtual const char *what() const throw()
-				{ return ("Error creation server socket"); }
+				ServerException(std::string msg): _msg(msg) {}
+				virtual ~ServerException(void) throw() {}
+				virtual const char *what() const throw() {
+					return (this->_msg.c_str());
+				}
 		};
 
-		class BindServer : public std::exception
+		class ClientException: public std::exception
 		{
+			private:
+				std::string _msg;
 			public:
-				virtual const char *what() const throw()
-				{ return ("Failed to bind address and port"); }
-		};
-
-		class ServerListen : public std::exception
-		{
-			public:
-				virtual const char *what() const throw()
-				{ return ("Server failed to listen"); }
-		};
-
-		class InvalidAddress : public std::exception
-		{
-			public:
-				virtual const char *what() const throw()
-				{ return ("Invalid address - not supported"); }
-		};
-
-		class RecvFailure : public std::exception
-		{
-			public:
-				virtual const char *what() const throw()
-				{ return ("Failed to receive request"); }
-		};
-
-		class SendFailure : public std::exception
-		{
-			public:
-				virtual const char *what() const throw()
-				{ return ("Failed to send response"); }
+				ClientException(std::string msg): _msg(msg) {}
+				virtual ~ClientException(void) throw() {}
+				virtual const char *what() const throw() {
+					return (this->_msg.c_str());
+				}
 		};
 
 		class LexerException: public std::exception

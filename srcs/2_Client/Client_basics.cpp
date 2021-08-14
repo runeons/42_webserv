@@ -102,6 +102,17 @@ void Client::set_total_bytes_to_send(const int bytes)
 	return ;
 }
 
+int Client::get__status_code(void) const
+{
+	return (_status_code);
+}
+
+void Client::set__status_code(const int code)
+{
+	_status_code = code;
+	return ;
+}
+
 std::string Client::getRequest(void) const
 {
 	return (_request);

@@ -45,8 +45,8 @@ std::string		Response::r_header_date()
 
 std::string		Response::r_header_connection()
 {
-	_headers_response[R_CONNECTION] = "close"; // à vérifier
-	_headers_response[R_CONNECTION] = "Keep-Alive"; // à vérifier
+	_headers_response[R_CONNECTION] = "close"; // TOCHECK
+	_headers_response[R_CONNECTION] = "Keep-Alive"; // TOCHECK
 	return (formatted_header_response(R_CONNECTION));
 }
 
@@ -55,7 +55,7 @@ std::string		Response::r_header_connection()
 std::string		Response::r_header_content_length()
 {
 	if (_response_body.length())
-		_headers_response[R_CONTENT_LENGTH] = itos(_response_body.length()); // should be binary length when appropriate ?
+		_headers_response[R_CONTENT_LENGTH] = itos(_response_body.length());
 	else
 		_headers_response[R_CONTENT_LENGTH] = "None";
 	return (formatted_header_response(R_CONTENT_LENGTH));
@@ -68,7 +68,6 @@ std::string		Response::r_header_location()
 	if (_status_code == 301)
 	{
 		_headers_response[R_LOCATION] = _applied_location.get__redir301();
-		// std::cerr << C_G_RED << "[ DEBUG 301 LOCATION ] " << C_RES << _headers_response[R_LOCATION] << std::endl;
 		return (formatted_header_response(R_LOCATION));
 	}
 	else
@@ -116,9 +115,12 @@ void		Response::retrieve_type_mime_charset(std::string str)
 std::string		Response::r_header_content_type()
 {
 	std::string cmd;
+	std::string res;
 
 	cmd = "file --mime " + _translated_path;
-	retrieve_type_mime_charset(exec_cmd(cmd.c_str(), PATH_CMD_RES));
+	res = exec_cmd(cmd.c_str(), PATH_CMD_RES);
+	retrieve_type_mime_charset(res);
+	// std::cerr << C_G_RED << "[ DEBUG res content_type ] " << C_RES << res << std::endl;
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;
 	return (formatted_header_response(R_CONTENT_TYPE));
 }

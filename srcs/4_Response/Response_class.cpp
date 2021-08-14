@@ -21,9 +21,7 @@ void	Response::check_if_method_allowed(void)
 void	Response::check_if_redir_301(void)
 {
 	if (_applied_location.get__redir301().size())
-	{
 		_status_code = 301;
-	}
 }
 
 // ********************************************* create body *********************************************
@@ -57,7 +55,6 @@ void	Response::POST_create_body_cgi(void)
 void	Response::POST_handle(void)
 {
 	POST_create_body();
-	// check POST types
 	std::string request_content_type = _request.get__header_value("Content-Type");
 	if (request_content_type.find("multipart/form-data;", 0) == 0)
 	{
@@ -86,8 +83,7 @@ void		Response::generate_response_header(void)
 	_response_header += r_header_connection();
 	_response_header += r_header_content_length();
 	_response_header += r_header_content_type();
-	// if (_status_code == 301)
-		_response_header += r_header_location();
+	_response_header += r_header_location();
 	return ;
 }
 
@@ -102,8 +98,10 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
-	check_if_method_allowed();
-	check_if_redir_301();
+	if (_status_code == 200)
+		check_if_method_allowed();
+	if (_status_code == 200)
+		check_if_redir_301();
 	if (_status_code == 200)
 	{
 		if (_request.get__method() == "GET")
