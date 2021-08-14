@@ -7,7 +7,7 @@ Client::Client(Config & config) : _config(config)
 	std::cout << GREY << "Client creation..." << C_RES << std::endl;
 
 	_socket = 0;
-	_status_code = 0;
+	_status_code = 200;
 	_bytes_read = 0;
 	_request = "";
 	_translated_path = "";
@@ -99,6 +99,17 @@ int Client::get_total_bytes_to_send(void) const
 void Client::set_total_bytes_to_send(const int bytes)
 {
 	_total_bytes_to_send = bytes;
+	return ;
+}
+
+int Client::get__status_code(void) const
+{
+	return (_status_code);
+}
+
+void Client::set__status_code(const int code)
+{
+	_status_code = code;
 	return ;
 }
 

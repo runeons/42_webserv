@@ -25,11 +25,11 @@ Server::Server(void)
 	_address.sin_addr.s_addr = INADDR_ANY;
 	try
 	{
-		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0)
-			throw Exceptions::InvalidAddress();
+		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0) // TOCHECK modifier avec host de config ??
+			throw (Exceptions::ServerException("Server invalid address"));
 		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
 	}
-	catch (Exceptions::InvalidAddress & e)
+	catch (Exceptions::ServerException & e)
 	{
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
@@ -49,10 +49,10 @@ Server::Server(const Config & config)
 	try
 	{
 		if (inet_aton(_config->get__host().c_str(), &_address.sin_addr) <= 0)
-			throw Exceptions::InvalidAddress();
+			throw (Exceptions::ServerException("Server invalid address"));
 		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
 	}
-	catch (Exceptions::InvalidAddress & e)
+	catch (Exceptions::ServerException & e)
 	{
 		std::cerr << RED << e.what() <<  C_RES << std::endl;
 	}
@@ -72,7 +72,7 @@ Server::Server(const Server& src)
 // Destructor
 Server::~Server(void)
 {
-	delete _config;
+	// delete _config;
 	// TO DO delete all clients
 	std::cout << GREY << "Server destruction..." << C_RES << std::endl;
 	return;

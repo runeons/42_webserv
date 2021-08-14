@@ -15,7 +15,8 @@ typedef enum		e_resp_fields
 	R_SERVER,
 	R_CONNECTION,
 	R_CONTENT_LENGTH,
-	R_CONTENT_TYPE
+	R_CONTENT_TYPE,
+	R_LOCATION
 }					t_resp_fields;
 
 class Response
@@ -84,6 +85,7 @@ class Response
 		std::string		r_header_connection();
 		std::string		r_header_content_length();
 		std::string		r_header_content_type();
+		std::string		r_header_location();
 		std::string		get_mime_type(std::string extension);
 		void			generate_response_header();
 		void			retrieve_type_mime_charset(std::string res);
@@ -91,7 +93,8 @@ class Response
 
 		// Response_class
 		void	check_if_method_allowed();
-		void	fill_content_if_error();
+		void	check_if_redir_301();
+		void	fill_body_if_error();
 		void	GET_create_body();
 		void	GET_handle();
 		void	POST_create_body();

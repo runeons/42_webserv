@@ -48,8 +48,13 @@ int		Client::calculate_total_bytes_expected(std::string buf_str)
 void Client::receive_with_content_length(void)
 {
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
+	// _bytes_read = -1;
 	if (_bytes_read == -1)
-		throw Exceptions::RecvFailure();
+	{
+		_status_code = 500;
+		// throw (Exceptions::ClientException("Client failed to receive request"));
+		return ;
+	}
 	_chunk[_bytes_read] = '\0';
 
 	std::string buf_str(_chunk);
@@ -71,6 +76,7 @@ void Client::receive_with_content_length(void)
 			_remaining_bytes_to_recv -= _bytes_read;
 	}
 	std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
+	_request.append(_chunk, _bytes_read);
 }
 
 void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
@@ -84,19 +90,10 @@ void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
 
 void Client::receive_request(void)
 {
-	try
-	{
-		receive_with_content_length();
-		// print_request_chunk(_bytes_read, _chunk);
-		_request.append(_chunk, _bytes_read);
-		// std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
-	}
-	catch (Exceptions::RecvFailure & e)
-	{
-		std::cerr << RED << e.what() <<  C_RES << std::endl;
-	}
-
-	return ;
+	receive_with_content_length();
+	// print_request_chunk(_bytes_read, _chunk);
+	// _request.append(_chunk, _bytes_read);
+	// std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
 }
 
 // ********************************************* parse + check request *********************************************
@@ -136,28 +133,65 @@ void	Client::check_request(void)
 	return ;
 }
 
-// ********************************************* parse path *********************************************
+// ********************************************* apply location *********************************************
 
-void	Client::parse_parameters(void)
+void		Client::adjust_applied_location(void)
 {
-	std::string p = _query_string;
-	int sep = 0;
-	int eq = 0;
-
-	while (sep > -1)
+	if (_applied_location->get__root_loc() == "")
+		_applied_location->set__root_loc(_config.get__root_dir());
+	if (_applied_location->get__methods().empty())
 	{
-		sep = p.find("&");
-		eq = p.find("=");
-		_parameters[p.substr(0, eq)] = p.substr(eq + 1, sep - (eq + 1));
-		p.erase(0, sep + 1);
+		std::vector<std::string> m;
+		m.push_back("GET");
+		m.push_back("POST");
+		m.push_back("DELETE");
+		_applied_location->set__methods(m);
+	}
+	_applied_location->print_info();
+}
+
+void		Client::apply_location(void)
+{
+	std::string	rsc = _request_parser->get__resource();
+
+	std::map<std::string, Location>::const_iterator it;
+	std::map<std::string, Location> m = _config.get__locations();
+
+	while (rsc.size() >= 1)
+	{
+		it = _config.get__locations().begin();
+		while (it != _config.get__locations().end())
+		{
+			if (it->first == rsc)
+			{
+				_applied_location = const_cast<Location *>(&it->second);
+				return ;
+			}
+			it++;
+		}
+		std::string sub = rsc.substr(0, rsc.size() - 1);
+		size_t	pos_last_slash = sub.rfind('/');
+		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
+		{
+			std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
+			_status_code = 404;
+		}
+		rsc.erase(pos_last_slash + 1);
 	}
 }
 
-std::string	Client::generate_autoindex(std::string rsc)
+// ********************************************* translate path *********************************************
+
+std::string		Client::apply_alias(std::string s)
 {
-	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
-	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
-	return res;
+	// Si cette location a un alias, je vais remplacer le debut de l'URL "/URI/" par "/alias/", tout simplement
+	// TO CHECK : alias OU root ? Un seul des deux possibles dans la config ?
+	if (_applied_location->get__alias().size())
+	{
+		s.erase(0, _applied_location->get__uri().size());
+		s = _applied_location->get__alias() + s;
+	}
+	return s;
 }
 
 std::string		Client::decode_url(std::string & s)
@@ -190,58 +224,8 @@ std::string		Client::decode_url(std::string & s)
 	return ret;
 }
 
-void		Client::adjust_applied_location(void)
-{
-	if (_applied_location->get__root_loc() == "")
-		_applied_location->set__root_loc(_config.get__root_dir());
-}
-
-void		Client::apply_location(void)
-{
-	std::string	rsc = _request_parser->get__resource();
-
-	std::map<std::string, Location>::const_iterator it;
-	std::map<std::string, Location> m = _config.get__locations();
-
-	while (rsc.size() >= 1)
-	{
-		it = _config.get__locations().begin();
-		while (it != _config.get__locations().end())
-		{
-			if (it->first == rsc)
-			{
-				_applied_location = const_cast<Location *>(&it->second);
-				_applied_location->print_info();
-				return ;
-			}
-			it++;
-		}
-		std::string sub = rsc.substr(0, rsc.size() - 1);
-		size_t	pos_last_slash = sub.rfind('/');
-		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
-		{
-			std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
-			exit(FAILURE);
-		}
-		rsc.erase(pos_last_slash + 1);
-	}
-}
-
-std::string		Client::apply_alias(std::string s)
-{
-	// Si cette location a un alias, je vais remplacer le debut de l'URL "/URI/" par "/alias/", tout simplement
-	// TO CHECK : alias OU root ? Un seul des deux possibles dans la config ?
-	if (_applied_location->get__alias().size())
-	{
-		s.erase(0, _applied_location->get__uri().size());
-		s = _applied_location->get__alias() + s;
-	}
-	return s;
-}
-
 std::string		Client::remove_and_store_query(std::string s)
 {
-	// Theo remaster - // remplir query_string
 	if (s.find("?") < s.length())
 	{
 		_query_string = s.substr(s.find("?") + 1);
@@ -250,7 +234,16 @@ std::string		Client::remove_and_store_query(std::string s)
 	return s;
 }
 
-// if directory : set up translated_path as index, unless don't exists and autoindex is on : generate_autoindex
+std::string	Client::generate_autoindex(std::string rsc)
+{
+	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
+	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
+	if (res == "")
+		_status_code = 500;
+	return res;
+}
+
+// if directory : set up translated_path as index, unless doesn't exist and autoindex is on : generate_autoindex
 std::string		Client::apply_index_or_autoindex(std::string rsc)
 {
 	struct stat buffer;
@@ -258,10 +251,25 @@ std::string		Client::apply_index_or_autoindex(std::string rsc)
 	if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
 	 ; // ne change rien au translated_path
 	else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->get__autoindex() == 1) // if index.html not found + auto
-		_page_content = generate_autoindex(rsc);// rsc += _applied_location->get__index();
+		_page_content = generate_autoindex(rsc);
 	else // if (ret == 0) ou -1 et autoindex off
 		rsc += _applied_location->get__index();
 	return rsc;
+}
+
+void	Client::parse_parameters(void)
+{
+	std::string p = _query_string;
+	int sep = 0;
+	int eq = 0;
+
+	while (sep > -1)
+	{
+		sep = p.find("&");
+		eq = p.find("=");
+		_parameters[p.substr(0, eq)] = p.substr(eq + 1, sep - (eq + 1));
+		p.erase(0, sep + 1);
+	}
 }
 
 void		Client::translate_path(void)
@@ -275,7 +283,6 @@ void		Client::translate_path(void)
 	if (rsc.back() == '/')
 		rsc = apply_index_or_autoindex(rsc);
 	_translated_path = rsc;
-	// std::cerr << C_G_YELLOW << "[ DEBUG _translated_path ] " << C_RES << _translated_path << std::endl;
 	if (!_query_string.empty())
 		parse_parameters();
 	// _request.set__resource(rsc);
@@ -289,17 +296,15 @@ void Client::read_resource(void)
 	std::ifstream ifs(_translated_path);
 	char c;
 
-	// std::cerr << C_G_RED << "[ DEBUG PAGECONTENT ] " << C_RES << _page_content << std::endl;
 	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex
 		;
 	else if (!ifs)
-		_status_code = 404;
+		_status_code = 404; // si can't find resource
 	else
 	{
 		while (ifs >> std::noskipws >> c)
 			_page_content += c;
 	}
-	std::cerr << BROWN << "status code: " << _status_code << C_RES << std::endl;
 	if (ifs)
 		ifs.close();
 	return ;
@@ -309,15 +314,18 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ?
+	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ? TOCHECK
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	if (_request_parser != NULL)
 		delete _request_parser;
 	_total_bytes_to_send = _response->getResponse().length() + 1;
-	// copy response in _response_vector vector - may simplify
+	// copy response in _response_vector vector
 	_response_vector.resize(_total_bytes_to_send);
 	memcpy(&_response_vector[0], _response->getResponse().c_str(), _total_bytes_to_send);
+
+	print_response_header();
+	// print_response_body();
 }
 
 // ********************************************* ::send response *********************************************
@@ -327,19 +335,14 @@ void Client::send_response(void)
 	int	bytes_sent = 0;
 	if (_remaining_bytes_to_send == 0)
 		_remaining_bytes_to_send = _total_bytes_to_send;
-	try
-	{
-		bytes_sent = ::send(_socket, &_response_vector[0], _response_vector.size(), 0);
-		if (bytes_sent == -1)
-			throw Exceptions::SendFailure();
-		std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
-		_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
-		_remaining_bytes_to_send -= bytes_sent;
-	}
-	catch (Exceptions::SendFailure & e)
-	{
-		std::cerr << RED << e.what() <<  C_RES << std::endl;
-	}
+	bytes_sent = ::send(_socket, &_response_vector[0], _response_vector.size(), 0);
+	// bytes_sent = -1;
+	if (bytes_sent == -1)
+		throw (Exceptions::ClientException("Client failed to send response"));
+	std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
+	_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
+	_remaining_bytes_to_send -= bytes_sent;
+	// std::cerr << C_G_YELLOW << "[ DEBUG RESPONSE SENT ] " << C_RES << "" << std::endl;
 }
 
 // ********************************************* main - treat client *********************************************
@@ -360,13 +363,4 @@ void Client::print_response(void)
 	print_response_header();
 	print_response_body();
 }
-//
-// void Client::treat_client(void)
-// {
-// 	receive_request();
-// 	check_request();
-// 	translate_path();
-// 	read_resource();
-// 	generate_response();
-// 	send_response();
-// }
+

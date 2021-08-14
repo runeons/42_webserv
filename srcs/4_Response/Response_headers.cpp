@@ -7,7 +7,6 @@ std::string Response::generate_status_line(void)
 {
 	std::map<int, std::string>::iterator it_msg = _error_msg.find(_status_code);
 
-	// return ("HTTP/" + _request_parser->get__http_version() + PAT_SP + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 	return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second + PAT_CRLF);
 }
 
@@ -22,7 +21,8 @@ std::string		Response::formatted_header_response(enum e_resp_fields field)
 
 std::string		Response::r_header_server()
 {
-	_headers_response[R_SERVER] = SERVER_NAME;
+	_headers_response[R_SERVER] = _config.get__server_name();
+	// _headers_response[R_SERVER] = SERVER_NAME;
 	return (formatted_header_response(R_SERVER));
 }
 
@@ -45,8 +45,8 @@ std::string		Response::r_header_date()
 
 std::string		Response::r_header_connection()
 {
-	_headers_response[R_CONNECTION] = "close"; // à vérifier
-	_headers_response[R_CONNECTION] = "Keep-Alive"; // à vérifier
+	_headers_response[R_CONNECTION] = "close"; // TOCHECK
+	_headers_response[R_CONNECTION] = "Keep-Alive"; // TOCHECK
 	return (formatted_header_response(R_CONNECTION));
 }
 
@@ -55,10 +55,23 @@ std::string		Response::r_header_connection()
 std::string		Response::r_header_content_length()
 {
 	if (_response_body.length())
-		_headers_response[R_CONTENT_LENGTH] = itos(_response_body.length()); // should be binary length when appropriate ?
+		_headers_response[R_CONTENT_LENGTH] = itos(_response_body.length());
 	else
 		_headers_response[R_CONTENT_LENGTH] = "None";
 	return (formatted_header_response(R_CONTENT_LENGTH));
+}
+
+// ********************************************* Content-Length *********************************************
+
+std::string		Response::r_header_location()
+{
+	if (_status_code == 301)
+	{
+		_headers_response[R_LOCATION] = _applied_location.get__redir301();
+		return (formatted_header_response(R_LOCATION));
+	}
+	else
+		return "";
 }
 
 // ********************************************* Content-Type *********************************************
@@ -91,14 +104,23 @@ void		Response::retrieve_type_mime_charset(std::string str)
 	first = str.find("=") + 1;
 	last = str.find("\n");
 	_charset = str.substr(first, last - first);
+	if (_charset == "binary" && (_type_mime == "inode/x-empty" || _type_mime == "inode/directory")) // si empty file || dir
+	{
+		_type_mime = "text/html";
+		_charset = "utf-8";
+		return ;
+	}
 }
 
 std::string		Response::r_header_content_type()
 {
 	std::string cmd;
+	std::string res;
 
 	cmd = "file --mime " + _translated_path;
-	retrieve_type_mime_charset(exec_cmd(cmd.c_str(), PATH_CMD_RES));
+	res = exec_cmd(cmd.c_str(), PATH_CMD_RES);
+	retrieve_type_mime_charset(res);
+	// std::cerr << C_G_RED << "[ DEBUG res content_type ] " << C_RES << res << std::endl;
 	_headers_response[R_CONTENT_TYPE] = _type_mime + "; charset=" + _charset;
 	return (formatted_header_response(R_CONTENT_TYPE));
 }

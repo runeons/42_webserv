@@ -11,6 +11,7 @@ std::string		Response::get_response_field_name(enum e_resp_fields field)
 		case R_CONNECTION		: return (std::string("Connection"));
 		case R_CONTENT_LENGTH	: return (std::string("Content-Length"));
 		case R_CONTENT_TYPE		: return (std::string("Content-Type"));
+		case R_LOCATION			: return (std::string("Location"));
 		default					: return (std::string("None"));
 	}
 }
@@ -24,6 +25,7 @@ std::map<int, std::string>	Response::init_map_headers()
 	m[R_CONNECTION] = "";
 	m[R_CONTENT_LENGTH] = "";
 	m[R_CONTENT_TYPE] = "";
+	m[R_LOCATION] = "";
 	return m;
 }
 
@@ -86,7 +88,6 @@ std::string Response::generate_error_page_content(int code)
 			</div>\
 		</body>\
 	</html>";
-	// std::cout << page << std::endl;
 	return page;
 }
 
@@ -111,7 +112,7 @@ std::map<int, std::string>	Response::init_map_body() // _error_content map
 				path = m_config_errors_path[it->first];
 			}
 		}
-		// sinon : path par défaut NB.html // A SUPPRIMER ?
+		// sinon : path par défaut NB.html // A SUPPRIMER ? TOCHECK
 		if (path.length() == 0)
 			path = DIR_ERROR_PAGES + itos(it->first) + ".html";
 		if (it->first != 200)

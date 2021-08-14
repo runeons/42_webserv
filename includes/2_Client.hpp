@@ -54,6 +54,8 @@ class Client
 		void 			set_remaining_bytes_to_recv(const int bytes);
 		int 			get_total_bytes_expected(void) const;
 		void 			set_total_bytes_expected(const int bytes);
+		int 			get__status_code(void) const;
+		void 			set__status_code(const int code);
 
 		int 			get_remaining_bytes_to_send(void) const;
 		void 			set_remaining_bytes_to_send(const int bytes);
@@ -93,8 +95,6 @@ class Client
 		void 			print_response_header(void);
 		void 			print_response_body(void);
 		void 			print_response(void);
-
-		// void			treat_client();
 
 		// void			close(void)
 		// {

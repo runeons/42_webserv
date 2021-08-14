@@ -36,39 +36,46 @@ void		clean_comments_config_file(std::string & config_file)
 
 int			main(int ac, char **av)
 {
-	std::string	config_file("");
+	try
+	{
+		std::string	config_file("");
 
-	if (ac > 2)
-	{
-		std::cerr << C_G_RED << "error: " << C_G_WHITE << "too many arguments." << C_RES << std::endl;
-		return (-1);
-	}
-	else if (ac < 2)
-	{
-		std::cerr << C_G_RED << "error: " << C_G_WHITE << "not enough arguments." << C_RES << std::endl;
-		return (-1);
-	}
-	else
-	{
-		try
+		if (ac > 2)
 		{
-			for (int i = 1; i < ac; i++)
-				config_file += get_config_file(av[i]);
-			clean_comments_config_file(config_file);
-			// std::cout << "config_file: " << "[" << config_file << "]" << std::endl;
+			std::cerr << C_G_RED << "error: " << C_G_WHITE << "too many arguments." << C_RES << std::endl;
+			return (-1);
 		}
-		catch (std::exception & e)
+		else if (ac < 2)
 		{
-			std::cout << "error: " << e.what() << std::endl;
+			std::cerr << C_G_RED << "error: " << C_G_WHITE << "not enough arguments." << C_RES << std::endl;
+			return (-1);
 		}
+		else
+		{
+			try
+			{
+				for (int i = 1; i < ac; i++)
+					config_file += get_config_file(av[i]);
+				clean_comments_config_file(config_file);
+				// std::cout << "config_file: " << "[" << config_file << "]" << std::endl;
+			}
+			catch (std::exception & e)
+			{
+				std::cout << "error: " << e.what() << std::endl;
+			}
+		}
+		ConfigParser cp(config_file);
+		cp.print_info();
+
+		Server server(cp.get__servers_config()[0]);
+
+		if (server.launch())
+			return (-1);
 	}
-	ConfigParser cp(config_file);
-	cp.print_info();
-
-	Server server(cp.get__servers_config()[0]);
-
-	if (server.launch())
-		return (-1);
+	catch (std::exception & e)
+	{
+		std::cout << "fatal error: " << e.what() << std::endl;
+	}
 
 	return 0;
 }
