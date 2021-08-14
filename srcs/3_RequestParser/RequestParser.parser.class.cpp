@@ -991,6 +991,10 @@ void	RequestParser::tchar(void)
 	{
 		for (int i = 0; i < 1; i++)
 		{
+			try { ALPHA(); break ; }
+			catch (std::exception & e) {}
+			try { DIGIT(); break ; }
+			catch (std::exception & e) {}
 			try { CHAR('!'); break ; }
 			catch (std::exception & e) {}
 			try { CHAR('#'); break ; }
@@ -1021,10 +1025,6 @@ void	RequestParser::tchar(void)
 			catch (std::exception & e) {}
 			try { CHAR('~'); break ; }
 			catch (std::exception & e) {}
-			try { DIGIT(); break ; }
-			catch (std::exception & e) {}
-			try { ALPHA(); break ; }
-			catch (std::exception & e) {}
 			throw(Exceptions::ParserException(""));
 		}
 	}
@@ -1035,7 +1035,7 @@ void	RequestParser::tchar(void)
 		SET_ERROR;
 		throw (Exceptions::ParserException("tchar expected"));
 	}
-		RESET_ERROR;
+	RESET_ERROR;
 	END_FUN(SUCCESS);
 }
 
@@ -1410,7 +1410,7 @@ void	RequestParser::message_body(void)
 	try
 	{
 		init_digest();
-		if (this->_head != static_cast<size_t>(this->_bytes_read))
+		if (this->_head != static_cast<ssize_t>(this->_bytes_read))
 			this->_head = this->_bytes_read - 1;
 		this->_body_size = this->_head - this->_head_last_digest;
 		digest(this->_body);
@@ -1480,7 +1480,9 @@ void	RequestParser::start_line(void)
 
 // HTTP_message = start_line *( header_field CRLF ) CRLF [ message_body ]
 void	RequestParser::HTTP_message(void)
-{START_FUN;
+{
+	deep = 0;
+	START_FUN;
 	SAVE_HEAD(0);
 	try
 	{

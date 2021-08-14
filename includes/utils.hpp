@@ -22,5 +22,7 @@ std::string	binary_to_string(std::string s);
 
 void		print_char_printf(char c);
 void		print_char(char c);
+void		print_string_formatted(std::string & s);
+void		print_string_formatted(std::string & s, size_t size);
 
 #endif

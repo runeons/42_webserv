@@ -138,7 +138,7 @@ OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 all: $(OBJS) $(SRCS) $(NAME)
 
 $(NAME): $(OBJS) $(SRCS)
-	@ $(CC) $(_FLAGS) $(HDIR) $(OBJS) -o $(NAME)
+	@ $(CC) $(FLAGS) $(HDIR) $(OBJS) -o $(NAME)
 	@ $(COMPILE_MSG)
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp

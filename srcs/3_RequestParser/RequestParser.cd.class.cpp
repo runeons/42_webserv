@@ -17,6 +17,7 @@ RequestParser::RequestParser(std::string request_raw, ssize_t bytes_read) // par
 	_error.head = -1;
 
 	this->start_parsing();
+	this->check_request_attributs();
 	// std::cout << "_request_raw: " << std::endl;
 	// std::cout << this->_request_raw << std::endl;
 }

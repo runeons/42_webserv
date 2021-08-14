@@ -19,7 +19,7 @@
 typedef struct		s_error
 {
 	std::string		msg;
-	size_t			head;
+	ssize_t			head;
 }					t_error;
 
 class RequestParser
@@ -33,8 +33,8 @@ class RequestParser
 		// PRIVATE MEMBERS ATRIBUTE : PRIMA
 		std::string		_request_raw;
 		ssize_t			_bytes_read;
-		size_t			_head;
-		size_t			_head_last_digest;
+		ssize_t			_head;
+		ssize_t			_head_last_digest;
 
 		std::string		_method;
 		std::string		_resource;
@@ -59,6 +59,9 @@ class RequestParser
 		// maps/vectors initiators
 		std::vector<std::string> init_methods_implemented(void);
 		std::vector<std::string> init_methods_unimplemented(void);
+
+		// checks
+		void	check_request_attributs(void);
 
 		// entry point
 		void	start_parsing(void);

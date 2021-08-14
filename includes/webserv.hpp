@@ -27,16 +27,23 @@ typedef int SOCKET;
 # define MAX_DATE	80
 # define SUCCESS	0
 # define FAILURE	-1
+# define MAX_URI_LENGTH	8000
 
-// # define START_FUN deep++; dprintf(1, "%*s[ %s%s%s ] "C_G_CYAN"start"C_RES"", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen("start"))
-// # define DEBUG_MSG(X) dprintf(1, "%*s[ %s%s%s ] "C_G_WHITE"%s on \'%c\'"C_RES"\n", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X, _config_raw[_head])
-// # define END_FUN(X) dprintf(1, "%*s[ %s%s%s ] %s", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X == FAILURE ? C_G_RED"FAILURE"C_RES : X == SUCCESS ? C_G_GREEN"SUCCESS"C_RES : "code "#X); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen(X == FAILURE ? "FAILURE" : X == SUCCESS ? "SUCCESS" : "code "#X)); deep--
-// # define DIGEST_DEBUG(X) dprintf(1, "%*s[ %s%s%s ] \'"C_G_WHITE"%s"C_RES"\'\n", (deep + 1) * 4, "", C_G_YELLOW, __FUNCTION__, C_RES, X)
+#ifndef __DEBUG__
+// # define __DEBUG__
+#endif
 
-# define START_FUN // deep++; dprintf(1, "%*s[ %s%s%s ] "C_G_CYAN"start"C_RES"", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen("start"))
-# define DEBUG_MSG(X) // dprintf(1, "%*s[ %s%s%s ] "C_G_WHITE"%s on \'%c\'"C_RES"\n", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X, _config_raw[_head])
-# define END_FUN(X) // dprintf(1, "%*s[ %s%s%s ] %s", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X == FAILURE ? C_G_RED"FAILURE"C_RES : X == SUCCESS ? C_G_GREEN"SUCCESS"C_RES : "code "#X); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen(X == FAILURE ? "FAILURE" : X == SUCCESS ? "SUCCESS" : "code "#X)); deep--
-# define DIGEST_DEBUG(X) // dprintf(1, "%*s[ %s%s%s ] \'"C_G_WHITE"%s"C_RES"\'\n", (deep + 1) * 4, "", C_G_YELLOW, __FUNCTION__, C_RES, X)
+# ifdef __DEBUG__
+#  define START_FUN deep++; dprintf(1, "%*s[ %s%s%s ] "C_G_CYAN"start"C_RES"", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen("start"))
+#  define DEBUG_MSG(X) dprintf(1, "%*s[ %s%s%s ] "C_G_WHITE"%s on \'%c\'"C_RES"\n", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X, _config_raw[_head])
+#  define END_FUN(X) dprintf(1, "%*s[ %s%s%s ] %s", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X == FAILURE ? C_G_RED"FAILURE"C_RES : X == SUCCESS ? C_G_GREEN"SUCCESS"C_RES : "code "#X); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen(X == FAILURE ? "FAILURE" : X == SUCCESS ? "SUCCESS" : "code "#X)); deep--
+#  define DIGEST_DEBUG(X) dprintf(1, "%*s[ %s%s%s ] \'"C_G_WHITE"%s"C_RES"\'\n", (deep + 1) * 4, "", C_G_YELLOW, __FUNCTION__, C_RES, X)
+# else
+#  define START_FUN // deep++; dprintf(1, "%*s[ %s%s%s ] "C_G_CYAN"start"C_RES"", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen("start"))
+#  define DEBUG_MSG(X) // dprintf(1, "%*s[ %s%s%s ] "C_G_WHITE"%s on \'%c\'"C_RES"\n", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X, _config_raw[_head])
+#  define END_FUN(X) // dprintf(1, "%*s[ %s%s%s ] %s", deep * 4, "", C_G_GRAY, __FUNCTION__, C_RES, X == FAILURE ? C_G_RED"FAILURE"C_RES : X == SUCCESS ? C_G_GREEN"SUCCESS"C_RES : "code "#X); print_center_line((int)strlen((char *)__FUNCTION__), (int)strlen(X == FAILURE ? "FAILURE" : X == SUCCESS ? "SUCCESS" : "code "#X)); deep--
+#  define DIGEST_DEBUG(X) // dprintf(1, "%*s[ %s%s%s ] \'"C_G_WHITE"%s"C_RES"\'\n", (deep + 1) * 4, "", C_G_YELLOW, __FUNCTION__, C_RES, X)
+# endif
 
 # define SVN(X) "head_save_"#X
 # define VN(X) head_save_##X

@@ -171,3 +171,16 @@ void	print_char(char c)
 	else
 		std::cout << c;
 }
+
+void	print_string_formatted(std::string & s)
+{
+	for (size_t i = 0; s[i]; i++)
+		print_char(s[i]);
+}
+
+void	print_string_formatted(std::string & s, size_t size)
+{
+	for (size_t i = 0; i < size; i++)
+		print_char(s[i]);
+}
+

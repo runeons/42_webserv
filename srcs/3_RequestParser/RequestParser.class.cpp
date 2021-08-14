@@ -16,7 +16,7 @@ void	RequestParser::bc_s(void)
 
 void	RequestParser::print_center_line(int fn, int msg)
 {
-	size_t i = MAX((int)((int)this->_head - (int)30), 0);
+	ssize_t i = MAX((int)((int)this->_head - (int)30), 0);
 	dprintf(1, " %-.*s %3lu {", 80 - (deep * 4) - fn - msg, PATTERNLINE, i);
 	for (; this->_request_raw[i] && i < this->_head + 30; i++)
 	{
@@ -37,7 +37,7 @@ void	RequestParser::debug_print_line(void)
 	std::cout << "head: " << this->_head << " \'";
 	print_char(this->_request_raw[this->_head]);
 	std::cout << "\'" << std::endl;
-	for (size_t i = 0; this->_request_raw[i]; i++)
+	for (ssize_t i = 0; this->_request_raw[i]; i++)
 	{
 		if (i >= this->_head_last_digest && i <= this->_head)
 			std::cout << C_B_BLUE;
@@ -71,7 +71,7 @@ void	RequestParser::bc_p(void)
 
 int				RequestParser::eat(int to_eat)
 {
-	if (this->_head >= static_cast<size_t>(this->_bytes_read))
+	if (this->_head >= static_cast<ssize_t>(this->_bytes_read))
 		throw (Exceptions::LexerException("eat ending"));
 	else if (this->_request_raw[this->_head] == to_eat)
 	{
@@ -123,9 +123,12 @@ void			RequestParser::print_request_info(void)
 	if (this->_body_size > 0)
 	{
 		std::cout << "    " << C_G_CYAN << "body size " << C_RES << "       : " << this->_body_size << std::endl;
-		dprintf(1, "    "C_G_CYAN"body "C_RES"            : [");
-		write(1, this->get__body().c_str(), this->_body_size);
-		dprintf(1, "]\n");
+		std::cout << "    " << C_G_CYAN << "body      " << C_RES << "       : " << std::endl << "[";
+		print_string_formatted(this->_body, this->_body_size);
+		std::cout << "]" << std::endl;
+		// dprintf(1, "    "C_G_CYAN"body "C_RES"            : [");
+		// write(1, this->get__body().c_str(), this->_body_size);
+		// dprintf(1, "]\n");
 	}
 	else
 		std::cout << "    " << C_G_CYAN << "body " << C_RES << "            : " << "no body" << std::endl;
@@ -136,4 +139,21 @@ void			RequestParser::print_request_info(void)
 		std::cout << "        [" << C_G_BLUE << it->first << C_RES << "] -> [" << it->second << "]" << std::endl;
 	}
 	std::cout << "-------------------------------------------------------" << std::endl;
+}
+
+void			RequestParser::check_request_attributs(void)
+{
+	// check method
+	if (_method != "GET" && _method != "POST" && _method != "DELETE")
+		_status_code = 501; // Not implemented
+
+	// check http version
+	else if (_http_version != "1.1")
+		_status_code = 505; // HTTP version not supported
+
+	// check uri length
+	else if (_resource.length() > MAX_URI_LENGTH)
+		_status_code = 414; // URI Too Long
+
+
 }

@@ -29,6 +29,21 @@ int		Client::calculate_total_bytes_expected(std::string buf_str)
 	total_bytes_expected = end_headers_pos + delim.length() + content_length;
 	return (total_bytes_expected);
 }
+//
+//  content_length | \r\n\r\n |
+//  ---------------------------
+// |             O |        O | continue to recv (until _remaining_bytes_to_recv == 0)
+// |             O |        X |
+// |             X |        O |
+// |             X |        X |
+// |               |          |
+// |               |          |
+// |               |          |
+// |               |          |
+// |               |          |
+// |               |          |
+// |               |          |
+// |               |          |
 
 void Client::receive_with_content_length(void)
 {
