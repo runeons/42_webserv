@@ -86,9 +86,13 @@ void Server::receive_and_process_request(int client_socket)
 
 	_clients_map[client_socket]->receive_request(); // recv
 	std::cerr << YELLOW << "remaining_bytes_to_recv on socket " << C_G_YELLOW << client_socket << " : " << _clients_map[client_socket]->get_remaining_bytes_to_recv() << C_RES << std::endl;
-	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0)
+	std::cerr << C_G_RED << "[ DEBUG remaining_bytes_to_recv ] " << C_RES << _clients_map[client_socket]->get_remaining_bytes_to_recv() << std::endl;
+	std::cerr << C_G_RED << "[ DEBUG _status_code ] " << C_RES << _clients_map[client_socket]->get__status_code() << std::endl;
+	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0 || _clients_map[client_socket]->get__status_code() == 500)
 	{
-		_clients_map[client_socket]->check_request(); // check if request OK
+		std::cerr << C_G_RED << "[ DEBUG IN HERE ] " << C_RES << "" << std::endl;
+		if (_clients_map[client_socket]->get__status_code() == 200)
+			_clients_map[client_socket]->check_request(); // check if request OK
 		if (_clients_map[client_socket]->get__status_code() == 200)
 			_clients_map[client_socket]->apply_location(); // 404 if error
 		if (_clients_map[client_socket]->get__status_code() == 200)
@@ -151,8 +155,8 @@ void Server::select_and_treat_connections(void)
 			catch (Exceptions::ClientException & e)
 			{
 				std::cerr << RED << e.what() <<  C_RES << std::endl;
-				_clients_map.erase(it);
 				shutdown_client_socket(it->first);
+				_clients_map.erase(it);
 				break;
 			}
 		}

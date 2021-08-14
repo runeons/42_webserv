@@ -35,7 +35,11 @@ void Client::receive_with_content_length(void)
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
 	// _bytes_read = -1;
 	if (_bytes_read == -1)
-		throw (Exceptions::ClientException("Client failed to receive request"));
+	{
+		_status_code = 500;
+		// throw (Exceptions::ClientException("Client failed to receive request"));
+		return ;
+	}
 	_chunk[_bytes_read] = '\0';
 
 	std::string buf_str(_chunk);
@@ -57,6 +61,7 @@ void Client::receive_with_content_length(void)
 			_remaining_bytes_to_recv -= _bytes_read;
 	}
 	std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
+	_request.append(_chunk, _bytes_read);
 }
 
 void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
@@ -72,7 +77,7 @@ void Client::receive_request(void)
 {
 	receive_with_content_length();
 	// print_request_chunk(_bytes_read, _chunk);
-	_request.append(_chunk, _bytes_read);
+	// _request.append(_chunk, _bytes_read);
 	// std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
 }
 

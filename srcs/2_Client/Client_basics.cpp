@@ -7,7 +7,7 @@ Client::Client(Config & config) : _config(config)
 	std::cout << GREY << "Client creation..." << C_RES << std::endl;
 
 	_socket = 0;
-	_status_code = 0;
+	_status_code = 200;
 	_bytes_read = 0;
 	_request = "";
 	_translated_path = "";
