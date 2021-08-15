@@ -62,11 +62,6 @@ int	Response::is_actually_directory(std::string path)
 
 void	Response::check_if_redir_301(void)
 {
-	// if (is_actually_directory(_translated_path))
-	// {
-	// 	_applied_location.set__redir301(_request.get__resource() + "/");
-	// 	_status_code = 301;
-	// }
 	if (_applied_location.get__redir301().size())
 		_status_code = 301;
 }
@@ -142,7 +137,7 @@ void	Response::POST_handle(void)
 	if (request_content_type.find("multipart/form-data;", 0) == 0)
 	{
 		if (_applied_location.get__upload() == "")
-			_status_code = 405;
+			_status_code = 403; // TOCHECK ou 405
 		else
 			POST_create_body_cgi();
 	}
@@ -185,15 +180,15 @@ void	Response::generate(void)
 		check_if_method_allowed();
 	retrieve_type_mime_charset();
 	check_if_redir_301();
-	if (is_response_successful())
-	{
+	// if (is_response_successful())
+	// {
 		if (_request.get__method() == "GET")
 			GET_handle(); // from page_content
 		else if (_request.get__method() == "POST")
 			POST_handle(); // from page_content
 		else if (_request.get__method() == "DELETE")
-			DELETE_handle(); // from page_content
-	}
+			DELETE_handle();
+	// }
 	fill_body_if_error();
 	generate_response_header(); // from status_code, page_content and translated_path
 	concatenate_response();

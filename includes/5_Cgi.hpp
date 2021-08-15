@@ -21,6 +21,7 @@ class Cgi
 		std::string							_full_buf;
 
 		std::map<std::string, std::string>	_env_map;
+		std::map<std::string, std::string>	_map_http;
 		char **								_env_arr;
 
 	public:
@@ -45,6 +46,7 @@ class Cgi
 		void	launch(void);
 
 		std::map<std::string, std::string>	init_map_env();
+		std::map<std::string, std::string>	init_map_http();
 };
 
 

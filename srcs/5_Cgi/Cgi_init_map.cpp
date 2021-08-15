@@ -11,6 +11,46 @@
 // this->_env_map["SCRIPT_FILENAME"]    =    this->_res.getTarget();    // full path du fichier de script
 // this->_env_map["UPLOAD_DIR"]        =    this->_req.config.upload_dir;
 
+std::string str_to_upper(std::string s)
+{
+	int	i;
+
+	i = -1;
+	while (s[++i])
+		s[i] = std::toupper(s[i]);
+	return s;
+}
+
+std::string reworked_http_header(std::string header)
+{
+	std::string s;
+
+	s = str_to_upper(header);
+	for (size_t i = 0; i < s.size(); i++)
+	{
+		if (s[i] == '-')
+			s[i] = '_';
+	}
+	s = "HTTP_" + s;
+	return s;
+}
+
+std::map<std::string, std::string>	Cgi::init_map_http()
+{
+	std::map<std::string, std::string>	m;
+	std::map<std::string, std::string>	h = _request.get__header_fields();
+
+
+	headers_iterator it = h.begin();
+	for (; it != h.end(); it++)
+	{
+		m[reworked_http_header(it->first)] = it->second;
+	}
+
+
+	return m;
+}
+
 std::map<std::string, std::string>	Cgi::init_map_env()
 {
 	std::map<std::string, std::string>	m;
@@ -18,29 +58,30 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	// MUST (discord)
 	m["REDIRECT_STATUS"]	= "200";		// nécessaire si utilise php-cgi
 
+	// CONDITIONAL (RFC)
+	m["CONTENT_LENGTH"]		= _request.get__header_value("Content-Length");			// if no body, MUST NOT be set
+	m["CONTENT_TYPE"]		= _request.get__header_value("Content-Type");				// if no body, can be NULL
+
 	// MUST (RFC)
 	m["GATEWAY_INTERFACE"]	= "CGI/1.1";
 	m["QUERY_STRING"]		= "";
 	m["REMOTE_ADDR"]		= "127.0.0.1";
 	m["REQUEST_METHOD"]		= _request.get__method();
 	// m["SCRIPT_NAME"]       = "./scripts/displayenv.pl";	// ROOT-RELATIVE path to script (peut être un alias dans certains cas, par ex quand on utilise Apache)
-	m["SCRIPT_NAME"]		= "/Users/user/42_webserv" + _request.get__resource();     // full path du fichier de script
-	m["SERVER_NAME"]		= "webserv";
-	m["SERVER_PORT"]		= "8000";
 	m["SERVER_PROTOCOL"]	= "HTTP/" + _request.get__http_version();
 	m["SERVER_SOFTWARE"]	= "webserv";
-
-	// CONDITIONAL (RFC)
-	m["CONTENT_LENGTH"]		= _request.get__header_value("Content-Length");			// if no body, MUST NOT be set
-	m["CONTENT_TYPE"]		= _request.get__header_value("Content-Type");				// if no body, can be NULL
+	m["SERVER_NAME"]		= "127.0.0.1";
+	m["SERVER_PORT"]		= "8000";
 
 	// added
-	m["UPLOAD_DIR"]			= "/Users/user/42_webserv/html/cgi-bin/upload/";
-	m["PATH_INFO"]			= "/Users/user/42_webserv" + _request.get__resource();	// SCRIPT_FILENAME will not be available if PATH_INFO is not (=$SCRIPT_FILENAME in some examples) : contient le path réel du script à exécuter
-	m["PATH_TRANSLATED"]	= "/Users/user/42_webserv" + _request.get__resource();		// adresse reelle du script (idem PATH_INFO pour nous)
-	m["SCRIPT_FILENAME"]	= "/Users/user/42_webserv" + _request.get__resource();		// full path du fichier de script
-	m["QUERY_STRING"]		= "";			//
-
+	m["DOCUMENT_ROOT"]		= "/Users/user/42_webserv";
+	m["PATH_INFO"]			= "/cgi-bin/upload_correc.php";
+	m["REQUEST_URI"]		= "/cgi-bin/upload_correc.php";
+	m["PATH_TRANSLATED"]	= "./html//cgi-bin/upload_correc.php";
+	m["SCRIPT_FILENAME"]	= "./html//cgi-bin/upload_correc.php";
+	m["SCRIPT_NAME"]		= "./html//cgi-bin/upload_correc.php";
+	m["UPLOAD_DIR"]			= "uploads/";
+	m.insert(_map_http.begin(), _map_http.end());
 	// PROBABLY (RFC)
 	// m["REMOTE_HOST"] = "";
 

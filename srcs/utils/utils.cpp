@@ -73,10 +73,7 @@ int		user_perm_to_write(std::string file)
 {
 	struct stat perm;
 	if (::lstat(file.c_str(), &perm) == -1)
-	{
-		perror("___lstat___");
-		exit(EXIT_FAILURE);
-	}
+		std::cout << RED << "lstat error : " << strerror(errno) << C_RES << std::endl;
 	if (perm.st_mode & S_IWUSR)
 		return 1;
 	else
@@ -87,10 +84,7 @@ int		user_perm_to_read(std::string file)
 {
 	struct stat perm;
 	if (::lstat(file.c_str(), &perm) == -1)
-	{
-		perror("___lstat___");
-		exit(EXIT_FAILURE);
-	}
+		std::cout << RED << "lstat error : " << strerror(errno) << C_RES << std::endl;
 	if (perm.st_mode & S_IRUSR)
 		return 1;
 	else
@@ -101,10 +95,7 @@ int		user_perm_to_exec(std::string file)
 {
 	struct stat perm;
 	if (::lstat(file.c_str(), &perm) == -1)
-	{
-		perror("___lstat___");
-		exit(EXIT_FAILURE);
-	}
+		std::cout << RED << "lstat error : " << strerror(errno) << C_RES << std::endl;
 	if (perm.st_mode & S_IXUSR)
 		return 1;
 	else

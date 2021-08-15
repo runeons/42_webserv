@@ -111,12 +111,20 @@
 			</form>
 		</div>
 		<div class="getpost">
-			<form method="delete" class="subform">
+			<form action="cgi-bin/upload_correc.php" method="post" enctype="multipart/form-data">
+				<div>
+					<label for="file">Sélectionner le fichier à envoyer (correc)</label>
+					<input type="file" id="file" name="file_correc">
+				</div>
+				<div>
+					<input type="submit" name="submit" value="Enter">
+				</div>
+			</form>
+			<!-- <form method="delete" class="subform">
 				<label class="labels">DELETE</label>
 				<input class="subform" name="userfile" type="file" />
-				<!-- <button type="submit" class="btn btn-primary">Send data with GET request</button> -->
 				<button class="btn btn-primary">Supprimer le fichier</button>
-			</form>
+			</form> -->
 			<!-- <form action=”/contact.html” method=”delete” if-match=”q1w2e3r4t5”> -->
 				<!-- <input type=”submit” /> -->
 			<!-- </form> -->

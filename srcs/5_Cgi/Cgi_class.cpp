@@ -16,10 +16,12 @@ void	Cgi::transform_to_envp(void)
 	std::map<std::string, std::string>::iterator itend = _env_map.end();
 	for (int i = 0; it != itend; it++, i++)
 	{
+		std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "[" << std::setw(30) << std::left << it->first << "] -> [" << it->second << "]" << std::endl;
+
 		std::string var = it->first + "=" + it->second;
 		env[i] = new char[var.size() + 1];
 		env[i] = strcpy(env[i], var.c_str());
-		// std::cout << "env[" << i << "]" << " : " << env[i] << std::endl;
+		// std::cout << C_G_MAGENTA << env[i] << C_RES << std::endl;
 	}
 	env[_env_map.size()] = NULL;
 	_env_arr = env;
@@ -40,8 +42,9 @@ void	Cgi::exec_script(void)
 	int		status;
 
 	std::string script = _env_map["SCRIPT_NAME"];
+	std::string bin = "/usr/local/bin/php-cgi";
 	char *av[3] = {
-		(char *)script.c_str(),
+		(char *)bin.c_str(), //TODO casts C to change
 		(char *)script.c_str(),
 		(char *)0
 	};
@@ -75,6 +78,11 @@ void	Cgi::exec_script(void)
 		close(pipe_fd[0]);					// Close the read side
 		// => quand le child va lire, il lira sur le pipe
 		// => quand le child va ecrire, il ecrira sur le fichier tmp
+		// std::cerr << C_G_RED << "[ DEBUG av[0] ] " << C_RES << av[0] << std::endl;
+		// if (av[1])
+		// 	std::cerr << C_G_RED << "[ DEBUG av[1] ] " << C_RES << av[1] << std::endl;
+		// if (av[2])
+		// 	std::cerr << C_G_RED << "[ DEBUG av[2] ] " << C_RES << av[2] << std::endl;
 		if (execve(av[0], &av[0], _env_arr) < 0)	// Execute process
 		{
 			perror("execve");

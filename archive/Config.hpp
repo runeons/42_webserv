@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Config.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tsantoni <tsantoni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/24 18:42:40 by tsantoni          #+#    #+#             */
-/*   Updated: 2021/07/28 10:48:43 by tsantoni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
 
@@ -21,9 +9,17 @@
 class Config
 {
 	private:
-		std::string	_host;
-		int			_port;
-		std::string	_root_dir;
+		std::string	_host;					// host_name
+		int			_port;					// listen
+		std::string	_root_dir;				// root
+		// bool		_autoindex;				// autoindex
+		// std::string	_index;					// default file if request directory
+		// std::string _upload_store;			// make the route able to upload files + configure where it should be saved
+		// std::string	_location;				// define a HTTP redirection
+		// int			_client_max_body_size;
+		// error_pages[num]					// setup default error_pages
+		// cgi-bin
+		// deny_method						// list of HTTP methods allowed for the route
 
 	public:
 		Config();

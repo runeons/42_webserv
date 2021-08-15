@@ -5,6 +5,7 @@
 Cgi::Cgi(RequestParser & request, std::string script_name) : _request(request), _script_name(script_name)
 {
 	std::cout << GREY << "Cgi creation..." << C_RES << std::endl;
+	_map_http = init_map_http();
 	_env_map = init_map_env();
 	_env_arr = NULL;
 	return ;
@@ -24,6 +25,7 @@ Cgi &	Cgi::operator=(const Cgi& rhs)
 	if (this != &rhs)
 	{
 		_env_map = rhs.getEnvMap();
+		// _env_http = rhs.getEnvMap();
 		_env_arr = rhs.getEnvArr();
 		_request = rhs.getRequest();
 		// _config = rhs.getConfig();
