@@ -68,6 +68,7 @@ std::string		Response::r_header_location()
 	if (_status_code == 301)
 	{
 		_headers_response[R_LOCATION] = _applied_location.get__redir301();
+		_applied_location.set__redir301(""); // REINIT TO EMPTY TO AVOID LOOP
 		return (formatted_header_response(R_LOCATION));
 	}
 	else

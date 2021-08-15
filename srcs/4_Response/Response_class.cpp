@@ -62,11 +62,11 @@ int	Response::is_actually_directory(std::string path)
 
 void	Response::check_if_redir_301(void)
 {
-	if (is_actually_directory(_translated_path))
-	{
-		_applied_location.set__redir301(_request.get__resource() + "/");
-		_status_code = 301;
-	}
+	// if (is_actually_directory(_translated_path))
+	// {
+	// 	_applied_location.set__redir301(_request.get__resource() + "/");
+	// 	_status_code = 301;
+	// }
 	if (_applied_location.get__redir301().size())
 		_status_code = 301;
 }
@@ -80,6 +80,11 @@ void	Response::GET_create_body(void)
 
 void	Response::GET_handle(void)
 {
+	if (is_actually_directory(_translated_path))
+	{
+		_applied_location.set__redir301(_request.get__resource() + "/");
+		_status_code = 301;
+	}
 	GET_create_body();
 }
 
@@ -161,10 +166,10 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
+	// if (_applied_location) // should always be the case with previous checks
+		check_if_method_allowed();
 	retrieve_type_mime_charset();
 	check_if_redir_301();
-	if (is_response_successful())
-		check_if_method_allowed();
 	if (is_response_successful())
 	{
 		if (_request.get__method() == "GET")
