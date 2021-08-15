@@ -1,0 +1,14 @@
+a.out*
+parser
+parsing
+objs/
+settings.json
+webserv
+html/uploads/*
+!html/uploads/README
+uploads
+.DS_Store
+file_should_exist_after
+multiple_same
+old
+OULALA
