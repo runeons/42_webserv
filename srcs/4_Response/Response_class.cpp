@@ -95,21 +95,43 @@ void	Response::DELETE_create_body(void)
 	_response_body = _page_content;
 }
 
+// perm[1] = ((s.st_mode & S_IRUSR) ? 'r' : '-');
+// perm[2] = ((s.st_mode & S_IWUSR) ? 'w' : '-');
+// perm[3] = ((s.st_mode & S_IXUSR) ? sbit(s.st_mode) : '-');
+// perm[4] = ((s.st_mode & S_IRGRP) ? 'r' : '-');
+// perm[5] = ((s.st_mode & S_IWGRP) ? 'w' : '-');
+// perm[6] = ((s.st_mode & S_IXGRP) ? sbit(s.st_mode) : '-');
+// perm[7] = ((s.st_mode & S_IROTH) ? 'r' : '-');
+// perm[8] = ((s.st_mode & S_IWOTH) ? 'w' : '-');
+// perm[9] = ((s.st_mode & S_IXOTH) ? sbit(s.st_mode) : '-');
+
 void	Response::DELETE_handle(void)
 {
 	if (is_actually_directory(_translated_path))
 		_status_code = 409;
 	if (is_response_successful())
 	{
-		// int res = remove(_translated_path);
-		// std::cerr << C_G_RED << "[ DEBUG delete remove : ] " << C_RES << res << " : " << strerror(errno) << std::endl;
-		std::string cmd = "rm -r " + _translated_path;
-		std::string res = exec_cmd(cmd, PATH_CMD_RES); // TODO protect if exec didn't work
-		_page_content = "<html>\
+		struct stat perm;
+		::lstat(_translated_path.c_str(), &perm);
+		if (perm.st_mode & S_IWUSR)
+		{
+			std::cerr << C_G_YELLOW << "[ DEBUG ] " << C_RES << "Permitted to delete (S_IWUSR)" << std::endl;
+			if (::remove(_translated_path.c_str()) == -1)
+			{
+				perror("___remove___"); // EXCEPTION to handle
+				exit(EXIT_FAILURE);
+			}
+			_page_content = "<html>\
 			<body>\
-				<h1>File deleted.</h1>\
-				</body>\
-		</html>";
+			<h1>File deleted.</h1>\
+			</body>\
+			</html>";
+		}
+		else
+		{
+			std::cerr << C_G_YELLOW << "[ DEBUG ] " << C_RES << "NOT Permitted to delete (S_IWUSR)" << std::endl;
+			_status_code = 403;
+		}
 	}
 	DELETE_create_body();
 }

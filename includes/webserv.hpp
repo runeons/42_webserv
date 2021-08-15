@@ -19,6 +19,7 @@
 # include <vector>
 # include <sys/stat.h>
 # include <dirent.h>
+# include <stdio.h>
 # include <sys/time.h>
 // #include <pstream.h>
 //
