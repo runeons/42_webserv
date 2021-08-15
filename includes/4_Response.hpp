@@ -91,11 +91,12 @@ class Response
 		std::string		r_header_location();
 		std::string		get_mime_type(std::string extension);
 		void			generate_response_header();
-		void			retrieve_type_mime_charset(std::string res);
-		// std::string		exec_cmd(std::string cmd);
 
 		// Response_class
+		void	parse_type_mime_charset_cmd_result(std::string res);
+		void	retrieve_type_mime_charset();
 		void	check_if_method_allowed();
+		int		is_actually_directory(std::string path);
 		void	check_if_redir_301();
 		void	fill_body_if_error();
 		void	DELETE_create_body();

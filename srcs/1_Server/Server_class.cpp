@@ -88,7 +88,6 @@ void Server::receive_and_process_request(int client_socket)
 	std::cerr << YELLOW << "remaining_bytes_to_recv on socket " << C_G_YELLOW << client_socket << " : " << _clients_map[client_socket]->get_remaining_bytes_to_recv() << C_RES << std::endl;
 	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->getRequest().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
 	{
-		std::cerr << C_G_RED << "[ DEBUG IN HERE ] " << C_RES << "" << std::endl;
 		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->check_request(); // check if request OK
 		if (_clients_map[client_socket]->is_response_successful())
