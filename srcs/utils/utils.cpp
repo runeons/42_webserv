@@ -57,6 +57,60 @@ std::string get_file_content(std::string filename)
 	}
 }
 
+// ********************************************* permissions *********************************************
+
+// perm[1] = ((s.st_mode & S_IRUSR) ? 'r' : '-');
+// perm[2] = ((s.st_mode & S_IWUSR) ? 'w' : '-');
+// perm[3] = ((s.st_mode & S_IXUSR) ? sbit(s.st_mode) : '-');
+// perm[4] = ((s.st_mode & S_IRGRP) ? 'r' : '-');
+// perm[5] = ((s.st_mode & S_IWGRP) ? 'w' : '-');
+// perm[6] = ((s.st_mode & S_IXGRP) ? sbit(s.st_mode) : '-');
+// perm[7] = ((s.st_mode & S_IROTH) ? 'r' : '-');
+// perm[8] = ((s.st_mode & S_IWOTH) ? 'w' : '-');
+// perm[9] = ((s.st_mode & S_IXOTH) ? sbit(s.st_mode) : '-');
+
+int		user_perm_to_write(std::string file)
+{
+	struct stat perm;
+	if (::lstat(file.c_str(), &perm) == -1)
+	{
+		perror("___lstat___");
+		exit(EXIT_FAILURE);
+	}
+	if (perm.st_mode & S_IWUSR)
+		return 1;
+	else
+		return 0;
+}
+
+int		user_perm_to_read(std::string file)
+{
+	struct stat perm;
+	if (::lstat(file.c_str(), &perm) == -1)
+	{
+		perror("___lstat___");
+		exit(EXIT_FAILURE);
+	}
+	if (perm.st_mode & S_IRUSR)
+		return 1;
+	else
+		return 0;
+}
+
+int		user_perm_to_exec(std::string file)
+{
+	struct stat perm;
+	if (::lstat(file.c_str(), &perm) == -1)
+	{
+		perror("___lstat___");
+		exit(EXIT_FAILURE);
+	}
+	if (perm.st_mode & S_IXUSR)
+		return 1;
+	else
+		return 0;
+}
+
 // ********************************************* binary conversion *********************************************
 
 std::string itos(int nb)

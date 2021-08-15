@@ -11,6 +11,12 @@ std::string	exec_cmd(std::string cmd, std::string file_res);
 std::string	get_extension(std::string path);
 std::string	get_file_content(std::string filename);
 
+// ********************************************* permissions *****************************
+
+int		user_perm_to_read(std::string file);
+int		user_perm_to_write(std::string file);
+int		user_perm_to_exec(std::string file);
+
 // ********************************************* binary conversion *****************************
 
 std::string	itos(int nb);
