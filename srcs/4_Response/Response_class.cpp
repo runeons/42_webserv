@@ -85,6 +85,7 @@ void	Response::GET_handle(void)
 		_applied_location.set__redir301(_request.get__resource() + "/");
 		_status_code = 301;
 	}
+	// std::cerr << C_G_RED << "[ DEBUG error code ] " << _status_code << C_RES << std::endl;
 	GET_create_body();
 }
 
@@ -107,15 +108,12 @@ void	Response::DELETE_handle(void)
 	{
 		if (user_perm_to_write(_translated_path))
 		{
-			// std::cerr << C_G_YELLOW << "[ DEBUG ] " << C_RES << "Permitted to delete (S_IWUSR) - path : " << _translated_path << std::endl;
+			// std::cerr << C_G_YELLOW << "[ DEBUG ] " << C_RES << "Permitted to delete (S_IWUSR)" << std::endl;
 			if (::remove(_translated_path.c_str()) == -1)
 				_status_code = 403;
 		}
 		else
-		{
-			// std::cerr << C_G_YELLOW << "[ DEBUG ] " << C_RES << "NOT Permitted to delete (S_IWUSR) - path : " << _translated_path << std::endl;
 			_status_code = 403;
-		}
 	}
 	DELETE_create_body();
 }

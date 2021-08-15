@@ -298,6 +298,8 @@ void Client::read_resource(void)
 
 	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex
 		;
+	else if (!user_perm_to_read(_translated_path))
+		_status_code = 403;
 	else if (!ifs)
 		_status_code = 404; // si can't find resource
 	else
