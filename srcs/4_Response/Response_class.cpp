@@ -97,10 +97,20 @@ void	Response::DELETE_create_body(void)
 
 void	Response::DELETE_handle(void)
 {
-	// can resource be deleted
-	// does rsc exists => fait avant
-	// does rsc exists as a folder
-	// delete_rsc();
+	if (is_actually_directory(_translated_path))
+		_status_code = 409;
+	if (is_response_successful())
+	{
+		// int res = remove(_translated_path);
+		// std::cerr << C_G_RED << "[ DEBUG delete remove : ] " << C_RES << res << " : " << strerror(errno) << std::endl;
+		std::string cmd = "rm -r " + _translated_path;
+		std::string res = exec_cmd(cmd, PATH_CMD_RES); // TODO protect if exec didn't work
+		_page_content = "<html>\
+			<body>\
+				<h1>File deleted.</h1>\
+				</body>\
+		</html>";
+	}
 	DELETE_create_body();
 }
 // ********************************************* POST create body *********************************************
@@ -176,6 +186,8 @@ void	Response::generate(void)
 			GET_handle(); // from page_content
 		else if (_request.get__method() == "POST")
 			POST_handle(); // from page_content
+		else if (_request.get__method() == "DELETE")
+			DELETE_handle(); // from page_content
 	}
 	fill_body_if_error();
 	generate_response_header(); // from status_code, page_content and translated_path

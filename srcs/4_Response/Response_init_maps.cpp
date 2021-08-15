@@ -43,6 +43,7 @@ std::map<int, std::string>	Response::init_map_msg()
 	m[404] = "Not Found"; 						// RESP
 	m[405] = "Method Not Allowed";				// RESP
 	m[408] = "Request Timeout"; 				// RESP
+	m[409] = "Conflict";		 				// RESP
 	m[411] = "Length Required";				// REQ
 	m[413] = "Payload Too Large"; 			// REQ
 	m[414] = "URI Too Long"; 				// REQ
