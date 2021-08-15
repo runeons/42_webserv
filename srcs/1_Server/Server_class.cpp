@@ -89,15 +89,15 @@ void Server::receive_and_process_request(int client_socket)
 	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->getRequest().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
 	{
 		std::cerr << C_G_RED << "[ DEBUG IN HERE ] " << C_RES << "" << std::endl;
-		if (_clients_map[client_socket]->get__status_code() == 200)
+		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->check_request(); // check if request OK
-		if (_clients_map[client_socket]->get__status_code() == 200)
+		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->apply_location(); // 404 if error
-		if (_clients_map[client_socket]->get__status_code() == 200)
+		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->adjust_applied_location();
-		if (_clients_map[client_socket]->get__status_code() == 200)
+		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->translate_path(); // 500 if can't exec tree for autoindex
-		if (_clients_map[client_socket]->get__status_code() == 200)
+		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->read_resource();
 		_clients_map[client_socket]->generate_response();
 		FD_SET(client_socket, &_write_fds);

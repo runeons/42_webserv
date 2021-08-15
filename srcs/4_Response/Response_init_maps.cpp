@@ -34,6 +34,7 @@ std::map<int, std::string>	Response::init_map_msg()
 	std::map<int, std::string> m;
 
 	m[200] = "OK"; 						// BOTH
+	m[202] = "Accepted"; 						// BOTH
 	m[204] = "No Content"; 						// RESP
 	m[301] = "Moved Permanently"; 				// RESP
 	m[307] = "Temporary Redirect"; 				// RESP
@@ -115,7 +116,7 @@ std::map<int, std::string>	Response::init_map_body() // _error_content map
 		// sinon : path par défaut NB.html // A SUPPRIMER ? TOCHECK
 		if (path.length() == 0)
 			path = DIR_ERROR_PAGES + itos(it->first) + ".html";
-		if (it->first != 200)
+		if (it->first != 200 && it->first != 202 && it->first != 204)
 		{
 			// recup content du path
 			path = _config.get__root_dir() + "/" + path;

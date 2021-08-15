@@ -64,6 +64,8 @@ class Client
 
 		Client			&operator=(const Client & src);
 
+		int				is_response_successful(void);
+
 		void			check_method(void);
 		void			check_http_version(void);
 

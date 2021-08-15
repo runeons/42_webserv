@@ -69,6 +69,9 @@ class Response
 
 		Response					&operator=(const Response & src);
 
+
+		int							is_response_successful(void);
+
 		// Response_init_maps
 		std::map<int, std::string>	init_map_msg();
 		std::map<int, std::string>	init_map_body();
@@ -95,6 +98,8 @@ class Response
 		void	check_if_method_allowed();
 		void	check_if_redir_301();
 		void	fill_body_if_error();
+		void	DELETE_create_body();
+		void	DELETE_handle();
 		void	GET_create_body();
 		void	GET_handle();
 		void	POST_create_body();

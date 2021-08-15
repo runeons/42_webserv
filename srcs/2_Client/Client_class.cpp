@@ -119,7 +119,7 @@ void	Client::check_request(void)
 	_request_parser = new RequestParser(_request, _total_bytes_expected + 1); // delete in generate_response :) // TOCHECK
 	_request_parser->print_request_info();
 	_status_code = _request_parser->get__status();
-	if (_status_code == 200)
+	if (is_response_successful())
 	{
 		try { check_method(); }
 		catch (Exceptions::HTTP_ErrorStatusException & e) {

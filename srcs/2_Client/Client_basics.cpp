@@ -134,3 +134,10 @@ void Client::setAppliedLocation(Location * applied_location)
 	_applied_location = applied_location;
 	return ;
 }
+
+int Client::is_response_successful(void)
+{
+	if (_status_code == 200 || _status_code == 202 || _status_code == 204)
+		return (1);
+	return (0);
+}

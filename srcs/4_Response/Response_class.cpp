@@ -24,7 +24,7 @@ void	Response::check_if_redir_301(void)
 		_status_code = 301;
 }
 
-// ********************************************* create body *********************************************
+// ********************************************* GET create body *********************************************
 
 void	Response::GET_create_body(void)
 {
@@ -35,7 +35,20 @@ void	Response::GET_handle(void)
 {
 	GET_create_body();
 }
-// ********************************************* create body *********************************************
+
+// ********************************************* DELETE create body *********************************************
+
+void	Response::DELETE_create_body(void)
+{
+	_response_body = _page_content;
+}
+
+void	Response::DELETE_handle(void)
+{
+	// delete_rsc();
+	DELETE_create_body();
+}
+// ********************************************* POST create body *********************************************
 
 void	Response::POST_create_body(void)
 {
@@ -69,7 +82,7 @@ void	Response::POST_handle(void)
 
 void	Response::fill_body_if_error(void)
 {
-	if (_status_code != 200)
+	if (!is_response_successful())
 		_response_body = _error_content[_status_code];
 }
 
@@ -98,11 +111,11 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
-	if (_status_code == 200)
+	if (is_response_successful())
 		check_if_method_allowed();
-	if (_status_code == 200)
+	if (is_response_successful())
 		check_if_redir_301();
-	if (_status_code == 200)
+	if (is_response_successful())
 	{
 		if (_request.get__method() == "GET")
 			GET_handle(); // from page_content

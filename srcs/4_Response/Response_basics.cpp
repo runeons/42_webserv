@@ -147,3 +147,10 @@ void Response::setPageContent(const std::string page_content)
 	_page_content = page_content;
 	return ;
 }
+
+int Response::is_response_successful(void)
+{
+	if (_status_code == 200 || _status_code == 202 || _status_code == 204)
+		return (1);
+	return (0);
+}
