@@ -51,11 +51,22 @@ std::map<std::string, std::string>	Cgi::init_map_http()
 	return m;
 }
 
+std::string	get_cwd(void)
+{
+	char cwd[256];
+
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+      return (std::string("./"));
+    else
+      return (std::string(cwd));
+}
+
+
 std::map<std::string, std::string>	Cgi::init_map_env()
 {
 	std::map<std::string, std::string>	m;
 
-	// MUST (discord)
+	// MUST for php-cgi
 	m["REDIRECT_STATUS"]	= "200";		// nécessaire si utilise php-cgi
 
 	// CONDITIONAL (RFC)
@@ -64,38 +75,23 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 
 	// MUST (RFC)
 	m["GATEWAY_INTERFACE"]	= "CGI/1.1";
-	m["QUERY_STRING"]		= "";
+	m["SERVER_PROTOCOL"]	= "HTTP/" + _request.get__http_version();
 	m["REMOTE_ADDR"]		= "127.0.0.1";
 	m["REQUEST_METHOD"]		= _request.get__method();
-	// m["SCRIPT_NAME"]       = "./scripts/displayenv.pl";	// ROOT-RELATIVE path to script (peut être un alias dans certains cas, par ex quand on utilise Apache)
-	m["SERVER_PROTOCOL"]	= "HTTP/" + _request.get__http_version();
 	m["SERVER_SOFTWARE"]	= "webserv";
 	m["SERVER_NAME"]		= "127.0.0.1";
 	m["SERVER_PORT"]		= "8000";
+	m["QUERY_STRING"]		= "";
 
-	// added
-	m["DOCUMENT_ROOT"]		= "/Users/user/42_webserv";
-	m["PATH_INFO"]			= "/cgi-bin/upload_correc.php";
-	m["REQUEST_URI"]		= "/cgi-bin/upload_correc.php";
-	m["PATH_TRANSLATED"]	= "./html//cgi-bin/upload_correc.php";
-	m["SCRIPT_FILENAME"]	= "./html//cgi-bin/upload_correc.php";
-	m["SCRIPT_NAME"]		= "./html//cgi-bin/upload_correc.php";
+	// paths
+	m["DOCUMENT_ROOT"]		= get_cwd();
+	m["PATH_INFO"]			= _request.get__resource();
+	m["REQUEST_URI"]		= _request.get__resource();
+	m["PATH_TRANSLATED"]	= "./html/cgi-bin/upload.php";
+	m["SCRIPT_FILENAME"]	= "./html/cgi-bin/upload.php";
+	m["SCRIPT_NAME"]		= "./html/cgi-bin/upload.php";
 	m["UPLOAD_DIR"]			= "uploads/";
 	m.insert(_map_http.begin(), _map_http.end());
-	// PROBABLY (RFC)
-	// m["REMOTE_HOST"] = "";
-
-	// PROBABLY NOT (RFC)
-	// m["AUTH_TYPE"] = ""; 				//
-	// m["REMOTE_IDENT"] = ""; 			//
-	// m["REMOTE_USER"] = ""; 				//
-
-	// MAYBE : discord example (fassani) mais pas php.net/manual
-	// m["SCRIPT_FILENAME"] = "";			// ABSOLUTE path to script.php que je voudrais utiliser (path réel)
-	// m["HTTP_ACCEPT-ENCODING"] = "";		//
-	// m["HTTP_HOST"] = "";				//
-	// m["HTTP_USER-AGENT"] = "";			//
-	// m["REQUEST_URI"] = "";				//
 
 	return m;
 }
