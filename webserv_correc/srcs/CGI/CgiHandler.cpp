@@ -113,6 +113,7 @@ void	CgiHandler::fillEnvp(void)
 		str = it->first + '=' + it->second;
 		this->_envp[i] = new char[str.size() + 1];
 		strcpy(this->_envp[i], str.c_str());
+		// std::cerr << C_G_RED << "[ DEBUG envp ] " << C_RES << this->_envp[i] << std::endl;
 		str.clear();
 		++it;
 		++i;

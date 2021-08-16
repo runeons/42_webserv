@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-phpinfo();
+// phpinfo();
 $uploaddir = $_SERVER['DOCUMENT_ROOT'] . "/" . getenv('UPLOAD_DIR');
 $uploadfile = $uploaddir . "/" . basename($_FILES['file']['name']);
 

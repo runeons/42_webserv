@@ -11,8 +11,8 @@ print("uploadfile  : $uploadfile</br>\n</br>\n");
 print_r ($_FILES);
 print("</br>\n");
 
-// if (!is_dir($uploaddir))
-//     mkdir($uploaddir, 0775);
+if (!is_dir($uploaddir))
+    mkdir($uploaddir, 0775);
 
 if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
     $message = "Le fichier est valide, et a été uploadé avec succès.\n";
