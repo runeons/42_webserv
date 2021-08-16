@@ -16,8 +16,8 @@ class Cgi
 		Cgi(const Cgi & src);
 
 		RequestParser &						_request;
+		Config &							_config;
 		std::string							_script_name;
-		// Config &							_config;
 		std::string							_full_buf;
 
 		std::map<std::string, std::string>	_env_map;
@@ -25,19 +25,20 @@ class Cgi
 		char **								_env_arr;
 
 	public:
-		Cgi(RequestParser & request, std::string script_name);
+		Cgi(RequestParser & request, Config & config, std::string script_name);
 		virtual ~Cgi();
 
-		std::map<std::string, std::string>	getEnvMap(void) const;
-		void								setEnvMap(const std::map<std::string, std::string> env_map);
-		char **								getEnvArr(void) const;
-		RequestParser &						getRequest(void) const;
-		void								setRequest(const RequestParser & request);
-		std::string							getFullBuf(void) const;
-		void								setFullBuf(const std::string full_buf);
-
-		// Config &							getConfig(void) const;
-		// void								setConfig(const Config & config);
+		std::map<std::string, std::string>	get__env_map(void) const;
+		void								set__env_map(const std::map<std::string, std::string> env_map);
+		std::map<std::string, std::string>	get__map_http(void) const;
+		void								set__map_http(const std::map<std::string, std::string> map_http);
+		char **								get__env_arr(void) const;
+		RequestParser &						get__request(void) const;
+		void								set__request(const RequestParser & request);
+		std::string							get__full_buf(void) const;
+		void								set__full_buf(const std::string full_buf);
+		Config &							get__config(void) const;
+		void								set__config(const Config & config);
 		Cgi									&operator=(const Cgi & src);
 
 		void	setup_metavariables(void);

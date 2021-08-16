@@ -1,16 +1,6 @@
 
 # include <webserv.hpp>
 
-// this->_env_map["CONTENT_LENGTH"]    =    iToString(this->_req.body_size);// content-length de la requete
-// this->_env_map["CONTENT_TYPE"]        =    headers["content-type"];    // content-type de la requete (POST)
-//
-// this->_env_map["PATH_INFO"]            =    this->_req.req_line.target;    // derniere partie de l'URI apres le host
-// this->_env_map["PATH_TRANSLATED"]    =    this->_res.getTarget();    // adresse reelle du script (idem PATH_INFO pour nous)
-//
-// this->_env_map["SCRIPT_NAME"]        =    this->_res.getTarget();    // full path du fichier de script
-// this->_env_map["SCRIPT_FILENAME"]    =    this->_res.getTarget();    // full path du fichier de script
-// this->_env_map["UPLOAD_DIR"]        =    this->_req.config.upload_dir;
-
 std::string str_to_upper(std::string s)
 {
 	int	i;
@@ -40,14 +30,9 @@ std::map<std::string, std::string>	Cgi::init_map_http()
 	std::map<std::string, std::string>	m;
 	std::map<std::string, std::string>	h = _request.get__header_fields();
 
-
 	headers_iterator it = h.begin();
 	for (; it != h.end(); it++)
-	{
 		m[reworked_http_header(it->first)] = it->second;
-	}
-
-
 	return m;
 }
 
@@ -76,11 +61,11 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	// MUST (RFC)
 	m["GATEWAY_INTERFACE"]	= "CGI/1.1";
 	m["SERVER_PROTOCOL"]	= "HTTP/" + _request.get__http_version();
-	m["REMOTE_ADDR"]		= "127.0.0.1";
+	m["REMOTE_ADDR"]		= _config.get__host();
 	m["REQUEST_METHOD"]		= _request.get__method();
-	m["SERVER_SOFTWARE"]	= "webserv";
-	m["SERVER_NAME"]		= "127.0.0.1";
-	m["SERVER_PORT"]		= "8000";
+	m["SERVER_SOFTWARE"]	= _config.get__server_name();
+	m["SERVER_NAME"]		= _config.get__server_name();
+	m["SERVER_PORT"]		= _config.get__port();
 	m["QUERY_STRING"]		= "";
 
 	// paths
@@ -95,52 +80,3 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 
 	return m;
 }
-
-/*
-
-	Example discord :
-
-	CONTENT_LENGTH=0
-	CONTENT_TYPE=text/plain
-	GATEWAY_INTERFACE=CGI/1.1
-	HTTP_ACCEPT-ENCODING=gzip
-	HTTP_HOST=localhost
-	HTTP_USER-AGENT=Go-http-client/1.1
-	PATH_INFO=/directory/youpi.bla
-	PATH_TRANSLATED=/YoupiBanane/youpi.bla
-	REDIRECT_STATUS=200
-	REMOTE_ADDR=127.0.0.1
-	REQUEST_METHOD=GET
-	REQUEST_URI=/directory/youpi.bla
-	SCRIPT_FILENAME=/home/fouad/Bureau/webserv/YoupiBanane/youpi.bla
-	SCRIPT_NAME=/home/fouad/Bureau/webserv/ubuntu_cgi_tester
-	SERVER_NAME=42WebServer
-	SERVER_PORT=8080
-	SERVER_PROTOCOL=HTTP/1.1
-	SERVER_SOFTWARE=WebServ/1.0
-*/
-/*
-	List RFC :
-
-	"AUTH_TYPE"
-	"CONTENT_LENGTH"
-	"CONTENT_TYPE"
-	"GATEWAY_INTERFACE"
-	"PATH_INFO"
-	"PATH_TRANSLATED"
-	"QUERY_STRING"
-	"REMOTE_ADDR"
-	"REMOTE_HOST"
-	"REMOTE_IDENT"
-	"REMOTE_USER"
-	"REQUEST_METHOD"
-	"SCRIPT_NAME"
-	"SERVER_NAME"
-	"SERVER_PORT"
-	"SERVER_PROTOCOL"
-	"SERVER_SOFTWARE"
-*/
-
-// m["CONTENT_LENGTH"] = "";			// if no body, MUST NOT be set
-// m["CONTENT_TYPE"] = "";				// if no body, can be NULL
-// m["PATH_INFO"] = "uploads/to_upload";

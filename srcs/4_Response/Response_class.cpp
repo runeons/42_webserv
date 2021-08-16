@@ -123,9 +123,9 @@ void	Response::POST_create_body(void)
 void	Response::POST_create_body_cgi(void)
 {
 	std::cout << C_G_YELLOW << "Let's start with upload cgi !" << C_RES << std::endl;
-	Cgi *cgi = new Cgi(_request, "." + _request.get__resource());
+	Cgi *cgi = new Cgi(_request, _config, "." + _request.get__resource());
 	cgi->launch();
-	_response_body = cgi->getFullBuf();
+	_response_body = cgi->get__full_buf();
 	delete cgi;
 	std::cout << C_G_YELLOW << "We are finished with upload cgi !" << C_RES << std::endl;
 }
