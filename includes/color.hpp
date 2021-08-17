@@ -22,6 +22,9 @@
 # define GREEN_TREE	COLOR(106)
 # define BROWN		COLOR(137)
 # define SKY_BLUE	COLOR(69)
+# define LIGHT_BLUE	COLOR(39)
+# define LIGHT_PINK	COLOR(170)
+# define PINK		COLOR(164)
 # define ORANGE		COLOR(130)
 
 # define C_G_BLACK 		"\033[30;01m"

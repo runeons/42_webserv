@@ -69,8 +69,10 @@ class Response
 
 		Response					&operator=(const Response & src);
 
-
+		// Utils
 		int							is_response_successful(void);
+		std::string					return_status_line();
+		void						print_status_line();
 
 		// Response_init_maps
 		std::map<int, std::string>	init_map_msg();
@@ -93,21 +95,21 @@ class Response
 		void			generate_response_header();
 
 		// Response_class
-		void	parse_type_mime_charset_cmd_result(std::string res);
-		void	retrieve_type_mime_charset();
-		void	check_if_method_allowed();
-		int		is_actually_directory(std::string path);
-		void	check_if_redir_301();
-		void	fill_body_if_error();
-		void	DELETE_create_body();
-		void	DELETE_handle();
-		void	GET_create_body();
-		void	GET_handle();
-		void	POST_create_body();
-		void	POST_create_body_cgi();
-		void	POST_handle();
-		void	concatenate_response();
-		void	generate();
+		void		parse_type_mime_charset_cmd_result(std::string res);
+		void		retrieve_type_mime_charset();
+		void		check_if_method_allowed();
+		int			is_actually_directory(std::string path);
+		void		check_if_redir_301();
+		void		fill_body_if_error();
+		void		DELETE_create_body();
+		void		DELETE_handle();
+		void		GET_create_body();
+		void		GET_handle();
+		void		POST_create_body();
+		void		POST_create_body_cgi();
+		void		POST_handle();
+		void		concatenate_response();
+		void		generate();
 };
 
 #endif

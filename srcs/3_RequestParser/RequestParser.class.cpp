@@ -116,13 +116,27 @@ void			RequestParser::start_parsing(void)
 
 void			RequestParser::print_request_info(void)
 {
-	std::cout << "request info:" << std::endl;
-	std::cout << "    " << C_G_CYAN << "method " << C_RES << "          : " << this->get__method() << std::endl;
-	std::cout << "    " << C_G_CYAN << "path " << C_RES << "            : " << "[" << this->get__resource() << "]" << std::endl;
-	std::cout << "    " << C_G_CYAN << "http_version " << C_RES << "    : " << this->get__http_version() << std::endl;
+	std::cerr	<< MAGENTA << "[REQUEST]                 : "
+				<< "["
+				<< this->get__method()
+				<< " "
+				<< this->get__resource()
+				<< " HTTP/"
+				<< this->get__http_version()
+				<< "]"
+				<< C_RES;
 	if (this->_body_size > 0)
-	{
-		std::cout << "    " << C_G_CYAN << "body size " << C_RES << "       : " << this->_body_size << std::endl;
+		std::cerr << MAGENTA << " - body size : " << this->_body_size << C_RES << std::endl;
+	else
+		std::cerr << MAGENTA << " - no body" << C_RES << std::endl;
+
+	// std::cout << "request info:" << std::endl;
+	// std::cout << "    " << C_G_CYAN << "method " << C_RES << "          : " << this->get__method() << std::endl;
+	// std::cout << "    " << C_G_CYAN << "path " << C_RES << "            : " << "[" << this->get__resource() << "]" << std::endl;
+	// std::cout << "    " << C_G_CYAN << "http_version " << C_RES << "    : " << this->get__http_version() << std::endl;
+	// if (this->_body_size > 0)
+	// {
+	// 	std::cout << "    " << C_G_CYAN << "body size " << C_RES << "       : " << this->_body_size << std::endl;
 		// std::cout << "    " << C_G_CYAN << "body      " << C_RES << "       : " << std::endl << "[";
 		// print_string_formatted(this->_body, this->_body_size);
 		// std::cout << "]" << std::endl;
@@ -130,16 +144,16 @@ void			RequestParser::print_request_info(void)
 		// dprintf(1, "    "C_G_CYAN"body "C_RES"            : [");
 		// write(1, this->get__body().c_str(), this->_body_size);
 		// dprintf(1, "]\n");
-	}
-	else
-		std::cout << "    " << C_G_CYAN << "body " << C_RES << "            : " << "no body" << std::endl;
+	// }
+	// else
+	// 	std::cout << "    " << C_G_CYAN << "body " << C_RES << "            : " << "no body" << std::endl;
 	// std::cout << "    " << C_G_CYAN << "headers  " << C_RES << "        : " << std::endl;
 	// for (headers_iterator it = this->_header_fields.begin();
 	// 	it != this->_header_fields.end(); it++)
 	// {
 		// std::cout << "        [" << C_G_BLUE << it->first << C_RES << "] -> [" << it->second << "]" << std::endl;
 	// }
-	std::cout << "-------------------------------------------------------" << std::endl;
+	// std::cout << "-------------------------------------------------------" << std::endl;
 }
 
 void			RequestParser::check_request_attributs(void)

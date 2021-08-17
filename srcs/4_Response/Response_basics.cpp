@@ -148,9 +148,27 @@ void Response::setPageContent(const std::string page_content)
 	return ;
 }
 
+// ********************************************* utils *********************************************
+
 int Response::is_response_successful(void)
 {
 	if (_status_code == 200 || _status_code == 202 || _status_code == 204)
 		return (1);
 	return (0);
+}
+
+std::string	Response::return_status_line()
+{
+	std::map<int, std::string>::iterator it_msg = _error_msg.find(_status_code);
+
+	return ("HTTP/1.1 " + itos(_status_code) + PAT_SP + it_msg->second);
+}
+
+void	Response::print_status_line()
+{
+	std::cerr	<< GREEN << "[RESPONSE]                : "
+				<< "["
+				<< return_status_line()
+				<< "]"
+				<< C_RES << std::endl;
 }

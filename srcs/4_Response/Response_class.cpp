@@ -191,6 +191,7 @@ void	Response::generate(void)
 	// }
 	fill_body_if_error();
 	generate_response_header(); // from status_code, page_content and translated_path
+	print_status_line();
 	concatenate_response();
 	// std::cerr << C_G_RED << "[ DEBUG RESPONSE GENERATED ] " << C_RES << "" << std::endl;
 }
