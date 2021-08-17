@@ -28,6 +28,8 @@
 # define PINK		COLOR(164)
 # define ORANGE		COLOR(130)
 
+// https://robotmoon.com/256-colors/
+
 # define C_001	COLOR(1)
 # define C_002	COLOR(2)
 # define C_003	COLOR(3)

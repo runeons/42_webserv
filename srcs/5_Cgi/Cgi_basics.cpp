@@ -15,6 +15,7 @@ Cgi::Cgi(RequestParser & request, Config & config, std::string script_name) : _r
 Cgi::~Cgi(void)
 {
 	std::cout << C_HIDDEN << "Cgi destruction..." << C_RES << std::endl;
+	delete_env_arr();
 	return;
 }
 

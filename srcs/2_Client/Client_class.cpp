@@ -313,8 +313,8 @@ void Client::generate_response(void)
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
 	std::cerr << C_DEBUG << "[ DEBUG &_request_parser ] " << C_RES << &_request_parser << std::endl;
-	if (_request_parser != NULL)
-		delete _request_parser;
+	// if (_request_parser != NULL)
+	// 	delete _request_parser;
 	_total_bytes_to_send = _response->getResponse().length() + 1;
 	// copy response in _response_vector vector
 	_response_vector.resize(_total_bytes_to_send);

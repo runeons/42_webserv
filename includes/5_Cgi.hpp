@@ -42,6 +42,7 @@ class Cgi
 		Cgi									&operator=(const Cgi & src);
 
 		void	setup_metavariables(void);
+		void	delete_env_arr(void);
 		void	transform_to_envp(void);
 		void	exec_script(void);
 		void	launch(void);

@@ -8,6 +8,14 @@ void	Cgi::setup_metavariables(void)
 
 }
 
+void	Cgi::delete_env_arr(void)
+{
+	int i = 0;
+	while (_env_arr[i])
+		delete _env_arr[i++];
+	delete [] _env_arr;
+}
+
 void	Cgi::transform_to_envp(void)
 {
 	char **env = new char*[_env_map.size() + 1];
@@ -16,12 +24,9 @@ void	Cgi::transform_to_envp(void)
 	std::map<std::string, std::string>::iterator itend = _env_map.end();
 	for (int i = 0; it != itend; it++, i++)
 	{
-		// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "[" << std::setw(30) << std::left << it->first << "] -> [" << it->second << "]" << std::endl;
 		std::string var = it->first + "=" + it->second;
 		env[i] = new char[var.size() + 1];
 		env[i] = strcpy(env[i], var.c_str());
-		// std::cerr << C_DEBUG << "[ DEBUG envp ] " << C_RES << env[i] << std::endl;
-		// std::cout << C_G_MAGENTA << env[i] << C_RES << std::endl;
 	}
 	env[_env_map.size()] = NULL;
 	_env_arr = env;

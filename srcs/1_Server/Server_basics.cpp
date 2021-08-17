@@ -14,30 +14,6 @@
 	};
 */
 
-
-// Default constructor
-// Server::Server(void)
-// {
-// 	std::cout << C_HIDDEN << "...Server creation..." << C_RES << std::endl;
-// 	// TO DO parse config
-// 	_config = new Config; // parametree avec le parsing
-// 	_address.sin_family = AF_INET;
-// 	_address.sin_addr.s_addr = INADDR_ANY;
-// 	try
-// 	{
-// 		if (inet_aton("127.0.0.1", &_address.sin_addr) <= 0) // TOCHECK modifier avec host de config ??
-// 			throw (Exceptions::ServerException("Server invalid address"));
-// 		std::cout << GREEN << "Address set !" <<  C_RES << std::endl;
-// 	}
-// 	catch (Exceptions::ServerException & e)
-// 	{
-// 		std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
-// 	}
-// 	_address.sin_port = htons(_config->get__port());
-// 	_master_socket = 0;
-// 	return ;
-// }
-
 Server::Server(const Config & config)
 {
 	std::cout << C_HIDDEN << "...Server creation..." << C_RES << std::endl;
