@@ -32,6 +32,8 @@ Client::~Client(void)
 	std::cout << C_HIDDEN << "...Client destruction..." << C_RES << std::endl;
 	if (_response != NULL)
 		delete _response;
+	if (_request_parser != NULL)
+		delete _request_parser;
 	return;
 }
 

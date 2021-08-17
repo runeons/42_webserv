@@ -114,6 +114,7 @@ void Server::shutdown_client_socket(int client_socket)
 	if (_max_fd == client_socket)
 		_max_fd--;
 	close(client_socket);
+	delete _clients_map[client_socket];
 }
 
 
@@ -121,7 +122,7 @@ void Server::prepare_and_send_response(int client_socket)
 {
 	std::cerr << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->send_response();
-	if (_clients_map[client_socket]->get_remaining_bytes_to_send() <= 0)
+	if (_clients_map[client_socket]->get_remaining_bytes_to_send() <= 0) // == 0 TOCHECK
 		shutdown_client_socket(client_socket);
 }
 
