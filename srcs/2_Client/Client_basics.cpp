@@ -4,7 +4,7 @@
 // Parametric constructor
 Client::Client(Config & config) : _config(config)
 {
-	std::cout << GREY << "Client creation..." << C_RES << std::endl;
+	std::cout << GREY << "...Client creation..." << C_RES << std::endl;
 
 	_socket = 0;
 	_status_code = 200;
@@ -29,7 +29,7 @@ Client::Client(Config & config) : _config(config)
 // Destructor
 Client::~Client(void)
 {
-	std::cout << GREY << "Client destruction..." << C_RES << std::endl;
+	std::cout << GREY << "...Client destruction..." << C_RES << std::endl;
 	if (_response != NULL)
 		delete _response;
 	return;

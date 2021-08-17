@@ -52,12 +52,14 @@ void	Cgi::exec_script(void)
 	cgi_fd = open("/tmp/cgi_file_our", O_RDWR | O_CREAT | O_APPEND | O_TRUNC, 0666);
 	if (cgi_fd == -1)
 	{
+		std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
 		perror("open cgi_fd");
 		exit(EXIT_FAILURE);
 	}
 	// create pipe
 	if (pipe(pipe_fd) == -1)
 	{
+		std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
@@ -65,6 +67,7 @@ void	Cgi::exec_script(void)
 	child = fork();
 	if (child == -1)
 	{
+		std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
@@ -80,6 +83,7 @@ void	Cgi::exec_script(void)
 		// => quand le child va ecrire, il ecrira sur le fichier tmp
 		if (execve(av[0], &av[0], _env_arr) < 0)	// Execute process
 		{
+			std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
 			perror("execve");
 			close(pipe_fd[0]);
 			exit(EXIT_FAILURE);
@@ -100,13 +104,15 @@ void	Cgi::exec_script(void)
 		// wait for child
 		if (waitpid(child, &status, 0) == -1)
 		{
+			std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
 			perror("waitpid");
 			exit(EXIT_FAILURE);
 		}
 		if (!WIFEXITED(status))
 		{
 			std::cout << "status : " << status << std::endl;
-			std::cout << "WIFEXITED(status) : " << WIFEXITED(status) << std::endl;
+
+			std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;std::cout << "WIFEXITED(status) : " << WIFEXITED(status) << std::endl;
 			perror("WIFEXITED(status)");
 			exit(EXIT_FAILURE);
 		}

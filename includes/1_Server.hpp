@@ -10,6 +10,8 @@ class Client;
 class Server
 {
 	private:
+		Server(void);
+		
 		Config *				_config;
 		std::map<int, Client *>	_clients_map;
 
@@ -20,7 +22,6 @@ class Server
 		int						_max_fd;
 
 	public:
-		Server(void);
 		Server(const Config & config);
 		Server(const Server & src);
 		virtual ~Server();

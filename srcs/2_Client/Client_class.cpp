@@ -37,13 +37,6 @@ int		Client::calculate_total_bytes_expected(std::string buf_str)
 // |             X |        O |
 // |             X |        X |
 // |               |          |
-// |               |          |
-// |               |          |
-// |               |          |
-// |               |          |
-// |               |          |
-// |               |          |
-// |               |          |
 
 void Client::receive_with_content_length(void)
 {
@@ -62,20 +55,20 @@ void Client::receive_with_content_length(void)
 	{ // I LOVE YOU
 		_total_bytes_expected = calculate_total_bytes_expected(buf_str);
 		_remaining_bytes_to_recv = _total_bytes_expected - _bytes_read;
-		if (_total_bytes_expected == _bytes_read)
-			std::cout << C_G_BLUE << "Request fully received !" << std::endl;
+		if (_remaining_bytes_to_recv == 0)
+			std::cout << CYAN << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "chunked request fully received" << C_RES << std::endl;
 		else
-			std::cout << C_G_BLUE << _remaining_bytes_to_recv << " remaining to read w/ recv" << std::endl;
+			std::cout << CYAN << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "chunked request received : " << _bytes_read << " bytes - remaining : " << _remaining_bytes_to_recv << " bytes" << C_RES << std::endl;
 	}
 	else
 	{
-		std::cout << C_G_BLUE << "Content-Length not found in request" << C_RES << std::endl;
+		// std::cout << CYAN << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "without Content-Length" << C_RES << std::endl;
 		if (_total_bytes_expected == 0) // s'il n'y a pas eu de Content-Length du tout, set _total_bytes_expected puisque envoyé à RequestParser
 			_total_bytes_expected = _bytes_read;
 		if (_remaining_bytes_to_recv > 0)
 			_remaining_bytes_to_recv -= _bytes_read;
 	}
-	std::cout << GREEN << "Request of size " << C_G_GREEN << _bytes_read << C_RES << GREEN << " received :" <<  C_RES << std::endl;
+	std::cout << CYAN << "[CLIENT] <" << _socket << "> [REQUEST]    : " << _bytes_read << " bytes received - " << _remaining_bytes_to_recv << " remaining" << C_RES << std::endl;
 	_request.append(_chunk, _bytes_read);
 }
 
@@ -319,6 +312,7 @@ void Client::generate_response(void)
 	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ? TOCHECK
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
+	std::cerr << C_G_RED << "[ DEBUG &_request_parser ] " << C_RES << &_request_parser << std::endl;
 	if (_request_parser != NULL)
 		delete _request_parser;
 	_total_bytes_to_send = _response->getResponse().length() + 1;
@@ -341,9 +335,9 @@ void Client::send_response(void)
 	// bytes_sent = -1;
 	if (bytes_sent == -1)
 		throw (Exceptions::ClientException("Client failed to send response"));
-	std::cout << GREEN << "Response of size " << C_G_GREEN << bytes_sent << C_RES << GREEN << " sent :" <<  C_RES << std::endl;
 	_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
 	_remaining_bytes_to_send -= bytes_sent;
+	std::cout << CYAN << "[CLIENT] <" << _socket << "> [RESPONSE]   : " << bytes_sent << " / " << _total_bytes_to_send << " bytes sent - " << _remaining_bytes_to_send << " remaining" << C_RES << std::endl;
 	// std::cerr << C_G_YELLOW << "[ DEBUG RESPONSE SENT ] " << C_RES << "" << std::endl;
 }
 

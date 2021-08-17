@@ -4,7 +4,7 @@
 // Parametric constructor
 Response::Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request) : _config(config), _applied_location(applied_location), _request(request)
 {
-	std::cout << GREY << "Response creation..." << C_RES << std::endl;
+	std::cout << GREY << "...Response creation..." << C_RES << std::endl;
 	// from parameters
 	_status_code = status_code;
 	_page_content = page_content;
@@ -25,7 +25,7 @@ Response::Response(Config & config, Location & applied_location, int status_code
 // Destructor
 Response::~Response(void)
 {
-	std::cout << GREY << "Response destruction..." << C_RES << std::endl;
+	std::cout << GREY << "...Response destruction..." << C_RES << std::endl;
 	return;
 }
 
