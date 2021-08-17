@@ -95,6 +95,7 @@ class Response
 		void			generate_response_header();
 
 		// Response_class
+		void		set_default_html_type_mime_charset();
 		void		parse_type_mime_charset_cmd_result(std::string res);
 		void		retrieve_type_mime_charset();
 		void		check_if_method_allowed();

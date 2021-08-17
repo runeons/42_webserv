@@ -169,7 +169,8 @@ void		Client::apply_location(void)
 		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
 		{
 			std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
-			_status_code = 404;
+			if (is_response_successful()) // pour eviter de changer le status_code si bad request ou precedent
+				_status_code = 404;
 		}
 		rsc.erase(pos_last_slash + 1);
 	}
