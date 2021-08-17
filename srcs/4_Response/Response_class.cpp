@@ -136,12 +136,10 @@ void	Response::POST_handle(void)
 	if (request_content_type.find("multipart/form-data;", 0) == 0)
 	{
 		if (_applied_location.get__upload() == "")
-		{
-			std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "NOT ALLOWED" << std::endl;
 			_status_code = 405;
-		}
 		else
 			POST_create_body_cgi();
+		_type_mime = "text/html"; // sinon, s'affiche en text/plain
 	}
 }
 

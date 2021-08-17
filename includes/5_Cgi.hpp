@@ -18,7 +18,7 @@ class Cgi
 		RequestParser &						_request;
 		Config &							_config;
 		Location &							_applied_location;
-		std::string							_script_name;
+		std::string							_bin;
 		std::string							_full_buf;
 
 		std::map<std::string, std::string>	_env_map;

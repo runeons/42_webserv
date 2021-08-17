@@ -47,9 +47,8 @@ void	Cgi::exec_script(void)
 	int		status;
 
 	std::string script = _env_map["SCRIPT_NAME"];
-	std::string bin = "/usr/local/bin/php-cgi";
 	char *av[3] = {
-		(char *)bin.c_str(), //TODO casts C to change
+		(char *)_bin.c_str(), //TODO casts C to change
 		(char *)script.c_str(),
 		(char *)0
 	};

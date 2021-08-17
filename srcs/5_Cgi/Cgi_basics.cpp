@@ -8,6 +8,7 @@ Cgi::Cgi(RequestParser & request, Config & config, Location & applied_location) 
 	_map_http = init_map_http();
 	_env_map = init_map_env();
 	_env_arr = NULL;
+	_bin = "/usr/local/bin/php-cgi";
 	return ;
 }
 
@@ -31,6 +32,7 @@ Cgi &	Cgi::operator=(const Cgi& rhs)
 		_request = rhs.get__request();
 		_config = rhs.get__config();
 		_applied_location = rhs.get__applied_location();
+		// _bin = rhs.get__bin();
 	}
 	return (*this);
 }
