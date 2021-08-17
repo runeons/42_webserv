@@ -334,7 +334,7 @@ void Client::send_response(void)
 		throw (Exceptions::ClientException("Client failed to send response"));
 	_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
 	_remaining_bytes_to_send -= bytes_sent;
-	std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [RESPONSE]   : " << bytes_sent << " / " << _total_bytes_to_send << " bytes sent - " << _remaining_bytes_to_send << " remaining" << C_RES << std::endl;
+	std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [RESPONSE] \033[01m" << std::setw(3) << ((_total_bytes_to_send - _remaining_bytes_to_send) * 100) / _total_bytes_to_send << "%" << C_RES << C_CLIENT << " : " << bytes_sent << " / " << _total_bytes_to_send << " bytes sent - " << _remaining_bytes_to_send << " remaining" << C_RES << std::endl;
 	// std::cerr << C_G_YELLOW << "[ DEBUG RESPONSE SENT ] " << C_RES << "" << std::endl;
 }
 
