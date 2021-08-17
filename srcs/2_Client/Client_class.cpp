@@ -236,6 +236,20 @@ std::string	Client::generate_autoindex(std::string rsc)
 	return res;
 }
 
+void			insert_html(std::string & s, std::string str_before, std::string to_insert)
+{
+	size_t pos = s.find(str_before);
+	if (pos != std::string::npos)
+		s.insert(pos + str_before.length(), to_insert);
+}
+
+void			erase_html(std::string & s, std::string to_erase)
+{
+	size_t pos = s.find(to_erase);
+	if (pos != std::string::npos)
+		s.erase(pos, to_erase.length());
+}
+
 // if directory : set up translated_path as index, unless doesn't exist and autoindex is on : generate_autoindex
 std::string		Client::apply_index_or_autoindex(std::string rsc)
 {
@@ -244,7 +258,16 @@ std::string		Client::apply_index_or_autoindex(std::string rsc)
 	if (stat(rsc.c_str(), &buffer) == -1) // si dir n'existe pas
 	 ; // ne change rien au translated_path
 	else if (stat(index_path.c_str(), &buffer) == -1 && _applied_location->get__autoindex() == 1) // if index.html not found + auto
+	{
 		_page_content = generate_autoindex(rsc);
+
+		insert_html(_page_content, std::string("<head>\n "), std::string("<link rel=\"icon\" href=\"/images/favicon.ico\" />\n <link rel<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">\n"));
+		insert_html(_page_content, std::string("<body>\n"), std::string("\t<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\">\n\t\t<div class=\"container-fluid\">\n\t\t\t<a class=\"navbar-brand\" href=\"/\">Home</a>\n\t\t\t<button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>\n\t\t\t</button>\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarNav\">\n\t\t\t\t<ul class=\"navbar-nav\">\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link active\" aria-current=\"page\" href=\"/contact.html\">Contact</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/documents/\">Documents</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/upload.html\">Upload</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</div>\n\t</nav>\n"));
+		insert_html(_page_content, std::string("Tokoro\n\t</p>\n"), std::string("\t<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\" crossorigin=\"anonymous\"></script>"));
+		erase_html(_page_content, std::string("\n  P { font-weight: normal; font-family : ariel, monospace, sans-serif; color: black; background-color: transparent;}\n  B { font-weight: normal; color: black; background-color: transparent;}\n  A:visited { font-weight : normal; text-decoration : none; background-color : transparent; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  A:link    { font-weight : normal; text-decoration : none; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  A:hover   { color : #000000; font-weight : normal; text-decoration : underline; background-color : yellow; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  A:active  { color : #000000; font-weight: normal; background-color : transparent; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  .VERSION { font-size: small; font-family : arial, sans-serif; }\n  .NORM  { color: black;  background-color: transparent;}\n  .FIFO  { color: purple; background-color: transparent;}\n  .CHAR  { color: yellow; background-color: transparent;}\n  .DIR   { color: blue;   background-color: transparent;}\n  .BLOCK { color: yellow; background-color: transparent;}\n  .LINK  { color: aqua;   background-color: transparent;}\n  .SOCK  { color: fuchsia;background-color: transparent;}\n  .EXEC  { color: green;  background-color: transparent;}"));
+		erase_html(_page_content, "\n  <!-- ");
+		erase_html(_page_content, "\n  -->");
+	}
 	else // if (ret == 0) ou -1 et autoindex off
 		rsc += _applied_location->get__index();
 	return rsc;
