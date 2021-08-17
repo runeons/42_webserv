@@ -17,6 +17,7 @@ class Cgi
 
 		RequestParser &						_request;
 		Config &							_config;
+		Location &							_applied_location;
 		std::string							_script_name;
 		std::string							_full_buf;
 
@@ -25,7 +26,7 @@ class Cgi
 		char **								_env_arr;
 
 	public:
-		Cgi(RequestParser & request, Config & config, std::string script_name);
+		Cgi(RequestParser & request, Config & config, Location & applied_location);
 		virtual ~Cgi();
 
 		std::map<std::string, std::string>	get__env_map(void) const;
@@ -39,6 +40,8 @@ class Cgi
 		void								set__full_buf(const std::string full_buf);
 		Config &							get__config(void) const;
 		void								set__config(const Config & config);
+		Location &							get__applied_location(void) const;
+		void								set__applied_location(const Location & applied_location);
 		Cgi									&operator=(const Cgi & src);
 
 		void	setup_metavariables(void);

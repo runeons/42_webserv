@@ -140,6 +140,8 @@ void		Client::adjust_applied_location(void)
 		m.push_back("DELETE");
 		_applied_location->set__methods(m);
 	}
+	if (_applied_location->get__upload() != "" && _applied_location->get__upload().back() != '/')
+		_applied_location->set__upload(_applied_location->get__upload() + "/");
 	_applied_location->print_info();
 }
 

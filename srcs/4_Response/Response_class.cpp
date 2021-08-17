@@ -123,7 +123,7 @@ void	Response::POST_create_body(void)
 void	Response::POST_create_body_cgi(void)
 {
 	std::cout << C_OTHER << "Let's start with upload cgi !" << C_RES << std::endl;
-	Cgi cgi(_request, _config, "." + _request.get__resource());
+	Cgi cgi(_request, _config, _applied_location);
 	cgi.launch();
 	_response_body = cgi.get__full_buf();
 	std::cout << C_OTHER << "We are finished with upload cgi !" << C_RES << std::endl;
@@ -136,7 +136,10 @@ void	Response::POST_handle(void)
 	if (request_content_type.find("multipart/form-data;", 0) == 0)
 	{
 		if (_applied_location.get__upload() == "")
-			_status_code = 403; // TOCHECK ou 405
+		{
+			std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "NOT ALLOWED" << std::endl;
+			_status_code = 405;
+		}
 		else
 			POST_create_body_cgi();
 	}
