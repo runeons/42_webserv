@@ -89,7 +89,14 @@ void	Response::GET_handle(void)
 		_applied_location.set__redir301(_request.get__resource() + "/");
 		_status_code = 301;
 	}
-	// std::cerr << C_DEBUG << "[ DEBUG error code ] " << _status_code << C_RES << std::endl;
+	if (get_extension(_translated_path) == "uppercase")
+	{
+		std::cout << C_OTHER << "Let's start with GET extension cgi !" << C_RES << std::endl;
+		Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
+		cgi.launch();
+		_response_body = cgi.get__full_buf();
+		std::cout << C_OTHER << "We are finished with GET extension cgi !" << C_RES << std::endl;
+	}
 	GET_create_body();
 }
 
@@ -132,7 +139,7 @@ void	Response::POST_create_body(void)
 void	Response::POST_create_body_cgi(void)
 {
 	std::cout << C_OTHER << "Let's start with upload cgi !" << C_RES << std::endl;
-	Cgi cgi(_request, _config, _applied_location);
+	Cgi cgi(_request, _config, _applied_location, CGI_UPLOAD, "");
 	cgi.launch();
 	_response_body = cgi.get__full_buf();
 	std::cout << C_OTHER << "We are finished with upload cgi !" << C_RES << std::endl;
@@ -149,6 +156,10 @@ void	Response::POST_handle(void)
 		else
 			POST_create_body_cgi();
 		_type_mime = "text/html"; // sinon, s'affiche en text/plain
+	}
+	else
+	{
+		;
 	}
 }
 

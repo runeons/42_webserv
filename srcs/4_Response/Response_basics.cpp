@@ -2,14 +2,14 @@
 # include <webserv.hpp>
 
 // Parametric constructor
-Response::Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request) : _config(config), _applied_location(applied_location), _request(request)
+Response::Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request, std::string query_string) : _config(config), _applied_location(applied_location), _request(request)
 {
 	std::cout << C_HIDDEN << "...Response creation..." << C_RES << std::endl;
 	// from parameters
 	_status_code = status_code;
 	_page_content = page_content;
 	_translated_path = translated_path;
-
+	_query_string = query_string;
 	// init
 	_type_mime = "";
 	_charset = "";

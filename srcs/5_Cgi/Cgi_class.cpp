@@ -11,9 +11,12 @@ void	Cgi::setup_metavariables(void)
 void	Cgi::delete_env_arr(void)
 {
 	int i = 0;
-	while (_env_arr[i])
-		delete _env_arr[i++];
-	delete [] _env_arr;
+	if (_env_arr)
+	{
+		while (_env_arr[i])
+			delete _env_arr[i++];
+		delete [] _env_arr;
+	}
 }
 
 void	Cgi::transform_to_envp(void)

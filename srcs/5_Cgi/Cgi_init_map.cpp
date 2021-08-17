@@ -66,12 +66,25 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	m["QUERY_STRING"]		= "";
 	// paths
 	m["DOCUMENT_ROOT"]		= get_cwd();
-	m["PATH_INFO"]			= _request.get__resource();
-	m["REQUEST_URI"]		= _request.get__resource();
-	m["PATH_TRANSLATED"]	= _applied_location.get__root_loc() + _request.get__resource();
-	m["SCRIPT_FILENAME"]	= _applied_location.get__root_loc() + _request.get__resource();
-	m["SCRIPT_NAME"]		= _applied_location.get__root_loc() + _request.get__resource();
-	m["UPLOAD_DIR"]			= _applied_location.get__upload();
+
+	std::string script;
+	if (_type == CGI_UPLOAD)
+	{
+		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_UPLOAD" << std::endl;
+		script = _request.get__resource();
+		m["UPLOAD_DIR"]		= _applied_location.get__upload();
+	}
+	else if (_type == CGI_EXTENSION)
+	{
+		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_EXTENSION" << std::endl;
+		script = "/cgi-bin/uppercase.php";
+		m["QUERY_STRING"]	= _query_string;
+	}
+	m["PATH_INFO"]			= script;
+	m["REQUEST_URI"]		= script;
+	m["PATH_TRANSLATED"]	= _applied_location.get__root_loc() + script;
+	m["SCRIPT_FILENAME"]	= _applied_location.get__root_loc() + script;
+	m["SCRIPT_NAME"]		= _applied_location.get__root_loc() + script;
 	m.insert(_map_http.begin(), _map_http.end());
 	return m;
 }

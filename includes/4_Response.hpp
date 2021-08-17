@@ -33,6 +33,7 @@ class Response
 		std::string					_translated_path;
 		std::string					_type_mime;
 		std::string					_charset;
+		std::string					_query_string;
 
 		RequestParser &				_request;
 
@@ -45,7 +46,7 @@ class Response
 
 	public:
 		// Response_basics
-		Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request);
+		Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request, std::string query_string);
 		virtual ~Response();
 
 		int							getStatusCode(void) const;

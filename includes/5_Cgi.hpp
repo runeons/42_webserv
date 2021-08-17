@@ -20,13 +20,15 @@ class Cgi
 		Location &							_applied_location;
 		std::string							_bin;
 		std::string							_full_buf;
+		std::string							_query_string;
+		int									_type;
 
 		std::map<std::string, std::string>	_env_map;
 		std::map<std::string, std::string>	_map_http;
 		char **								_env_arr;
 
 	public:
-		Cgi(RequestParser & request, Config & config, Location & applied_location);
+		Cgi(RequestParser & request, Config & config, Location & applied_location, int type, std::string query_string);
 		virtual ~Cgi();
 
 		std::map<std::string, std::string>	get__env_map(void) const;

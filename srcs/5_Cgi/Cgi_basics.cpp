@@ -2,9 +2,10 @@
 # include <webserv.hpp>
 
 // Parameter constructor
-Cgi::Cgi(RequestParser & request, Config & config, Location & applied_location) : _request(request), _config(config), _applied_location(applied_location)
+Cgi::Cgi(RequestParser & request, Config & config, Location & applied_location, int type, std::string query_string) : _request(request), _config(config), _applied_location(applied_location), _type(type)
 {
 	std::cout << C_HIDDEN << "Cgi creation..." << C_RES << std::endl;
+	_query_string = query_string;
 	_map_http = init_map_http();
 	_env_map = init_map_env();
 	_env_arr = NULL;
@@ -33,6 +34,8 @@ Cgi &	Cgi::operator=(const Cgi& rhs)
 		_config = rhs.get__config();
 		_applied_location = rhs.get__applied_location();
 		// _bin = rhs.get__bin();
+		// _query_string = rhs.get__query_string();
+		// _type = rhs.get__type();
 	}
 	return (*this);
 }

@@ -336,7 +336,7 @@ void Client::read_resource(void)
 void Client::generate_response(void)
 {
 	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ? TOCHECK
-	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
+	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser, _query_string);
 	_response->generate();
 	_total_bytes_to_send = _response->getResponse().length() + 1;
 	// copy response in _response_vector vector
@@ -382,4 +382,3 @@ void Client::print_response(void)
 	print_response_header();
 	print_response_body();
 }
-
