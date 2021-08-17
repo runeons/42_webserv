@@ -10,10 +10,10 @@ std::string		exec_cmd(std::string cmd, std::string file_res)
 	cmd += " > ";
 	cmd += file_res;
 	if (!oss) // EXCEPTION A CREER
-		std::cerr << RED << "Error : can't open osstream" <<  C_RES << std::endl;
+		std::cerr << C_ERROR << "Error : can't open osstream" <<  C_RES << std::endl;
 	int status = std::system(cmd.c_str());
 	if (WEXITSTATUS(status) != 0)
-		std::cerr << RED << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
+		std::cerr << C_ERROR << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
 	oss << std::ifstream(file_res).rdbuf();
 	return oss.str();
 }
@@ -40,13 +40,13 @@ std::string get_file_content(std::string filename)
 
 	if (!ifs)
 	{
-		// std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "error ifs get_file_content : " << filename << std::endl;
-		// std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << strerror(errno) << std::endl;
+		// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "error ifs get_file_content : " << filename << std::endl;
+		// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << strerror(errno) << std::endl;
 		return "";
 	}
 	else if (!oss)
 	{
-		// std::cerr << C_G_RED << "[ DEBUG ] " << C_RES << "error oss get_file_content" << std::endl;
+		// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "error oss get_file_content" << std::endl;
 		return "";
 	}
 	else
@@ -73,7 +73,7 @@ int		user_perm_to_write(std::string file)
 {
 	struct stat perm;
 	if (::lstat(file.c_str(), &perm) == -1)
-		std::cout << RED << "lstat error : " << strerror(errno) << C_RES << std::endl;
+		std::cout << C_ERROR << "lstat error : " << strerror(errno) << C_RES << std::endl;
 	if (perm.st_mode & S_IWUSR)
 		return 1;
 	else
@@ -84,7 +84,7 @@ int		user_perm_to_read(std::string file)
 {
 	struct stat perm;
 	if (::lstat(file.c_str(), &perm) == -1)
-		std::cout << RED << "lstat error : " << strerror(errno) << C_RES << std::endl;
+		std::cout << C_ERROR << "lstat error : " << strerror(errno) << C_RES << std::endl;
 	if (perm.st_mode & S_IRUSR)
 		return 1;
 	else
@@ -95,7 +95,7 @@ int		user_perm_to_exec(std::string file)
 {
 	struct stat perm;
 	if (::lstat(file.c_str(), &perm) == -1)
-		std::cout << RED << "lstat error : " << strerror(errno) << C_RES << std::endl;
+		std::cout << C_ERROR << "lstat error : " << strerror(errno) << C_RES << std::endl;
 	if (perm.st_mode & S_IXUSR)
 		return 1;
 	else
@@ -110,7 +110,7 @@ std::string itos(int nb)
 
 	if (!ss)
 	{
-		std::cout << RED << "Error in itos" << std::endl << C_RES;
+		std::cout << C_ERROR << "Error in itos" << std::endl << C_RES;
 		return "";
 	}
 	ss << nb;

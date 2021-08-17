@@ -80,7 +80,7 @@ void	Response::GET_handle(void)
 		_applied_location.set__redir301(_request.get__resource() + "/");
 		_status_code = 301;
 	}
-	// std::cerr << C_G_RED << "[ DEBUG error code ] " << _status_code << C_RES << std::endl;
+	// std::cerr << C_DEBUG << "[ DEBUG error code ] " << _status_code << C_RES << std::endl;
 	GET_create_body();
 }
 
@@ -103,7 +103,7 @@ void	Response::DELETE_handle(void)
 	{
 		if (user_perm_to_write(_translated_path))
 		{
-			// std::cerr << C_G_YELLOW << "[ DEBUG ] " << C_RES << "Permitted to delete (S_IWUSR)" << std::endl;
+			// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "Permitted to delete (S_IWUSR)" << std::endl;
 			if (::remove(_translated_path.c_str()) == -1)
 				_status_code = 403;
 		}
@@ -122,12 +122,12 @@ void	Response::POST_create_body(void)
 
 void	Response::POST_create_body_cgi(void)
 {
-	std::cout << C_G_YELLOW << "Let's start with upload cgi !" << C_RES << std::endl;
+	std::cout << C_OTHER << "Let's start with upload cgi !" << C_RES << std::endl;
 	Cgi *cgi = new Cgi(_request, _config, "." + _request.get__resource());
 	cgi->launch();
 	_response_body = cgi->get__full_buf();
 	delete cgi;
-	std::cout << C_G_YELLOW << "We are finished with upload cgi !" << C_RES << std::endl;
+	std::cout << C_OTHER << "We are finished with upload cgi !" << C_RES << std::endl;
 }
 
 void	Response::POST_handle(void)
@@ -193,5 +193,5 @@ void	Response::generate(void)
 	generate_response_header(); // from status_code, page_content and translated_path
 	print_status_line();
 	concatenate_response();
-	// std::cerr << C_G_RED << "[ DEBUG RESPONSE GENERATED ] " << C_RES << "" << std::endl;
+	// std::cerr << C_DEBUG << "[ DEBUG RESPONSE GENERATED ] " << C_RES << "" << std::endl;
 }

@@ -4,7 +4,7 @@
 // Parameter constructor
 Cgi::Cgi(RequestParser & request, Config & config, std::string script_name) : _request(request), _config(config), _script_name(script_name)
 {
-	std::cout << GREY << "Cgi creation..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "Cgi creation..." << C_RES << std::endl;
 	_map_http = init_map_http();
 	_env_map = init_map_env();
 	_env_arr = NULL;
@@ -14,14 +14,14 @@ Cgi::Cgi(RequestParser & request, Config & config, std::string script_name) : _r
 // Destructor
 Cgi::~Cgi(void)
 {
-	std::cout << GREY << "Cgi destruction..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "Cgi destruction..." << C_RES << std::endl;
 	return;
 }
 
 // Assignation operator
 Cgi &	Cgi::operator=(const Cgi& rhs)
 {
-	std::cout << GREY << "Cgi Assignation operator called" << C_RES << std::endl;
+	std::cout << C_HIDDEN << "Cgi Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
 		_env_map = rhs.get__env_map();

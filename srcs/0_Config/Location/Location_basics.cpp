@@ -3,14 +3,14 @@
 
 Location::Location(void)
 {
-	// std::cout << GREY << "Location creation..." << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Location creation..." << C_RES << std::endl;
 	this->clear();
 }
 
 // Parametric constructor
 Location::Location(std::string uri, std::string root_loc, std::string alias, std::string index, bool autoindex, std::vector<std::string> methods, std::string upload, std::string redir_301)
 {
-	// std::cout << GREY << "Location creation..." << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Location creation..." << C_RES << std::endl;
 	_uri = uri;
 	_root_loc = root_loc;
 	_alias = alias;
@@ -37,7 +37,7 @@ Location::Location(const Location & src)
 // Destructor
 Location::~Location(void)
 {
-	// std::cout << GREY << "Location destruction..." << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Location destruction..." << C_RES << std::endl;
 	return;
 }
 
@@ -57,7 +57,7 @@ void	Location::clear(void)
 // Assignation operator
 Location &	Location::operator=(const Location & rhs)
 {
-	std::cout << GREY << "Location Assignation operator called" << C_RES << std::endl;
+	std::cout << C_HIDDEN << "Location Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
 		_uri = rhs.get__uri();

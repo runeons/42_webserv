@@ -4,7 +4,7 @@
 RequestParser::RequestParser(void) {} // constructor
 RequestParser::RequestParser(std::string request_raw, ssize_t bytes_read) // param constructor
 {
-	std::cout << GREY << "...RequestParser creation..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "...RequestParser creation..." << C_RES << std::endl;
 
 	_request_raw = request_raw;
 	_bytes_read = bytes_read;
@@ -31,6 +31,6 @@ RequestParser::RequestParser(RequestParser const &src)  // constructor by copy
 
 RequestParser::~RequestParser(void) // destructor
 {
-	std::cout << GREY << "...RequestParser destruction..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "...RequestParser destruction..." << C_RES << std::endl;
 
 }

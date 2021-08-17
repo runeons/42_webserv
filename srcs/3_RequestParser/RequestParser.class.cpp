@@ -116,7 +116,7 @@ void			RequestParser::start_parsing(void)
 
 void			RequestParser::print_request_info(void)
 {
-	std::cerr	<< MAGENTA << "[REQUEST]                 : "
+	std::cerr	<< C_REQUEST << "[REQUEST]                 : "
 				<< "["
 				<< this->get__method()
 				<< " "
@@ -126,9 +126,9 @@ void			RequestParser::print_request_info(void)
 				<< "]"
 				<< C_RES;
 	if (this->_body_size > 0)
-		std::cerr << MAGENTA << " - body size : " << this->_body_size << C_RES << std::endl;
+		std::cerr << C_REQUEST << " - body size : " << this->_body_size << C_RES << std::endl;
 	else
-		std::cerr << MAGENTA << " - no body" << C_RES << std::endl;
+		std::cerr << C_REQUEST << " - no body" << C_RES << std::endl;
 
 	// std::cout << "request info:" << std::endl;
 	// std::cout << "    " << C_G_CYAN << "method " << C_RES << "          : " << this->get__method() << std::endl;

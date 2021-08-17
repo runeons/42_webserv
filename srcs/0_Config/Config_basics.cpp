@@ -4,7 +4,7 @@
 // Default constructor
 Config::Config(void)
 {
-	// std::cout << GREY << "Config creation..." << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Config creation..." << C_RES << std::endl;
 
 	this->clear();
 	// char hostname[1024];
@@ -25,7 +25,7 @@ Config::Config(void)
 // Copy constructor
 Config::Config(const Config & src)
 {
-	// std::cout << GREY << "Config creation..." << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Config creation..." << C_RES << std::endl;
 	*this = src;
 	return;
 }
@@ -33,7 +33,7 @@ Config::Config(const Config & src)
 // Destructor
 Config::~Config(void)
 {
-	// std::cout << GREY << "Config destruction..." << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Config destruction..." << C_RES << std::endl;
 	return;
 }
 
@@ -52,7 +52,7 @@ void	Config::clear(void)
 // Assignation operator
 Config &	Config::operator=(const Config & rhs)
 {
-	// std::cout << GREY << "Config Assignation operator called" << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "Config Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
 		_host = rhs.get__host();

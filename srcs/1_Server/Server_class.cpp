@@ -5,13 +5,13 @@
 
 void		Server::stop_server()
 {
-	std::cerr << GREY << "Server shut down" <<  C_RES << std::endl;
+	std::cerr << C_HIDDEN << "Server shut down" <<  C_RES << std::endl;
 	close(_master_socket); // pas besoin de protéger le close parce qu'on va quitter le programme
 }
 
 void Server::print_config(void)
 {
-	std::cout	<< ORANGE
+	std::cout	<< C_SERVER
 				<< "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : "
 				<< "root=\""
 				<< _config->get__root_dir()
@@ -32,7 +32,7 @@ void		Server::create_server_socket()
 	// _master_socket = -1;
 	if (_master_socket == -1)
 		throw (Exceptions::ServerException("Master socket not created"));
-	// std::cout << ORANGE << "Server socket created !" <<  C_RES << std::endl;
+	// std::cout << C_SERVER << "Server socket created !" <<  C_RES << std::endl;
 }
 
 // ********************************************* ::bind() *********************************************
@@ -41,7 +41,7 @@ void		Server::bind_address_and_port()
 {
 	if (::bind(_master_socket, reinterpret_cast<const struct sockaddr *>(&_address), sizeof(_address)) == -1)
 		throw (Exceptions::ServerException("Cannot bind address and port on master socket"));
-	// std::cout << ORANGE << "Server ready at <" << inet_ntoa(_address.sin_addr) << ":" << _config->get__port() << ">" <<  C_RES << std::endl;
+	// std::cout << C_SERVER << "Server ready at <" << inet_ntoa(_address.sin_addr) << ":" << _config->get__port() << ">" <<  C_RES << std::endl;
 }
 
 // ********************************************* ::accept() + Client.treat_client() *********************************************
@@ -52,12 +52,12 @@ void Server::listen_connections(void)
 	// fcntl(_master_socket, F_SETFL, O_NONBLOCK); // TOCHECK - only client sockets must be O_NONBLOCK ?
 	if (::listen(_master_socket, MAX_CLIENTS) == -1)
 		throw (Exceptions::ServerException("Server failed to listen"));
-	std::cout << ORANGE << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : listening" << C_RES << std::endl;
+	std::cout << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : listening" << C_RES << std::endl;
 }
 
 void Server::accept_new_connection(int server_socket)
 {
-	// std::cerr << GREY << "[SERVER] : accepting new connection on server_socket " << server_socket << C_RES << std::endl;
+	// std::cerr << C_HIDDEN << "[SERVER] : accepting new connection on server_socket " << server_socket << C_RES << std::endl;
 	(void)server_socket;
 	Client *cl = new Client(*_config); // dans lequel j'envoie Config
 	int client_socket = ::accept(_master_socket, NULL, NULL);
@@ -67,11 +67,11 @@ void Server::accept_new_connection(int server_socket)
 	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw (Exceptions::ServerException("Client socket non blocking option failure (fcntl)")); // TOCHECK to move in Client ?
 	_clients_map[client_socket] = cl;
-	std::cerr << ORANGE << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : accepting new connection from socket <" << client_socket << ">" << C_RES << std::endl;
+	std::cerr << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : accepting new connection from socket <" << client_socket << ">" << C_RES << std::endl;
 	FD_SET(client_socket, &_read_fds);
 	if (_max_fd < client_socket)
 		_max_fd = client_socket;
-	// std::cout << GREY << "[SERVER] : " << client_socket << " added to _clients_map and _read_fds" << C_RES << std::endl;
+	// std::cout << C_HIDDEN << "[SERVER] : " << client_socket << " added to _clients_map and _read_fds" << C_RES << std::endl;
 }
 
 void Server::init_fd_sets(void)
@@ -84,10 +84,10 @@ void Server::init_fd_sets(void)
 
 void Server::receive_and_process_request(int client_socket)
 {
-	std::cerr << std::endl << ORANGE << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : reading on already connected socket <" << client_socket << ">" << C_RES << std::endl;
+	std::cerr << std::endl << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : reading on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->receive_request(); // recv
 	if (_clients_map[client_socket]->get_remaining_bytes_to_recv())
-		std::cerr << YELLOW << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : chunked request in progress on socket <" << client_socket << ">" << C_RES << std::endl;
+		std::cerr << C_OTHER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : chunked request in progress on socket <" << client_socket << ">" << C_RES << std::endl;
 	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->getRequest().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
 	{
 		if (_clients_map[client_socket]->is_response_successful())
@@ -119,7 +119,7 @@ void Server::shutdown_client_socket(int client_socket)
 
 void Server::prepare_and_send_response(int client_socket)
 {
-	std::cerr << ORANGE << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
+	std::cerr << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->send_response();
 	if (_clients_map[client_socket]->get_remaining_bytes_to_send() <= 0)
 		shutdown_client_socket(client_socket);
@@ -151,7 +151,7 @@ void Server::select_and_treat_connections(void)
 			}
 			catch (Exceptions::ClientException & e)
 			{
-				std::cerr << RED << e.what() <<  C_RES << std::endl;
+				std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
 				shutdown_client_socket(it->first);
 				_clients_map.erase(it);
 				break;
@@ -174,7 +174,7 @@ int		Server::launch(void)
 	}
 	catch (Exceptions::ServerException & e)
 	{
-		std::cerr << RED << e.what() <<  C_RES << std::endl;
+		std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
 		this->stop_server();
 		return (1);
 	}

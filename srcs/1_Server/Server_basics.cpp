@@ -18,7 +18,7 @@
 // Default constructor
 // Server::Server(void)
 // {
-// 	std::cout << GREY << "...Server creation..." << C_RES << std::endl;
+// 	std::cout << C_HIDDEN << "...Server creation..." << C_RES << std::endl;
 // 	// TO DO parse config
 // 	_config = new Config; // parametree avec le parsing
 // 	_address.sin_family = AF_INET;
@@ -31,7 +31,7 @@
 // 	}
 // 	catch (Exceptions::ServerException & e)
 // 	{
-// 		std::cerr << RED << e.what() <<  C_RES << std::endl;
+// 		std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
 // 	}
 // 	_address.sin_port = htons(_config->get__port());
 // 	_master_socket = 0;
@@ -40,7 +40,7 @@
 
 Server::Server(const Config & config)
 {
-	std::cout << GREY << "...Server creation..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "...Server creation..." << C_RES << std::endl;
 	// TO DO parse config
 	_config = const_cast<Config *>(&config); // parametree avec le parsing
 	_config->set__root_dir("./" + _config->get__root_dir());
@@ -53,7 +53,7 @@ Server::Server(const Config & config)
 	}
 	catch (Exceptions::ServerException & e)
 	{
-		std::cerr << RED << e.what() <<  C_RES << std::endl;
+		std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
 	}
 	_address.sin_port = htons(_config->get__port());
 	_master_socket = 0;
@@ -63,7 +63,7 @@ Server::Server(const Config & config)
 // Copy constructor
 Server::Server(const Server& src)
 {
-	std::cout << GREY << "Server creation..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "Server creation..." << C_RES << std::endl;
 	*this = src;
 	return;
 }
@@ -73,14 +73,14 @@ Server::~Server(void)
 {
 	// delete _config;
 	// TO DO delete all clients
-	std::cout << GREY << "...Server destruction..." << C_RES << std::endl;
+	std::cout << C_HIDDEN << "...Server destruction..." << C_RES << std::endl;
 	return;
 }
 
 // Assignation operator
 Server &	Server::operator=(const Server& rhs)
 {
-	std::cout << GREY << "Server Assignation operator called" << C_RES << std::endl;
+	std::cout << C_HIDDEN << "Server Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
 		_config = rhs.getConfig();

@@ -56,19 +56,19 @@ void Client::receive_with_content_length(void)
 		_total_bytes_expected = calculate_total_bytes_expected(buf_str);
 		_remaining_bytes_to_recv = _total_bytes_expected - _bytes_read;
 		if (_remaining_bytes_to_recv == 0)
-			std::cout << LIGHT_BLUE << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "chunked request fully received" << C_RES << std::endl;
+			std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "chunked request fully received" << C_RES << std::endl;
 		else
-			std::cout << LIGHT_BLUE << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "chunked request received : " << _bytes_read << " bytes - remaining : " << _remaining_bytes_to_recv << " bytes" << C_RES << std::endl;
+			std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "chunked request received : " << _bytes_read << " bytes - remaining : " << _remaining_bytes_to_recv << " bytes" << C_RES << std::endl;
 	}
 	else
 	{
-		// std::cout << LIGHT_BLUE << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "without Content-Length" << C_RES << std::endl;
+		// std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "without Content-Length" << C_RES << std::endl;
 		if (_total_bytes_expected == 0) // s'il n'y a pas eu de Content-Length du tout, set _total_bytes_expected puisque envoyé à RequestParser
 			_total_bytes_expected = _bytes_read;
 		if (_remaining_bytes_to_recv > 0)
 			_remaining_bytes_to_recv -= _bytes_read;
 	}
-	std::cout << LIGHT_BLUE << "[CLIENT] <" << _socket << "> [REQUEST]    : " << _bytes_read << " bytes received - " << _remaining_bytes_to_recv << " remaining" << C_RES << std::endl;
+	std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [REQUEST]    : " << _bytes_read << " bytes received - " << _remaining_bytes_to_recv << " remaining" << C_RES << std::endl;
 	_request.append(_chunk, _bytes_read);
 }
 
@@ -206,11 +206,11 @@ std::string		Client::decode_url(std::string & s)
 		else
 		{
 			sscanf(s.substr(i + 1, 2).c_str(), "%x", &ii);
-			// std::cerr << C_G_RED << "[ DEBUG ii ] " << C_RES << ii << std::endl;
+			// std::cerr << C_DEBUG << "[ DEBUG ii ] " << C_RES << ii << std::endl;
 			ch = static_cast<char>(ii);
-			// std::cerr << C_G_RED << "[ DEBUG ch ] " << C_RES << ch << std::endl;
+			// std::cerr << C_DEBUG << "[ DEBUG ch ] " << C_RES << ch << std::endl;
 			ret += ch;
-			// std::cerr << C_G_RED << "[ DEBUG ret ] " << C_RES << ret << std::endl;
+			// std::cerr << C_DEBUG << "[ DEBUG ret ] " << C_RES << ret << std::endl;
 			i = i + 2;
 		}
 	}
@@ -312,7 +312,7 @@ void Client::generate_response(void)
 	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ? TOCHECK
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
 	_response->generate();
-	std::cerr << C_G_RED << "[ DEBUG &_request_parser ] " << C_RES << &_request_parser << std::endl;
+	std::cerr << C_DEBUG << "[ DEBUG &_request_parser ] " << C_RES << &_request_parser << std::endl;
 	if (_request_parser != NULL)
 		delete _request_parser;
 	_total_bytes_to_send = _response->getResponse().length() + 1;
@@ -337,7 +337,7 @@ void Client::send_response(void)
 		throw (Exceptions::ClientException("Client failed to send response"));
 	_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
 	_remaining_bytes_to_send -= bytes_sent;
-	std::cout << LIGHT_BLUE << "[CLIENT] <" << _socket << "> [RESPONSE]   : " << bytes_sent << " / " << _total_bytes_to_send << " bytes sent - " << _remaining_bytes_to_send << " remaining" << C_RES << std::endl;
+	std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [RESPONSE]   : " << bytes_sent << " / " << _total_bytes_to_send << " bytes sent - " << _remaining_bytes_to_send << " remaining" << C_RES << std::endl;
 	// std::cerr << C_G_YELLOW << "[ DEBUG RESPONSE SENT ] " << C_RES << "" << std::endl;
 }
 

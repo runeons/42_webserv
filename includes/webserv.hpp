@@ -23,6 +23,17 @@
 # include <sys/time.h>
 // #include <pstream.h>
 //
+//colors
+# define C_SERVER	C_038
+# define C_CLIENT	C_106
+# define C_REQUEST	C_170
+# define C_RESPONSE	C_170
+# define C_CONFIG	C_130
+# define C_OTHER	C_220 // CGI, chunk request
+# define C_ERROR	COLOR(1)
+# define C_DEBUG	COLOR_BOLD(1)
+# define C_HIDDEN	GREY
+
 typedef int SOCKET;
 # define MAX_RCV	4096
 # define MAX_DATE	80
