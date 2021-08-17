@@ -22,9 +22,10 @@
 # include <stdio.h>
 # include <sys/time.h>
 // #include <pstream.h>
-//
+
 //colors
 # define C_SERVER	C_038
+# define C_LOCATION	COLOR_BOLD(038)
 # define C_CLIENT	C_106
 # define C_REQUEST	C_170
 # define C_RESPONSE	C_170
