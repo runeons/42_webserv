@@ -137,13 +137,13 @@ void			RequestParser::print_request_info(void)
 	// if (this->_body_size > 0)
 	// {
 	// 	std::cout << "    " << C_G_CYAN << "body size " << C_RES << "       : " << this->_body_size << std::endl;
-		// std::cout << "    " << C_G_CYAN << "body      " << C_RES << "       : " << std::endl << "[";
-		// print_string_formatted(this->_body, this->_body_size);
-		// std::cout << "]" << std::endl;
-
-		// dprintf(1, "    "C_G_CYAN"body "C_RES"            : [");
-		// write(1, this->get__body().c_str(), this->_body_size);
-		// dprintf(1, "]\n");
+	// 	std::cout << "    " << C_G_CYAN << "body      " << C_RES << "       : " << std::endl << "[";
+	// 	print_string_formatted(this->_body, this->_body_size);
+	// 	std::cout << "]" << std::endl;
+	//
+	// 	dprintf(1, "    "C_G_CYAN"body "C_RES"            : [");
+	// 	write(1, this->get__body().c_str(), this->_body_size);
+	// 	dprintf(1, "]\n");
 	// }
 	// else
 	// 	std::cout << "    " << C_G_CYAN << "body " << C_RES << "            : " << "no body" << std::endl;
@@ -151,7 +151,7 @@ void			RequestParser::print_request_info(void)
 	// for (headers_iterator it = this->_header_fields.begin();
 	// 	it != this->_header_fields.end(); it++)
 	// {
-		// std::cout << "        [" << C_G_BLUE << it->first << C_RES << "] -> [" << it->second << "]" << std::endl;
+	// 	std::cout << "        [" << C_G_BLUE << it->first << C_RES << "] -> [" << it->second << "]" << std::endl;
 	// }
 	// std::cout << "-------------------------------------------------------" << std::endl;
 }
