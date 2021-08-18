@@ -13,6 +13,7 @@ std::string	get_file_content(std::string filename);
 
 // ********************************************* permissions *****************************
 
+int		isfile_exist(std::string file);
 int		user_perm_to_read(std::string file);
 int		user_perm_to_write(std::string file);
 int		user_perm_to_exec(std::string file);

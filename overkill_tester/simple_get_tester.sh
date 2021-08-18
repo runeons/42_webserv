@@ -169,7 +169,10 @@ tester()
 	printf "╔═%-.60s═╦═%.${WIDTH_RET_TITLE}s═╦═%.${WIDTH_RET_TITLE}s═╗\n" $PATTERN_BORDER $PATTERN_BORDER $PATTERN_BORDER
 	printf "║ %-60s ║ %${WIDTH_RET_TITLE}s ║ %${WIDTH_RET_TITLE}s ║\n" "target" "nginx" "webserv"
 	printf "╠═%-.60s═╬═%.${WIDTH_RET_TITLE}s═╬═%.${WIDTH_RET_TITLE}s═╣\n" $PATTERN_BORDER $PATTERN_BORDER $PATTERN_BORDER
-	list_file=("${(@f)$(PATHH="$PATH_DIR" ; TMP=`printf $PATHH | wc -c | xargs` ; find $PATHH | cut -c`expr $TMP + 2`-)}");
+
+	# LIST FILE
+	# list_file=("${(@f)$(PATHH="$PATH_DIR" ; TMP=`printf $PATHH | wc -c | xargs` ; find ./html/ | grep $PATHH | sort | cut -c`expr $TMP + 2`-)}");
+	list_file=("${(@f)$(PATHH="$PATH_DIR" ; TMP=`printf $PATHH | wc -c | xargs` ; find ./html | grep $PATHH | sort | cut -c8-)}");
 
 
 	for file in $list_file; do

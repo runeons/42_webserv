@@ -69,6 +69,15 @@ std::string get_file_content(std::string filename)
 // perm[8] = ((s.st_mode & S_IWOTH) ? 'w' : '-');
 // perm[9] = ((s.st_mode & S_IXOTH) ? sbit(s.st_mode) : '-');
 
+int		isfile_exist(std::string file)
+{
+	struct stat perm;
+	if (::lstat(file.c_str(), &perm) == -1)
+		return 0;
+	else	
+		return 1;
+}
+
 int		user_perm_to_write(std::string file)
 {
 	struct stat perm;
