@@ -3,6 +3,12 @@
 
 // ********************************************* retrieve type_mime and charset *********************************************
 
+void		Response::set_default_html_type_mime_charset(void)
+{
+	_type_mime = "text/html";
+	_charset = "utf-8";
+}
+
 void		Response::parse_type_mime_charset_cmd_result(std::string str)
 {
 	unsigned first = str.find(":") + 2;
@@ -10,8 +16,7 @@ void		Response::parse_type_mime_charset_cmd_result(std::string str)
 
 	if (last > str.length() || _translated_path.back() == '/') // si "cannot open file" || directory
 	{
-		_type_mime = "text/html";
-		_charset = "utf-8";
+		set_default_html_type_mime_charset();
 		return ;
 	}
 	_type_mime = str.substr(first, last - first);
@@ -20,8 +25,7 @@ void		Response::parse_type_mime_charset_cmd_result(std::string str)
 	_charset = str.substr(first, last - first);
 	if (_charset == "binary" && _type_mime == "inode/x-empty") // si empty file
 	{
-		_type_mime = "text/html";
-		_charset = "utf-8";
+		set_default_html_type_mime_charset();
 		return ;
 	}
 }
@@ -31,9 +35,14 @@ void		Response::retrieve_type_mime_charset(void)
 	std::string cmd;
 	std::string res;
 
-	cmd = "file --mime " + _translated_path;
-	res = exec_cmd(cmd.c_str(), PATH_CMD_RES);
-	parse_type_mime_charset_cmd_result(res);
+	if (is_response_successful())
+	{
+		cmd = "file --mime " + _translated_path;
+		res = exec_cmd(cmd.c_str(), PATH_CMD_RES);
+		parse_type_mime_charset_cmd_result(res);
+	}
+	else
+		set_default_html_type_mime_charset();
 }
 
 // ********************************************* check if method allowed *********************************************
@@ -80,7 +89,14 @@ void	Response::GET_handle(void)
 		_applied_location.set__redir301(_request.get__resource() + "/");
 		_status_code = 301;
 	}
-	// std::cerr << C_DEBUG << "[ DEBUG error code ] " << _status_code << C_RES << std::endl;
+	if (get_extension(_translated_path) == "uppercase")
+	{
+		std::cout << C_OTHER << "Let's start with GET extension cgi !" << C_RES << std::endl;
+		Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
+		cgi.launch();
+		_response_body = cgi.get__full_buf();
+		std::cout << C_OTHER << "We are finished with GET extension cgi !" << C_RES << std::endl;
+	}
 	GET_create_body();
 }
 
@@ -123,7 +139,7 @@ void	Response::POST_create_body(void)
 void	Response::POST_create_body_cgi(void)
 {
 	std::cout << C_OTHER << "Let's start with upload cgi !" << C_RES << std::endl;
-	Cgi cgi(_request, _config, "." + _request.get__resource());
+	Cgi cgi(_request, _config, _applied_location, CGI_UPLOAD, "");
 	cgi.launch();
 	_response_body = cgi.get__full_buf();
 	std::cout << C_OTHER << "We are finished with upload cgi !" << C_RES << std::endl;
@@ -136,9 +152,14 @@ void	Response::POST_handle(void)
 	if (request_content_type.find("multipart/form-data;", 0) == 0)
 	{
 		if (_applied_location.get__upload() == "")
-			_status_code = 403; // TOCHECK ou 405
+			_status_code = 405;
 		else
 			POST_create_body_cgi();
+		_type_mime = "text/html"; // sinon, s'affiche en text/plain
+	}
+	else
+	{
+		;
 	}
 }
 
@@ -175,10 +196,11 @@ void	Response::concatenate_response()
 
 void	Response::generate(void)
 {
-	// if (_applied_location) // should always be the case with previous checks
+	if (is_response_successful()) // should always be the case with previous checks
 		check_if_method_allowed();
 	retrieve_type_mime_charset();
-	check_if_redir_301();
+	if (is_response_successful()) // should always be the case with previous checks
+		check_if_redir_301();
 	// if (is_response_successful())
 	// {
 		if (_request.get__method() == "GET")
@@ -192,5 +214,4 @@ void	Response::generate(void)
 	generate_response_header(); // from status_code, page_content and translated_path
 	print_status_line();
 	concatenate_response();
-	// std::cerr << C_DEBUG << "[ DEBUG RESPONSE GENERATED ] " << C_RES << "" << std::endl;
 }

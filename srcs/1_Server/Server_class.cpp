@@ -92,8 +92,7 @@ void Server::receive_and_process_request(int client_socket)
 	{
 		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->check_request(); // check if request OK
-		if (_clients_map[client_socket]->is_response_successful())
-			_clients_map[client_socket]->apply_location(); // 404 if error
+		_clients_map[client_socket]->apply_location(); // 404 if error
 		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->adjust_applied_location();
 		if (_clients_map[client_socket]->is_response_successful())

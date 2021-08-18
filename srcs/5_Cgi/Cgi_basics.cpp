@@ -2,12 +2,14 @@
 # include <webserv.hpp>
 
 // Parameter constructor
-Cgi::Cgi(RequestParser & request, Config & config, std::string script_name) : _request(request), _config(config), _script_name(script_name)
+Cgi::Cgi(RequestParser & request, Config & config, Location & applied_location, int type, std::string query_string) : _request(request), _config(config), _applied_location(applied_location), _type(type)
 {
 	std::cout << C_HIDDEN << "Cgi creation..." << C_RES << std::endl;
+	_query_string = query_string;
 	_map_http = init_map_http();
 	_env_map = init_map_env();
 	_env_arr = NULL;
+	_bin = "/usr/local/bin/php-cgi";
 	return ;
 }
 
@@ -30,6 +32,10 @@ Cgi &	Cgi::operator=(const Cgi& rhs)
 		_env_arr = rhs.get__env_arr();
 		_request = rhs.get__request();
 		_config = rhs.get__config();
+		_applied_location = rhs.get__applied_location();
+		// _bin = rhs.get__bin();
+		// _query_string = rhs.get__query_string();
+		// _type = rhs.get__type();
 	}
 	return (*this);
 }
@@ -91,5 +97,16 @@ Config & Cgi::get__config(void) const
 void Cgi::set__config(const Config & config)
 {
 	_config = config;
+	return ;
+}
+
+Location & Cgi::get__applied_location(void) const
+{
+	return (_applied_location);
+}
+
+void Cgi::set__applied_location(const Location & applied_location)
+{
+	_applied_location = applied_location;
 	return ;
 }

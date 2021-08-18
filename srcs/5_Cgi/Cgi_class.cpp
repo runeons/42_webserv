@@ -11,9 +11,12 @@ void	Cgi::setup_metavariables(void)
 void	Cgi::delete_env_arr(void)
 {
 	int i = 0;
-	while (_env_arr[i])
-		delete _env_arr[i++];
-	delete [] _env_arr;
+	if (_env_arr)
+	{
+		while (_env_arr[i])
+			delete _env_arr[i++];
+		delete [] _env_arr;
+	}
 }
 
 void	Cgi::transform_to_envp(void)
@@ -47,9 +50,8 @@ void	Cgi::exec_script(void)
 	int		status;
 
 	std::string script = _env_map["SCRIPT_NAME"];
-	std::string bin = "/usr/local/bin/php-cgi";
 	char *av[3] = {
-		(char *)bin.c_str(), //TODO casts C to change
+		(char *)_bin.c_str(), //TODO casts C to change
 		(char *)script.c_str(),
 		(char *)0
 	};

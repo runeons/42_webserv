@@ -41,6 +41,8 @@ typedef int SOCKET;
 # define SUCCESS	0
 # define FAILURE	-1
 # define MAX_URI_LENGTH	8000
+# define CGI_EXTENSION	1
+# define CGI_UPLOAD		2
 
 #ifndef __DEBUG__
 // # define __DEBUG__

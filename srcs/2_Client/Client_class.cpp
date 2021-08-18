@@ -140,6 +140,8 @@ void		Client::adjust_applied_location(void)
 		m.push_back("DELETE");
 		_applied_location->set__methods(m);
 	}
+	if (_applied_location->get__upload() != "" && _applied_location->get__upload().back() != '/')
+		_applied_location->set__upload(_applied_location->get__upload() + "/");
 	_applied_location->print_info();
 }
 
@@ -167,7 +169,8 @@ void		Client::apply_location(void)
 		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
 		{
 			std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
-			_status_code = 404;
+			if (is_response_successful()) // pour eviter de changer le status_code si bad request ou precedent
+				_status_code = 404;
 		}
 		rsc.erase(pos_last_slash + 1);
 	}
@@ -333,7 +336,7 @@ void Client::read_resource(void)
 void Client::generate_response(void)
 {
 	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ? TOCHECK
-	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser);
+	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser, _query_string);
 	_response->generate();
 	_total_bytes_to_send = _response->getResponse().length() + 1;
 	// copy response in _response_vector vector
@@ -379,4 +382,3 @@ void Client::print_response(void)
 	print_response_header();
 	print_response_body();
 }
-

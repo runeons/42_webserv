@@ -33,6 +33,7 @@ class Response
 		std::string					_translated_path;
 		std::string					_type_mime;
 		std::string					_charset;
+		std::string					_query_string;
 
 		RequestParser &				_request;
 
@@ -45,7 +46,7 @@ class Response
 
 	public:
 		// Response_basics
-		Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request);
+		Response(Config & config, Location & applied_location, int status_code, std::string page_content, std::string translated_path, RequestParser & request, std::string query_string);
 		virtual ~Response();
 
 		int							getStatusCode(void) const;
@@ -95,6 +96,7 @@ class Response
 		void			generate_response_header();
 
 		// Response_class
+		void		set_default_html_type_mime_charset();
 		void		parse_type_mime_charset_cmd_result(std::string res);
 		void		retrieve_type_mime_charset();
 		void		check_if_method_allowed();
