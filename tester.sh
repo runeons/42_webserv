@@ -6,7 +6,7 @@
 #    By: tharchen <tharchen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/25 13:28:04 by tharchen          #+#    #+#              #
-#    Updated: 2021/08/15 13:40:37 by tharchen         ###   ########.fr        #
+#    Updated: 2021/08/18 03:41:55 by tharchen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,89 +72,69 @@ BLINK=$(tput blink)
 REVERSE=$(tput smso)
 UNDERLINE=$(tput smul)
 
-# test ()
-# {
-# 	curl -s 127.0.0.1:$PORT_NGINX -o /dev/null
-# 	IS_ONLINE_NGINX=$?
-# 	curl -s 127.0.0.1:$PORT_WEBSERV -o /dev/null
-# 	IS_ONLINE_WEBSERV=$?
-#
-# 	RET_NGINX=`curl -s -D - -o /dev/null 127.0.0.1:$PORT_NGINX$1 | grep -m1 "" | cut -c10- | head -c 3`
-# 	RET_WEBSERV=`curl -s -D - -o /dev/null 127.0.0.1:$PORT_WEBSERV$1 | grep -m1 "" | cut -c10- | head -c 3`
-# 	if [[ $RET_NGINX = $RET_WEBSERV ]]; then
-# 		RES_COLOR=${GREEN}
-# 	else
-# 		RES_COLOR=${RED}
-# 	fi
-# 	if (( $IS_ONLINE_NGINX == 5 )); then
-# 		RET_NGINX="${RED}$ERROR_5${C_RES}"
-# 	elif (( $IS_ONLINE_NGINX == 6 )); then
-# 		RET_NGINX="${RED}$ERROR_6${C_RES}"
-# 	elif (( $IS_ONLINE_NGINX == 7 )); then
-# 		RET_NGINX="${RED}$ERROR_7${C_RES}"
-# 	elif (( $IS_ONLINE_NGINX == 8 )); then
-# 		RET_NGINX="${RED}$ERROR_8${C_RES}"
-# 	elif (( $IS_ONLINE_NGINX != 0 )); then
-# 		RET_NGINX="${RED}$ERROR_UNKNOWN${C_RES}"
-# 	fi
-# 	if (( $IS_ONLINE_WEBSERV == 5 )); then
-# 		RET_WEBSERV="${RED}$ERROR_5${C_RES}"
-# 	elif (( $IS_ONLINE_WEBSERV == 6 )); then
-# 		RET_WEBSERV="${RED}$ERROR_6${C_RES}"
-# 	elif (( $IS_ONLINE_WEBSERV == 7 )); then
-# 		RET_WEBSERV="${RED}$ERROR_7${C_RES}"
-# 	elif (( $IS_ONLINE_WEBSERV == 8 )); then
-# 		RET_WEBSERV="${RED}$ERROR_8${C_RES}"
-# 	elif (( $IS_ONLINE_WEBSERV != 0 )); then
-# 		RET_WEBSERV="${RED}$ERROR_UNKNOWN${C_RES}"
-# 	fi
-# 	if [[ $RET_NGINX == "" ]]; then
-# 		RET_NGINX="no response"
-# 	fi
-# 	if [[ $RET_WEBSERV == "" ]]; then
-# 		RET_WEBSERV="no response"
-# 	fi
-# 	printf "║ $RES_COLOR%-30s${C_RES} ║ %-3s %${WIDTH_RET}s ║ %-3s %${WIDTH_RET}s ║\n" $1 $IS_ONLINE_NGINX $RET_NGINX $IS_ONLINE_WEBSERV $RET_WEBSERV
-# }
-
-config:
-	- no server
-	- 1 server
-		- no location
-		- 1 location
-			- 
-			- /
-		- 2 locations
-			-
-		- 3 locations
-			-
-	- 2 servers
-	- 3 servers
-
-
 test ()
 {
+	curl -s 127.0.0.1:$PORT_NGINX -o /dev/null
+	IS_ONLINE_NGINX=$?
+	curl -s 127.0.0.1:$PORT_WEBSERV -o /dev/null
+	IS_ONLINE_WEBSERV=$?
 
+	RET_NGINX=`curl -s -D - -o /dev/null 127.0.0.1:$PORT_NGINX$1 | grep -m1 "" | cut -c10- | head -c 3`
+	RET_WEBSERV=`curl -s -D - -o /dev/null 127.0.0.1:$PORT_WEBSERV$1 | grep -m1 "" | cut -c10- | head -c 3`
+	if [[ $RET_NGINX = $RET_WEBSERV ]]; then
+		RES_COLOR=${GREEN}
+	else
+		RES_COLOR=${RED}
+	fi
+	if (( $IS_ONLINE_NGINX == 5 )); then
+		RET_NGINX="${RED}$ERROR_5${C_RES}"
+	elif (( $IS_ONLINE_NGINX == 6 )); then
+		RET_NGINX="${RED}$ERROR_6${C_RES}"
+	elif (( $IS_ONLINE_NGINX == 7 )); then
+		RET_NGINX="${RED}$ERROR_7${C_RES}"
+	elif (( $IS_ONLINE_NGINX == 8 )); then
+		RET_NGINX="${RED}$ERROR_8${C_RES}"
+	elif (( $IS_ONLINE_NGINX != 0 )); then
+		RET_NGINX="${RED}$ERROR_UNKNOWN${C_RES}"
+	fi
+	if (( $IS_ONLINE_WEBSERV == 5 )); then
+		RET_WEBSERV="${RED}$ERROR_5${C_RES}"
+	elif (( $IS_ONLINE_WEBSERV == 6 )); then
+		RET_WEBSERV="${RED}$ERROR_6${C_RES}"
+	elif (( $IS_ONLINE_WEBSERV == 7 )); then
+		RET_WEBSERV="${RED}$ERROR_7${C_RES}"
+	elif (( $IS_ONLINE_WEBSERV == 8 )); then
+		RET_WEBSERV="${RED}$ERROR_8${C_RES}"
+	elif (( $IS_ONLINE_WEBSERV != 0 )); then
+		RET_WEBSERV="${RED}$ERROR_UNKNOWN${C_RES}"
+	fi
+	if [[ $RET_NGINX == "" ]]; then
+		RET_NGINX="no response"
+	fi
+	if [[ $RET_WEBSERV == "" ]]; then
+		RET_WEBSERV="no response"
+	fi
+	printf "║ $RES_COLOR%-30s${C_RES} ║ %-3s %${WIDTH_RET}s ║ %-3s %${WIDTH_RET}s ║\n" $1 $IS_ONLINE_NGINX $RET_NGINX $IS_ONLINE_WEBSERV $RET_WEBSERV
 }
 
-tester()
-{
-	test "/asdfasd"
-	test "/"
-	test "/?ok=lol"
-	test "^/#@!_()_#"
-	test "/asd"
-	test "/sdfds"
-	test "/docs/"
-	test "/as"
-	test "//////////"
-	test "./"
-}
+# tester()
+# {
+# 	test "/asdfasd"
+# 	test "/"
+# 	test "/?ok=lol"
+# 	test "^/#@!_()_#"
+# 	test "/asd"
+# 	test "/sdfds"
+# 	test "/docs/"
+# 	test "/as"
+# 	test "//////////"
+# 	test "./"
+# }
 
 printf "╔═%-.30s═╦═%.${WIDTH_RET_TITLE}s═╦═%.${WIDTH_RET_TITLE}s═╗\n" $PATTERN_BORDER $PATTERN_BORDER $PATTERN_BORDER
 printf "║ %-30s ║ %${WIDTH_RET_TITLE}s ║ %${WIDTH_RET_TITLE}s ║\n" "target" "nginx" "webserv"
 printf "╠═%-.30s═╬═%.${WIDTH_RET_TITLE}s═╬═%.${WIDTH_RET_TITLE}s═╣\n" $PATTERN_BORDER $PATTERN_BORDER $PATTERN_BORDER
-tester
+run_get_method $TARGET
 printf "╚═%-.30s═╩═%.${WIDTH_RET_TITLE}s═╩═%.${WIDTH_RET_TITLE}s═╝\n" $PATTERN_BORDER $PATTERN_BORDER $PATTERN_BORDER
 
 
