@@ -28,9 +28,10 @@ class Server
 		virtual ~Server();
 
 		std::map<int, Config>		init_servers_map();
-		int							multi_create_server_socket();
+		int							create_server_socket();
 
 		void		stop_server();
+		void		stop_one_server(int);
 
 		void		init_fd_sets();
 		void		accept_new_connection(int server_socket, Config & config);
