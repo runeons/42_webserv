@@ -5,69 +5,79 @@
 
 void		Server::stop_server()
 {
-	std::cerr << C_HIDDEN << "Server shut down" <<  C_RES << std::endl;
-	close(_master_socket); // pas besoin de protéger le close parce qu'on va quitter le programme
+	// TO DO : close all clients too ? close only port with issue ?
+	std::cerr << C_HIDDEN << "Server shut down (close all servers_sockets)" <<  C_RES << std::endl;
+	std::map<int, Config>::iterator it = _servers_map.begin();
+	for (; it != _servers_map.end(); it++)
+		close(it->first); // pas besoin de protéger le close parce qu'on va quitter le programme
 }
 
-void Server::print_config(void)
-{
-	std::cout	<< C_SERVER
-				<< "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : "
-				<< "root=\""
-				<< _config->get__root_dir()
-				<< "\""
-				<< C_RES << std::endl;
-	return ;
-}
+// ********************************************* init servers : socket + bind + listen *********************************************
 
-// ********************************************* ::socket() + ::setsockopt() *********************************************
-
-void		Server::create_server_socket()
+int		Server::multi_create_server_socket()
 {
 	int option = 1;
+	int	master_socket = 0;
 
-	_master_socket = ::socket(AF_INET, SOCK_STREAM, 0);
-	if (::setsockopt(_master_socket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) < 0)
+	master_socket = ::socket(AF_INET, SOCK_STREAM, 0);
+	if (::setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) < 0)
 		throw (Exceptions::ServerException("set socket option"));
-	// _master_socket = -1;
-	if (_master_socket == -1)
+	// master_socket = -1;
+	if (master_socket == -1)
 		throw (Exceptions::ServerException("Master socket not created"));
-	// std::cout << C_SERVER << "Server socket created !" <<  C_RES << std::endl;
+	return (master_socket);
 }
 
-// ********************************************* ::bind() *********************************************
-
-void		Server::bind_address_and_port()
+std::map<int, Config> Server::init_servers_map()
 {
-	if (::bind(_master_socket, reinterpret_cast<const struct sockaddr *>(&_address), sizeof(_address)) == -1)
-		throw (Exceptions::ServerException("Cannot bind address and port on master socket"));
-	// std::cout << C_SERVER << "Server ready at <" << inet_ntoa(_address.sin_addr) << ":" << _config->get__port() << ">" <<  C_RES << std::endl;
+	std::map<int, Config> m;
+
+	std::vector<Config>::iterator it = _config_vec.begin();
+	std::vector<Config>::iterator it_end= _config_vec.end();
+
+	for (; it != it_end; it++)
+	{
+		// create socket
+		int					server_socket = multi_create_server_socket();
+		struct sockaddr_in	address;
+		// bind address and port
+		address.sin_family = AF_INET;
+		address.sin_addr.s_addr = INADDR_ANY;
+		try
+		{
+			if (inet_aton((*it).get__host().c_str(), &address.sin_addr) <= 0)
+				throw (Exceptions::ServerException("Server invalid address"));
+		}
+		catch (Exceptions::ServerException & e)
+		{
+			std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
+		}
+		address.sin_port = htons((*it).get__port());
+		if (::bind(server_socket, reinterpret_cast<const struct sockaddr *>(&address), sizeof(address)) == -1)
+			throw (Exceptions::ServerException("Cannot bind address and port on master socket"));
+		// listen
+		if (::listen(server_socket, MAX_CLIENTS) == -1)
+			throw (Exceptions::ServerException("Server failed to listen"));
+		std::cout << C_SERVER << "[SERVER] <" << (*it).get__host() << ":" << (*it).get__port() << "> : listens new connections" << C_RES << std::endl;
+		m[server_socket] = *it;
+	}
+	return m;
 }
 
-// ********************************************* ::accept() + Client.treat_client() *********************************************
+// ********************************************* select_and_treat_connections *********************************************
 
-void Server::listen_connections(void)
-{
-	// MAX CLIENTS = plutot MAX PENDING CONNECTIONS ?
-	// fcntl(_master_socket, F_SETFL, O_NONBLOCK); // TOCHECK - only client sockets must be O_NONBLOCK ?
-	if (::listen(_master_socket, MAX_CLIENTS) == -1)
-		throw (Exceptions::ServerException("Server failed to listen"));
-	std::cout << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : listening" << C_RES << std::endl;
-}
-
-void Server::accept_new_connection(int server_socket)
+void Server::accept_new_connection(int server_socket, Config & config)
 {
 	// std::cerr << C_HIDDEN << "[SERVER] : accepting new connection on server_socket " << server_socket << C_RES << std::endl;
-	(void)server_socket;
-	Client *cl = new Client(*_config); // dans lequel j'envoie Config
-	int client_socket = ::accept(_master_socket, NULL, NULL);
+	Client *cl = new Client(config); // dans lequel j'envoie Config
+	int client_socket = ::accept(server_socket, NULL, NULL);
 	if (client_socket < 0)
 		throw (Exceptions::ServerException("Server failed to accept connection"));
 	cl->setSocket(client_socket);
 	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw (Exceptions::ServerException("Client socket non blocking option failure (fcntl)")); // TOCHECK to move in Client ?
 	_clients_map[client_socket] = cl;
-	std::cerr << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : accepting new connection from socket <" << client_socket << ">" << C_RES << std::endl;
+	std::cerr << C_SERVER << "[SERVER] <" << config.get__host() << ":" << config.get__port() << "> : accepting new connection from socket <" << client_socket << ">" << C_RES << std::endl;
 	FD_SET(client_socket, &_read_fds);
 	if (_max_fd < client_socket)
 		_max_fd = client_socket;
@@ -78,16 +88,24 @@ void Server::init_fd_sets(void)
 {
 	FD_ZERO(&_read_fds);
 	FD_ZERO(&_write_fds);
-	FD_SET(_master_socket, &_read_fds);
-	_max_fd = _master_socket;
+	std::map<int, Config>::iterator it = _servers_map.begin();
+	std::map<int, Config>::iterator it_end = _servers_map.end();
+	for (; it != it_end; it++)
+	{
+		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "adding " << it->first << " to FD_SET" << std::endl;
+		FD_SET(it->first, &_read_fds);
+		if (it->first > _max_fd)
+			_max_fd = it->first;
+	}
+	std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "_max_fd = " << _max_fd << std::endl;
 }
 
 void Server::receive_and_process_request(int client_socket)
 {
-	std::cerr << std::endl << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : reading on already connected socket <" << client_socket << ">" << C_RES << std::endl;
+	std::cerr << std::endl << C_SERVER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : reading on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->receive_request(); // recv
 	if (_clients_map[client_socket]->get_remaining_bytes_to_recv())
-		std::cerr << C_OTHER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : chunked request in progress on socket <" << client_socket << ">" << C_RES << std::endl;
+		std::cerr << C_OTHER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : chunked request in progress on socket <" << client_socket << ">" << C_RES << std::endl;
 	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->getRequest().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
 	{
 		if (_clients_map[client_socket]->is_response_successful())
@@ -119,7 +137,7 @@ void Server::shutdown_client_socket(int client_socket)
 
 void Server::prepare_and_send_response(int client_socket)
 {
-	std::cerr << C_SERVER << "[SERVER] <" << _config->get__host() << ":" << _config->get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
+	std::cerr << C_SERVER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->send_response();
 	if (_clients_map[client_socket]->get_remaining_bytes_to_send() <= 0) // == 0 TOCHECK
 		shutdown_client_socket(client_socket);
@@ -137,8 +155,12 @@ void Server::select_and_treat_connections(void)
 		if (socketCount < 0)
 			throw (Exceptions::ServerException("Select failure"));
 		// Accept new connection - Server loop
-		if (FD_ISSET(_master_socket, &read_fds)) // si incoming NEW connection
-			accept_new_connection(_master_socket);
+		std::map<int, Config>::iterator it_server = _servers_map.begin();
+		for (; it_server != _servers_map.end(); it_server++)
+		{
+			if (FD_ISSET(it_server->first, &read_fds)) // si incoming NEW connection
+				accept_new_connection(it_server->first, it_server->second);
+		}
 		std::map<int, Client *>::iterator it;
 		for (it = _clients_map.begin(); it != _clients_map.end(); it++) // client_loop - pour chaque client existant
 		{
@@ -166,10 +188,7 @@ int		Server::launch(void)
 {
 	try
 	{
-		print_config();
-		create_server_socket();
-		bind_address_and_port();
-		listen_connections();
+		_servers_map = init_servers_map();
 		select_and_treat_connections();
 	}
 	catch (Exceptions::ServerException & e)

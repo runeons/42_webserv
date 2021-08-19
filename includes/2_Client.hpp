@@ -56,6 +56,8 @@ class Client
 		void 			set_total_bytes_expected(const int bytes);
 		int 			get__status_code(void) const;
 		void 			set__status_code(const int code);
+		Config & 		get__config(void) const;
+		void 			set__config(const Config & config);
 
 		int 			get_remaining_bytes_to_send(void) const;
 		void 			set_remaining_bytes_to_send(const int bytes);

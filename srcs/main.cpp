@@ -67,7 +67,7 @@ int			main(int ac, char **av)
 		ConfigParser cp(config_file);
 		cp.print_info();
 
-		Server server(cp.get__servers_config()[0]);
+		Server server(cp.get__servers_config());
 
 		if (server.launch())
 			return (-1);

@@ -11,34 +11,34 @@ class Server
 {
 	private:
 		Server(void);
-		
-		Config *				_config;
-		std::map<int, Client *>	_clients_map;
 
-		SOCKET					_master_socket;
-		struct sockaddr_in		_address;
-		fd_set					_read_fds;
-		fd_set					_write_fds;
-		int						_max_fd;
+		std::map<int, Client *>				_clients_map;
+		std::map<int, Config>				_servers_map;
+		std::vector<Config>					_config_vec;
+
+		struct sockaddr_in					_address;
+		fd_set								_read_fds;
+		fd_set								_write_fds;
+		int									_max_fd;
 
 	public:
-		Server(const Config & config);
+		// Server(const Config & config);
+		Server(std::vector<Config> config_vec);
 		Server(const Server & src);
 		virtual ~Server();
 
-		Config *	getConfig(void) const;
-		void		setConfig(Config * config);
-		SOCKET		getSocket(void) const;
-		void		setSocket(const SOCKET server_socket);
+		std::map<int, Config>		init_servers_map();
+		int							multi_create_server_socket();
 
 		void		stop_server();
-		void 		print_config(void);
-		void		create_server_socket();
-		void		bind_address_and_port();
-		void		listen_connections();
+		// void 	print_config(void);
+		// void		create_server_socket();
+		// void		bind_address_and_port();
+		// void		listen_connections();
+		// void		server_set_up();
 
 		void		init_fd_sets();
-		void		accept_new_connection(int server_socket);
+		void		accept_new_connection(int server_socket, Config & config);
 		void		receive_and_process_request(int client_socket);
 		void		prepare_and_send_response(int client_socket);
 

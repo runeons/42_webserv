@@ -137,6 +137,17 @@ void Client::setAppliedLocation(Location * applied_location)
 	return ;
 }
 
+Config & Client::get__config(void) const
+{
+	return (_config);
+}
+
+void Client::set__config(const Config & config)
+{
+	_config = config;
+	return ;
+}
+
 int Client::is_response_successful(void)
 {
 	if (_status_code == 200 || _status_code == 202 || _status_code == 204)
