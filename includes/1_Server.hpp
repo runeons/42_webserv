@@ -31,11 +31,6 @@ class Server
 		int							multi_create_server_socket();
 
 		void		stop_server();
-		// void 	print_config(void);
-		// void		create_server_socket();
-		// void		bind_address_and_port();
-		// void		listen_connections();
-		// void		server_set_up();
 
 		void		init_fd_sets();
 		void		accept_new_connection(int server_socket, Config & config);

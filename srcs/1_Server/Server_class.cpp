@@ -73,7 +73,7 @@ void Server::accept_new_connection(int server_socket, Config & config)
 	int client_socket = ::accept(server_socket, NULL, NULL);
 	if (client_socket < 0)
 		throw (Exceptions::ServerException("Server failed to accept connection"));
-	cl->setSocket(client_socket);
+	cl->set__socket(client_socket);
 	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw (Exceptions::ServerException("Client socket non blocking option failure (fcntl)")); // TOCHECK to move in Client ?
 	_clients_map[client_socket] = cl;
@@ -92,21 +92,19 @@ void Server::init_fd_sets(void)
 	std::map<int, Config>::iterator it_end = _servers_map.end();
 	for (; it != it_end; it++)
 	{
-		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "adding " << it->first << " to FD_SET" << std::endl;
 		FD_SET(it->first, &_read_fds);
 		if (it->first > _max_fd)
 			_max_fd = it->first;
 	}
-	std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "_max_fd = " << _max_fd << std::endl;
 }
 
 void Server::receive_and_process_request(int client_socket)
 {
 	std::cerr << std::endl << C_SERVER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : reading on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->receive_request(); // recv
-	if (_clients_map[client_socket]->get_remaining_bytes_to_recv())
+	if (_clients_map[client_socket]->get__remaining_bytes_to_recv())
 		std::cerr << C_OTHER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : chunked request in progress on socket <" << client_socket << ">" << C_RES << std::endl;
-	if (_clients_map[client_socket]->get_remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->getRequest().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
+	if (_clients_map[client_socket]->get__remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->get__request().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
 	{
 		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->check_request(); // check if request OK
@@ -139,7 +137,7 @@ void Server::prepare_and_send_response(int client_socket)
 {
 	std::cerr << C_SERVER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->send_response();
-	if (_clients_map[client_socket]->get_remaining_bytes_to_send() <= 0) // == 0 TOCHECK
+	if (_clients_map[client_socket]->get__remaining_bytes_to_send() <= 0) // == 0 TOCHECK
 		shutdown_client_socket(client_socket);
 }
 
