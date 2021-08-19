@@ -95,9 +95,11 @@ void	Response::GET_handle(void)
 		Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
 		cgi.launch();
 		_response_body = cgi.get__full_buf();
+		_type_mime = "text/html"; // sinon, s'affiche en text/plain
 		std::cout << C_OTHER << "We are finished with GET extension cgi !" << C_RES << std::endl;
 	}
-	GET_create_body();
+	else
+		GET_create_body();
 }
 
 // ********************************************* DELETE create body *********************************************
@@ -159,7 +161,16 @@ void	Response::POST_handle(void)
 	}
 	else
 	{
-		;
+		// copier-coller de GET, pourrait placer en amont pour unifier
+		if (get_extension(_translated_path) == "uppercase")
+		{
+			std::cout << C_OTHER << "Let's start with POST extension cgi !" << C_RES << std::endl;
+			Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
+			cgi.launch();
+			_response_body = cgi.get__full_buf();
+			_type_mime = "text/html"; // sinon, s'affiche en text/plain
+			std::cout << C_OTHER << "We are finished with POST extension cgi !" << C_RES << std::endl;
+		}
 	}
 }
 

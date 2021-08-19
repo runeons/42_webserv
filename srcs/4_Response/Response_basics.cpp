@@ -170,5 +170,9 @@ void	Response::print_status_line()
 				<< "["
 				<< return_status_line()
 				<< "]"
+				<< " typemime : "
+				<< _type_mime
+				<< ", charset : "
+				<< _charset
 				<< C_RES << std::endl;
 }

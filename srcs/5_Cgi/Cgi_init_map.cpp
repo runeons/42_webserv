@@ -77,7 +77,7 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	else if (_type == CGI_EXTENSION)
 	{
 		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_EXTENSION" << std::endl;
-		script = "/cgi-bin/uppercase.php";
+		script = "/cgi-bin/displayenv.pl";
 		m["QUERY_STRING"]	= _query_string;
 	}
 	m["PATH_INFO"]			= script;
