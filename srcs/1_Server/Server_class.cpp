@@ -104,7 +104,7 @@ void Server::receive_and_process_request(int client_socket)
 	_clients_map[client_socket]->receive_request(); // recv
 	if (_clients_map[client_socket]->get__remaining_bytes_to_recv())
 		std::cerr << C_OTHER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : chunked request in progress on socket <" << client_socket << ">" << C_RES << std::endl;
-	if (_clients_map[client_socket]->get__remaining_bytes_to_recv() == 0 && _clients_map[client_socket]->get__request().find(""PAT_CRLF""PAT_CRLF) != std::string::npos)
+	if (_clients_map[client_socket]->get__remaining_bytes_to_recv() == 0 && (_clients_map[client_socket]->get__request().find(""PAT_CRLF""PAT_CRLF) != std::string::npos || !(_clients_map[client_socket]->is_response_successful()))) // dernier condition, importante si requete jamais recue par exemple et qu'on veut retourner quand meme une reponse (500)
 	{
 		if (_clients_map[client_socket]->is_response_successful())
 			_clients_map[client_socket]->check_request(); // check if request OK
@@ -151,7 +151,10 @@ void Server::select_and_treat_connections(void)
 
 		int socketCount = ::select(_max_fd + 1, &read_fds, &write_fds, NULL, NULL);
 		if (socketCount < 0)
+		{
+			std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "select errno : " << strerror(errno) << std::endl;
 			throw (Exceptions::ServerException("Select failure"));
+		}
 		// Accept new connection - Server loop
 		std::map<int, Config>::iterator it_server = _servers_map.begin();
 		for (; it_server != _servers_map.end(); it_server++)

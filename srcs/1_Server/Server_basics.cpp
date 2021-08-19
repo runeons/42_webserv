@@ -17,7 +17,7 @@
 Server::Server(std::vector<Config> config_vec) : _config_vec(config_vec)
 {
 	std::cout << C_HIDDEN << "...Multi server creation..." << C_RES << std::endl;
-
+	_max_fd = 0;
 	return ;
 }
 

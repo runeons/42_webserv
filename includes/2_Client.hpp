@@ -72,7 +72,6 @@ class Client
 
 		size_t			retrieve_request_content_length(std::string buf_str);
 		int				calculate_total_bytes_expected(std::string buf_str);
-		void			receive_with_content_length(void);
 		void			receive_request();
 
 		void			check_request();

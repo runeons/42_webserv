@@ -212,15 +212,15 @@ void	Response::generate(void)
 	retrieve_type_mime_charset();
 	if (is_response_successful()) // should always be the case with previous checks
 		check_if_redir_301();
-	// if (is_response_successful())
-	// {
+	if (is_response_successful()) // important car si Erreur 500 avant, peutetre pas de method, donc segfault
+	{
 		if (_request.get__method() == "GET")
 			GET_handle(); // from page_content
 		else if (_request.get__method() == "POST")
 			POST_handle(); // from page_content
 		else if (_request.get__method() == "DELETE")
 			DELETE_handle();
-	// }
+	}
 	fill_body_if_error();
 	generate_response_header(); // from status_code, page_content and translated_path
 	print_status_line();
