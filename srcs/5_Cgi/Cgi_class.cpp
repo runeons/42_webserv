@@ -90,7 +90,7 @@ void	Cgi::exec_script(void)
 		// => quand le child va ecrire, il ecrira sur le fichier tmp
 		if (execve(av[0], &av[0], _env_arr) < 0)	// Execute process
 		{
-			std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
+			std::cerr << "EXIT_IN_CGI_EXEC (av[0] = " << av[0] << ")" << std::endl;
 			perror("execve");
 			close(pipe_fd[0]);
 			exit(EXIT_FAILURE);

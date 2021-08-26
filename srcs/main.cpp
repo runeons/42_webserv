@@ -45,11 +45,6 @@ int			main(int ac, char **av)
 			std::cerr << C_G_RED << "error: " << C_G_WHITE << "too many arguments." << C_RES << std::endl;
 			return (-1);
 		}
-		// else if (ac < 2)
-		// {
-		// 	std::cerr << C_G_RED << "error: " << C_G_WHITE << "not enough arguments." << C_RES << std::endl;
-		// 	return (-1);
-		// }
 		else
 		{
 			try

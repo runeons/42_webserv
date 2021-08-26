@@ -76,8 +76,8 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	}
 	else if (_type == CGI_EXTENSION)
 	{
-		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_EXTENSION" << std::endl;
-		script = "/cgi-bin/displayenv.pl";
+		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_EXTENSION (" << _request.get__resource() << ")" << std::endl;
+		script = _request.get__resource();
 		m["QUERY_STRING"]	= _query_string;
 	}
 	m["PATH_INFO"]			= script;

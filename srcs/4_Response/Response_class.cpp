@@ -89,7 +89,7 @@ void	Response::GET_handle(void)
 		_applied_location.set__redir301(_request.get__resource() + "/");
 		_status_code = 301;
 	}
-	if (get_extension(_translated_path) == "uppercase")
+	if (get_extension(_translated_path) == "pl")
 	{
 		std::cout << C_OTHER << "Let's start with GET extension cgi !" << C_RES << std::endl;
 		Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
@@ -129,6 +129,7 @@ void	Response::DELETE_handle(void)
 			_status_code = 403;
 	}
 	DELETE_create_body();
+	// AJOUTER CGI pour les .pl si methode DELETE ??
 }
 
 // ********************************************* POST create body *********************************************
@@ -161,8 +162,8 @@ void	Response::POST_handle(void)
 	}
 	else
 	{
-		// copier-coller de GET, pourrait placer en amont pour unifier
-		if (get_extension(_translated_path) == "uppercase")
+		// copier-coller de GET, pourrait placer en amont pour unifier => A VERIFIER, je n'ai jamais testé ce CGI avec POST
+		if (get_extension(_translated_path) == "pl")
 		{
 			std::cout << C_OTHER << "Let's start with POST extension cgi !" << C_RES << std::endl;
 			Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
