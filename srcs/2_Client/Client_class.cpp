@@ -121,7 +121,7 @@ void		Client::adjust_applied_location(void)
 		m.push_back("DELETE");
 		_applied_location->set__methods(m);
 	}
-	if (_applied_location->get__upload() != "" && _applied_location->get__upload().back() != '/')
+	if (_applied_location->get__upload() != "" && _applied_location->get__upload().at(_applied_location->get__upload().size() - 1) != '/')
 		_applied_location->set__upload(_applied_location->get__upload() + "/");
 	_applied_location->print_info();
 }
@@ -221,6 +221,7 @@ std::string		Client::remove_and_store_query(std::string s)
 std::string	Client::generate_autoindex(std::string rsc)
 {
 	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
+//	std::string cmd = "scripts/bin/tree_linux \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
 	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
 	if (res == "")
 		_status_code = 500;
@@ -287,7 +288,7 @@ void		Client::translate_path(void)
 	rsc = decode_url(rsc); // TO CHECK avant ? gérer les accents dans les alias et fichiers de conf ? Too much I think
 	rsc = remove_and_store_query(rsc);
 	rsc = _applied_location->get__root_loc() + rsc;
-	if (rsc.back() == '/')
+	if (rsc[rsc.size() - 1] == '/')
 		rsc = apply_index_or_autoindex(rsc);
 	_translated_path = rsc;
 	if (!_query_string.empty())
@@ -300,7 +301,7 @@ void		Client::translate_path(void)
 
 void Client::read_resource(void)
 {
-	std::ifstream ifs(_translated_path);
+	std::ifstream ifs(_translated_path.c_str());
 	char c;
 
 	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex

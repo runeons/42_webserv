@@ -14,7 +14,7 @@ void		Response::parse_type_mime_charset_cmd_result(std::string str)
 	unsigned first = str.find(":") + 2;
 	unsigned last = str.find(";");
 
-	if (last > str.length() || _translated_path.back() == '/') // si "cannot open file" || directory
+	if (last > str.length() || _translated_path[_translated_path.size() - 1] == '/') // si "cannot open file" || directory
 	{
 		set_default_html_type_mime_charset();
 		return ;
@@ -64,7 +64,7 @@ void	Response::check_if_method_allowed(void)
 
 int	Response::is_actually_directory(std::string path)
 {
-	if (path.back() != '/' && _type_mime == "inode/directory") // si c'est un dir sans slash final
+	if (path[path.size() - 1] != '/' && _type_mime == "inode/directory") // si c'est un dir sans slash final
 		return (1);
 	return (0);
 }

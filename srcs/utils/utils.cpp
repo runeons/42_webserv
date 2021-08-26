@@ -14,7 +14,7 @@ std::string		exec_cmd(std::string cmd, std::string file_res)
 	int status = std::system(cmd.c_str());
 	if (WEXITSTATUS(status) != 0)
 		std::cerr << C_ERROR << "Error : can't exec cmd " << cmd <<  C_RES << std::endl; // EXCEPTION
-	oss << std::ifstream(file_res).rdbuf();
+	oss << std::ifstream(file_res.c_str()).rdbuf();
 	return oss.str();
 }
 
@@ -35,7 +35,7 @@ std::string		get_extension(std::string path)
 
 std::string get_file_content(std::string filename)
 {
-	std::ifstream ifs(filename);
+	std::ifstream ifs(filename.c_str());
 	std::ostringstream oss;
 
 	if (!ifs)
@@ -135,7 +135,7 @@ std::string int_to_binary(int n)
         r += ( n % 2 == 0 ? "0" : "1" );
         n /= 2;
     }
-	reverse(r.begin(), r.end());
+	std::reverse(r.begin(), r.end());
 	while (r.length() < 8)
 		r = "0" + r;
     return r;
