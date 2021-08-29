@@ -1,5 +1,10 @@
 
 # include <webserv.hpp>
+# include<signal.h>
+
+# define SIGNAL_MSG_2 "2     SIGINT       terminate process    interrupt program"
+# define SIGNAL_MSG_3 "3     SIGQUIT      create core image    quit program"
+# define SIGNAL_MSG_9 "9     SIGKILL      terminate process    kill program"
 
 std::string	get_config_file(char *filename)
 {
@@ -34,8 +39,21 @@ void		clean_comments_config_file(std::string & config_file)
 	}
 }
 
+void		handle_signal(int sig)
+{
+	if (sig == 2)
+		std::cout << "\r[2] SIGINT: interrupt program" << std::endl;
+	else if (sig == 3)
+		std::cout << "\r[3] SIGQUIT: quit program" << std::endl;
+	else if (sig == 9)
+		std::cout << "\r[9] SIGKILL: kill program" << std::endl;
+}
+
 int			main(int ac, char **av)
 {
+	signal(SIGINT, handle_signal);
+	signal(SIGQUIT, handle_signal);
+	signal(SIGKILL, handle_signal);
 	try
 	{
 		std::string	config_file("");
@@ -77,5 +95,5 @@ int			main(int ac, char **av)
 		std::cout << "fatal error: " << e.what() << std::endl;
 	}
 
-	return 0;
+	return (0);
 }
