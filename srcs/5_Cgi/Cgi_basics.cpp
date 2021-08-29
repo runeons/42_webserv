@@ -9,7 +9,10 @@ Cgi::Cgi(RequestParser & request, Config & config, Location & applied_location, 
 	_map_http = init_map_http();
 	_env_map = init_map_env();
 	_env_arr = NULL;
-	_bin = "/usr/local/bin/php-cgi";
+	if (type == CGI_UPLOAD)
+		_bin = "/usr/local/bin/php-cgi";
+	if (type == CGI_EXTENSION)
+		_bin = "/usr/bin/perl";
 	return ;
 }
 

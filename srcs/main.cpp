@@ -6,7 +6,7 @@
 # define SIGNAL_MSG_3 "3     SIGQUIT      create core image    quit program"
 # define SIGNAL_MSG_9 "9     SIGKILL      terminate process    kill program"
 
-std::string	get_config_file(char *filename)
+std::string	get_config_file(const char *filename)
 {
 	std::string file;
 	std::ifstream ifs(filename);
@@ -56,26 +56,27 @@ int			main(int ac, char **av)
 	signal(SIGKILL, handle_signal);
 	try
 	{
-		std::string	config_file("");
+		std::string	config_file;
 
 		if (ac > 2)
 		{
 			std::cerr << C_G_RED << "error: " << C_G_WHITE << "too many arguments." << C_RES << std::endl;
 			return (-1);
 		}
-		else if (ac < 2)
-		{
-			std::cerr << C_G_RED << "error: " << C_G_WHITE << "not enough arguments." << C_RES << std::endl;
-			return (-1);
-		}
 		else
 		{
 			try
 			{
-				for (int i = 1; i < ac; i++)
-					config_file += get_config_file(av[i]);
+				if (ac < 2)
+				{
+					std::cerr << C_G_MAGENTA << "warning: " << C_G_WHITE << "no config file provided - using conf/example.conf." << C_RES << std::endl;
+					std::string default_conf = "conf/example.conf";
+					config_file = get_config_file(default_conf.c_str());
+				}
+				else
+					config_file = get_config_file(av[1]);
 				clean_comments_config_file(config_file);
-				// std::cout << "config_file: " << "[" << config_file << "]" << std::endl;
+				std::cout << "config_file: " << "[" << config_file << "]" << std::endl;
 			}
 			catch (std::exception & e)
 			{
@@ -85,7 +86,7 @@ int			main(int ac, char **av)
 		ConfigParser cp(config_file);
 		cp.print_info();
 
-		Server server(cp.get__servers_config()[0]);
+		Server server(cp.get__servers_config());
 
 		if (server.launch())
 			return (-1);

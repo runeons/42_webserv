@@ -44,23 +44,24 @@ class Client
 		Client(Config & config);
 		virtual ~Client();
 
-		SOCKET			getSocket(void) const;
-		void			setSocket(const SOCKET client_socket);
-		std::string		getRequest(void) const;
-		void			setRequest(const std::string request);
-		Location *		getAppliedLocation(void) const;
-		void			setAppliedLocation(Location * applied_location);
-		int 			get_remaining_bytes_to_recv(void) const;
-		void 			set_remaining_bytes_to_recv(const int bytes);
-		int 			get_total_bytes_expected(void) const;
-		void 			set_total_bytes_expected(const int bytes);
+		SOCKET			get__socket(void) const;
+		void			set__socket(const SOCKET client_socket);
+		std::string		get__request(void) const;
+		void			set__request(const std::string request);
+		Location *		get__applied_location(void) const;
+		void			set__applied_location(Location * applied_location);
+		int 			get__remaining_bytes_to_recv(void) const;
+		void 			set__remaining_bytes_to_recv(const int bytes);
+		int 			get__total_bytes_expected(void) const;
+		void 			set__total_bytes_expected(const int bytes);
 		int 			get__status_code(void) const;
 		void 			set__status_code(const int code);
-
-		int 			get_remaining_bytes_to_send(void) const;
-		void 			set_remaining_bytes_to_send(const int bytes);
-		int 			get_total_bytes_to_send(void) const;
-		void 			set_total_bytes_to_send(const int bytes);
+		Config & 		get__config(void) const;
+		void 			set__config(const Config & config);
+		int 			get__remaining_bytes_to_send(void) const;
+		void 			set__remaining_bytes_to_send(const int bytes);
+		int 			get__total_bytes_to_send(void) const;
+		void 			set__total_bytes_to_send(const int bytes);
 
 		Client			&operator=(const Client & src);
 
@@ -71,7 +72,6 @@ class Client
 
 		size_t			retrieve_request_content_length(std::string buf_str);
 		int				calculate_total_bytes_expected(std::string buf_str);
-		void			receive_with_content_length(void);
 		void			receive_request();
 
 		void			check_request();
@@ -98,11 +98,6 @@ class Client
 		void 			print_response_body(void);
 		void 			print_response(void);
 
-		// void			close(void)
-		// {
-		// 	::close(this->_socket);
-		// }
-		//
 };
 
 

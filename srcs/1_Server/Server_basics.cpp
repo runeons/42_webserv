@@ -14,25 +14,10 @@
 	};
 */
 
-Server::Server(const Config & config)
+Server::Server(std::vector<Config> config_vec) : _config_vec(config_vec)
 {
-	std::cout << C_HIDDEN << "...Server creation..." << C_RES << std::endl;
-	// TO DO parse config
-	_config = const_cast<Config *>(&config); // parametree avec le parsing
-	_config->set__root_dir("./" + _config->get__root_dir());
-	_address.sin_family = AF_INET;
-	_address.sin_addr.s_addr = INADDR_ANY;
-	try
-	{
-		if (inet_aton(_config->get__host().c_str(), &_address.sin_addr) <= 0)
-			throw (Exceptions::ServerException("Server invalid address"));
-	}
-	catch (Exceptions::ServerException & e)
-	{
-		std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
-	}
-	_address.sin_port = htons(_config->get__port());
-	_master_socket = 0;
+	std::cout << C_HIDDEN << "...Multi server creation..." << C_RES << std::endl;
+	_max_fd = 0;
 	return ;
 }
 
@@ -59,31 +44,8 @@ Server &	Server::operator=(const Server& rhs)
 	std::cout << C_HIDDEN << "Server Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
-		_config = rhs.getConfig();
-		_master_socket = rhs.getSocket();
+		// TO DO
+		;
 	}
 	return (*this);
-}
-
-// getters and setters (non static attributes)
-Config * Server::getConfig(void) const
-{
-	return (_config);
-}
-
-void Server::setConfig(Config * config)
-{
-	_config = config;
-	return ;
-}
-
-SOCKET Server::getSocket(void) const
-{
-	return (_master_socket);
-}
-
-void Server::setSocket(const SOCKET server_socket)
-{
-	_master_socket = server_socket;
-	return ;
 }

@@ -21,6 +21,12 @@
 # include <dirent.h>
 # include <stdio.h>
 # include <sys/time.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <string.h>
+# include <iomanip>
+# include <errno.h>
+# include <algorithm>
 // #include <pstream.h>
 
 //colors

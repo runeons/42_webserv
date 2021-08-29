@@ -14,7 +14,7 @@ void		Response::parse_type_mime_charset_cmd_result(std::string str)
 	unsigned first = str.find(":") + 2;
 	unsigned last = str.find(";");
 
-	if (last > str.length() || _translated_path.back() == '/') // si "cannot open file" || directory
+	if (last > str.length() || _translated_path[_translated_path.size() - 1] == '/') // si "cannot open file" || directory
 	{
 		set_default_html_type_mime_charset();
 		return ;
@@ -64,7 +64,7 @@ void	Response::check_if_method_allowed(void)
 
 int	Response::is_actually_directory(std::string path)
 {
-	if (path.back() != '/' && _type_mime == "inode/directory") // si c'est un dir sans slash final
+	if (path[path.size() - 1] != '/' && _type_mime == "inode/directory") // si c'est un dir sans slash final
 		return (1);
 	return (0);
 }
@@ -89,15 +89,17 @@ void	Response::GET_handle(void)
 		_applied_location.set__redir301(_request.get__resource() + "/");
 		_status_code = 301;
 	}
-	if (get_extension(_translated_path) == "uppercase")
+	if (get_extension(_translated_path) == "pl")
 	{
 		std::cout << C_OTHER << "Let's start with GET extension cgi !" << C_RES << std::endl;
 		Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
 		cgi.launch();
 		_response_body = cgi.get__full_buf();
+		_type_mime = "text/html"; // sinon, s'affiche en text/plain
 		std::cout << C_OTHER << "We are finished with GET extension cgi !" << C_RES << std::endl;
 	}
-	GET_create_body();
+	else
+		GET_create_body();
 }
 
 // ********************************************* DELETE create body *********************************************
@@ -127,6 +129,7 @@ void	Response::DELETE_handle(void)
 			_status_code = 403;
 	}
 	DELETE_create_body();
+	// AJOUTER CGI pour les .pl si methode DELETE ??
 }
 
 // ********************************************* POST create body *********************************************
@@ -159,7 +162,16 @@ void	Response::POST_handle(void)
 	}
 	else
 	{
-		;
+		// copier-coller de GET, pourrait placer en amont pour unifier => A VERIFIER, je n'ai jamais testé ce CGI avec POST
+		if (get_extension(_translated_path) == "pl")
+		{
+			std::cout << C_OTHER << "Let's start with POST extension cgi !" << C_RES << std::endl;
+			Cgi cgi(_request, _config, _applied_location, CGI_EXTENSION, _query_string);
+			cgi.launch();
+			_response_body = cgi.get__full_buf();
+			_type_mime = "text/html"; // sinon, s'affiche en text/plain
+			std::cout << C_OTHER << "We are finished with POST extension cgi !" << C_RES << std::endl;
+		}
 	}
 }
 
@@ -201,15 +213,15 @@ void	Response::generate(void)
 	retrieve_type_mime_charset();
 	if (is_response_successful()) // should always be the case with previous checks
 		check_if_redir_301();
-	// if (is_response_successful())
-	// {
+	if (is_response_successful()) // important car si Erreur 500 avant, peutetre pas de method, donc segfault
+	{
 		if (_request.get__method() == "GET")
 			GET_handle(); // from page_content
 		else if (_request.get__method() == "POST")
 			POST_handle(); // from page_content
 		else if (_request.get__method() == "DELETE")
 			DELETE_handle();
-	// }
+	}
 	fill_body_if_error();
 	generate_response_header(); // from status_code, page_content and translated_path
 	print_status_line();

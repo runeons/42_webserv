@@ -38,14 +38,13 @@ int		Client::calculate_total_bytes_expected(std::string buf_str)
 // |             X |        X |
 // |               |          |
 
-void Client::receive_with_content_length(void)
+void Client::receive_request(void)
 {
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
-	// _bytes_read = -1;
-	if (_bytes_read == -1)
+	// _bytes_read = -1; CHECKED 19/08
+	if (_bytes_read <= 0) // 0 aussi car grace a select, si on rentre ici c'est qu'il y a qqch a envoyer
 	{
 		_status_code = 500;
-		// throw (Exceptions::ClientException("Client failed to receive request"));
 		return ;
 	}
 	_chunk[_bytes_read] = '\0';
@@ -62,7 +61,6 @@ void Client::receive_with_content_length(void)
 	}
 	else
 	{
-		// std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [REQUEST]    : " << "without Content-Length" << C_RES << std::endl;
 		if (_total_bytes_expected == 0) // s'il n'y a pas eu de Content-Length du tout, set _total_bytes_expected puisque envoyé à RequestParser
 			_total_bytes_expected = _bytes_read;
 		if (_remaining_bytes_to_recv > 0)
@@ -70,23 +68,6 @@ void Client::receive_with_content_length(void)
 	}
 	std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [REQUEST]    : " << _bytes_read << " bytes received - " << _remaining_bytes_to_recv << " remaining" << C_RES << std::endl;
 	_request.append(_chunk, _bytes_read);
-}
-
-void	print_request_chunk(int bytes_read, char chunk[MAX_RCV])
-{
-	// print current request chunk
-	std::cout << "[";
-	for (ssize_t i = 0; i < bytes_read; i++)
-		std::cout << chunk[i] ;
-	std::cout << "]" << std::endl;
-}
-
-void Client::receive_request(void)
-{
-	receive_with_content_length();
-	// print_request_chunk(_bytes_read, _chunk);
-	// _request.append(_chunk, _bytes_read);
-	// std::cerr << C_G_YELLOW << "[ DEBUG print request ] " << C_RES << "[" << _request << "]" << std::endl;
 }
 
 // ********************************************* parse + check request *********************************************
@@ -140,14 +121,21 @@ void		Client::adjust_applied_location(void)
 		m.push_back("DELETE");
 		_applied_location->set__methods(m);
 	}
-	if (_applied_location->get__upload() != "" && _applied_location->get__upload().back() != '/')
+	if (_applied_location->get__upload() != "" && _applied_location->get__upload().at(_applied_location->get__upload().size() - 1) != '/')
 		_applied_location->set__upload(_applied_location->get__upload() + "/");
 	_applied_location->print_info();
 }
 
 void		Client::apply_location(void)
 {
-	std::string	rsc = _request_parser->get__resource();
+	std::string rsc;
+	if (_request_parser == NULL)
+	{
+		rsc = "/"; // applique une loc par defaut si la requete n'a pas pu etre lue
+		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "applique une loc par defaut si la requete n'a pas pu etre lue" << std::endl;
+	}
+	else
+		rsc = _request_parser->get__resource();
 
 	std::map<std::string, Location>::const_iterator it;
 	std::map<std::string, Location> m = _config.get__locations();
@@ -168,7 +156,7 @@ void		Client::apply_location(void)
 		size_t	pos_last_slash = sub.rfind('/');
 		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
 		{
-			std::cerr << C_G_RED << "apply_location: " << C_G_WHITE << " location not found" << C_RES << std::endl;
+			std::cerr << C_G_RED << "Error: " << C_G_WHITE << " location not found" << C_RES << std::endl;
 			if (is_response_successful()) // pour eviter de changer le status_code si bad request ou precedent
 				_status_code = 404;
 		}
@@ -233,6 +221,7 @@ std::string		Client::remove_and_store_query(std::string s)
 std::string	Client::generate_autoindex(std::string rsc)
 {
 	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
+//	std::string cmd = "scripts/bin/tree_linux \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
 	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
 	if (res == "")
 		_status_code = 500;
@@ -299,7 +288,7 @@ void		Client::translate_path(void)
 	rsc = decode_url(rsc); // TO CHECK avant ? gérer les accents dans les alias et fichiers de conf ? Too much I think
 	rsc = remove_and_store_query(rsc);
 	rsc = _applied_location->get__root_loc() + rsc;
-	if (rsc.back() == '/')
+	if (rsc[rsc.size() - 1] == '/')
 		rsc = apply_index_or_autoindex(rsc);
 	_translated_path = rsc;
 	if (!_query_string.empty())
@@ -312,7 +301,7 @@ void		Client::translate_path(void)
 
 void Client::read_resource(void)
 {
-	std::ifstream ifs(_translated_path);
+	std::ifstream ifs(_translated_path.c_str());
 	char c;
 
 	if (_page_content.length() > 0) // s'il a deja ete genere par l'autoindex
@@ -357,13 +346,12 @@ void Client::send_response(void)
 	if (_remaining_bytes_to_send == 0)
 		_remaining_bytes_to_send = _total_bytes_to_send;
 	bytes_sent = ::send(_socket, &_response_vector[0], _response_vector.size(), 0);
-	// bytes_sent = -1;
-	if (bytes_sent == -1)
+	// bytes_sent = -1; // CHECKED ON 19/08 : cannot really check because send has been excecuted anyway
+	if (bytes_sent <= 0) // 0 aussi car grace a select, si on rentre ici c'est qu'il y a qqch a envoyer
 		throw (Exceptions::ClientException("Client failed to send response"));
 	_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
 	_remaining_bytes_to_send -= bytes_sent;
 	std::cout << C_CLIENT << "[CLIENT] <" << _socket << "> [RESPONSE] \033[01m" << std::setw(3) << ((_total_bytes_to_send - _remaining_bytes_to_send) * 100) / _total_bytes_to_send << "%" << C_RES << C_CLIENT << " : " << bytes_sent << " / " << _total_bytes_to_send << " bytes sent - " << _remaining_bytes_to_send << " remaining" << C_RES << std::endl;
-	// std::cerr << C_G_YELLOW << "[ DEBUG RESPONSE SENT ] " << C_RES << "" << std::endl;
 }
 
 // ********************************************* main - treat client *********************************************

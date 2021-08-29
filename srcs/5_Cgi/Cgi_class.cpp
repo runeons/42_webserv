@@ -90,7 +90,7 @@ void	Cgi::exec_script(void)
 		// => quand le child va ecrire, il ecrira sur le fichier tmp
 		if (execve(av[0], &av[0], _env_arr) < 0)	// Execute process
 		{
-			std::cerr << "EXIT_IN_CGI_EXEC" << std::endl;
+			std::cerr << "EXIT_IN_CGI_EXEC (av[0] = " << av[0] << ")" << std::endl;
 			perror("execve");
 			close(pipe_fd[0]);
 			exit(EXIT_FAILURE);
@@ -105,7 +105,13 @@ void	Cgi::exec_script(void)
 		// TODO - DONE - ADDED : si body => write body in pipe_fd[1]
 		std::string body = _request.get__body();
 		if (body.size())
-			write(pipe_fd[1], body.c_str(), body.size());
+		{
+			ssize_t ret = write(pipe_fd[1], body.c_str(), body.size());
+			if (ret == 0 || ret < static_cast<ssize_t>(body.size()))
+				throw (Exceptions::ClientException("Write failure (in CGI)"));
+			if (ret == -1)
+				throw (Exceptions::ClientException("Write failure (in CGI) - returned -1"));
+		}
 
 		close(pipe_fd[1]);
 		// wait for child
@@ -134,12 +140,15 @@ void	Cgi::exec_script(void)
 		while (1)
 		{
 			ret = read(cgi_fd, buf, BUFS);
-			if (ret < 1)
+			if (ret == 0)
 				break ;
+			// ret = -1;
+			if (ret == -1)
+				throw (Exceptions::ClientException("Read failure (in CGI) - returned -1"));
 			buf[ret] = 0;
 			bufcat(full_buf, &buf[0]);
 		}
-		std::cout << "full_buf: [" << full_buf << "]" << std::endl;
+		// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "full_buf: [" << full_buf << "]" << std::endl;
 		_full_buf = full_buf;
 		// TO DO : if body: treat header + body
 		close(cgi_fd);

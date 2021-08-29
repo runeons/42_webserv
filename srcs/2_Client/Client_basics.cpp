@@ -43,62 +43,62 @@ Client &	Client::operator=(const Client& rhs)
 	std::cout << C_HIDDEN << "Client Assignation operator called" << C_RES << std::endl;
 	if (this != &rhs)
 	{
-		_socket = rhs.getSocket();
+		_socket = rhs.get__socket();
 	}
 	return (*this);
 }
 
 // getters and setters (non static attributes)
-SOCKET Client::getSocket(void) const
+SOCKET Client::get__socket(void) const
 {
 	return (_socket);
 }
 
-void Client::setSocket(const SOCKET client_socket)
+void Client::set__socket(const SOCKET client_socket)
 {
 	_socket = client_socket;
 	return ;
 }
 
-int Client::get_remaining_bytes_to_recv(void) const
+int Client::get__remaining_bytes_to_recv(void) const
 {
 	return (_remaining_bytes_to_recv);
 }
 
-void Client::set_remaining_bytes_to_recv(const int bytes)
+void Client::set__remaining_bytes_to_recv(const int bytes)
 {
 	_remaining_bytes_to_recv = bytes;
 	return ;
 }
 
-int Client::get_total_bytes_expected(void) const
+int Client::get__total_bytes_expected(void) const
 {
 	return (_total_bytes_expected);
 }
 
-void Client::set_total_bytes_expected(const int bytes)
+void Client::set__total_bytes_expected(const int bytes)
 {
 	_total_bytes_expected = bytes;
 	return ;
 }
 
-int Client::get_remaining_bytes_to_send(void) const
+int Client::get__remaining_bytes_to_send(void) const
 {
 	return (_remaining_bytes_to_send);
 }
 
-void Client::set_remaining_bytes_to_send(const int bytes)
+void Client::set__remaining_bytes_to_send(const int bytes)
 {
 	_remaining_bytes_to_send = bytes;
 	return ;
 }
 
-int Client::get_total_bytes_to_send(void) const
+int Client::get__total_bytes_to_send(void) const
 {
 	return (_total_bytes_to_send);
 }
 
-void Client::set_total_bytes_to_send(const int bytes)
+void Client::set__total_bytes_to_send(const int bytes)
 {
 	_total_bytes_to_send = bytes;
 	return ;
@@ -115,25 +115,36 @@ void Client::set__status_code(const int code)
 	return ;
 }
 
-std::string Client::getRequest(void) const
+std::string Client::get__request(void) const
 {
 	return (_request);
 }
 
-void Client::setRequest(const std::string request)
+void Client::set__request(const std::string request)
 {
 	_request = request;
 	return ;
 }
 
-Location * Client::getAppliedLocation(void) const
+Location * Client::get__applied_location(void) const
 {
 	return (_applied_location);
 }
 
-void Client::setAppliedLocation(Location * applied_location)
+void Client::set__applied_location(Location * applied_location)
 {
 	_applied_location = applied_location;
+	return ;
+}
+
+Config & Client::get__config(void) const
+{
+	return (_config);
+}
+
+void Client::set__config(const Config & config)
+{
+	_config = config;
 	return ;
 }
 
