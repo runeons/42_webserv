@@ -105,6 +105,7 @@ class ConfigParser
 		~ConfigParser(void); // destructor
 		void	start_parsing(void); // entry point
 		void	print_info(void) const;
+		int		ConfigParserErrorChecking(void);
 		const std::vector<Config> & get__servers_config(void) const;
 };
 

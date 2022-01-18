@@ -39,7 +39,7 @@ void	ConfigParser::debug_print_line(void)
 	std::cout << std::endl;
 }
 
-int				ConfigParser::eat_debug(int to_eat)
+int		ConfigParser::eat_debug(int to_eat)
 {
 	std::cout << "to_eat: \'";
 	print_char(to_eat);

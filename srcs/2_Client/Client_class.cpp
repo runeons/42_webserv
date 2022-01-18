@@ -82,10 +82,17 @@ void	Client::check_method(void)
 	}
 	throw (Exceptions::HTTP_ErrorStatusException(501)); // Not Implemented
 }
+
 void	Client::check_http_version(void)
 {
 	if (this->_request_parser->get__http_version() != "1.1")
 		throw (Exceptions::HTTP_ErrorStatusException(505)); // HTTP Version Not Supported
+}
+
+void	Client::check_body_size(void)
+{
+	if (this->_request_parser->get__body_size() > static_cast<size_t>(this->_config.get__max_body_size()))
+		throw (Exceptions::HTTP_ErrorStatusException(413)); // HTTP Version Not Supported
 }
 
 void	Client::check_request(void)
@@ -100,6 +107,10 @@ void	Client::check_request(void)
 			_status_code = e.get__status();
 		}
 		try { check_http_version(); }
+		catch (Exceptions::HTTP_ErrorStatusException & e) {
+			_status_code = e.get__status();
+		}
+		try { check_body_size(); }
 		catch (Exceptions::HTTP_ErrorStatusException & e) {
 			_status_code = e.get__status();
 		}
@@ -253,8 +264,10 @@ std::string		Client::apply_index_or_autoindex(std::string rsc)
 	{
 		_page_content = generate_autoindex(rsc);
 
+		// \t<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\">\n\t\t<div class=\"container-fluid\">\n\t\t\t<a class=\"navbar-brand\" href=\"/\">Home</a>\n\t\t\t<button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>\n\t\t\t</button>\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarNav\">\n\t\t\t\t<ul class=\"navbar-nav\">\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link active\" aria-current=\"page\" href=\"/contact.html\">Contact</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/documents/\">Documents</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/upload.html\">Upload</a>\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/theo_test\">theo_test</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</div>\n\t</nav>\n
+
 		insert_html(_page_content, std::string("<head>\n "), std::string("<link rel=\"icon\" href=\"/images/favicon.ico\" />\n <link rel<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">\n"));
-		insert_html(_page_content, std::string("<body>\n"), std::string("\t<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\">\n\t\t<div class=\"container-fluid\">\n\t\t\t<a class=\"navbar-brand\" href=\"/\">Home</a>\n\t\t\t<button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>\n\t\t\t</button>\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarNav\">\n\t\t\t\t<ul class=\"navbar-nav\">\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link active\" aria-current=\"page\" href=\"/contact.html\">Contact</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/documents/\">Documents</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/upload.html\">Upload</a>\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/theo_test\">theo_test</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</div>\n\t</nav>\n"));
+		insert_html(_page_content, std::string("<body>\n"), std::string("<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\"><div class=\"container-fluid\"><a class=\"navbar-brand\" href=\"/\">Home</a><button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\"><span class=\"navbar-toggler-icon\"></span></button></div></nav>"));
 		insert_html(_page_content, std::string("Tokoro\n\t</p>\n"), std::string("\t<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\" crossorigin=\"anonymous\"></script>"));
 		erase_html(_page_content, std::string("\n  P { font-weight: normal; font-family : ariel, monospace, sans-serif; color: black; background-color: transparent;}\n  B { font-weight: normal; color: black; background-color: transparent;}\n  A:visited { font-weight : normal; text-decoration : none; background-color : transparent; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  A:link    { font-weight : normal; text-decoration : none; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  A:hover   { color : #000000; font-weight : normal; text-decoration : underline; background-color : yellow; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  A:active  { color : #000000; font-weight: normal; background-color : transparent; margin : 0px 0px 0px 0px; padding : 0px 0px 0px 0px; display: inline; }\n  .VERSION { font-size: small; font-family : arial, sans-serif; }\n  .NORM  { color: black;  background-color: transparent;}\n  .FIFO  { color: purple; background-color: transparent;}\n  .CHAR  { color: yellow; background-color: transparent;}\n  .DIR   { color: blue;   background-color: transparent;}\n  .BLOCK { color: yellow; background-color: transparent;}\n  .LINK  { color: aqua;   background-color: transparent;}\n  .SOCK  { color: fuchsia;background-color: transparent;}\n  .EXEC  { color: green;  background-color: transparent;}"));
 		erase_html(_page_content, "\n  <!-- ");
@@ -372,4 +385,3 @@ void Client::print_response(void)
 	print_response_header();
 	print_response_body();
 }
-

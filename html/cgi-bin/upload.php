@@ -6,7 +6,7 @@ $uploadfile = $uploaddir . basename($_FILES['file']['name']);
 
 if (!is_dir($uploaddir))
     mkdir($uploaddir, 0775);
-	
+
 print("uploaddir   : $uploaddir</br>\n");
 print("uploadfile  : $uploadfile</br>\n</br>\n");
 
@@ -19,9 +19,8 @@ if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
           Voici plus d'informations :\n";
 }
 
-echo 'Voici quelques informations de débogage :';
+echo 'Voici quelques informations de débugage :';
 print_r($_FILES);
 
 echo '</pre>';
-
 ?>

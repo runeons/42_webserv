@@ -147,6 +147,7 @@ class RequestParser
 		std::string							get__resource(void) const;
 		std::string							get__http_version(void) const;
 		std::string							get__body(void) const;
+		size_t								get__body_size(void) const;
 		int									get__status(void) const;
 		std::map<std::string, std::string>	get__header_fields(void) const;
 		// PUBLIC MEMBERS ATRIBUTE : PUMA

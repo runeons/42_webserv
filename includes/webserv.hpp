@@ -99,4 +99,6 @@ typedef int SOCKET;
 typedef std::map<std::string, std::string>::iterator	headers_iterator;
 typedef std::vector<std::string>::iterator				v_string_iterator;
 
+extern bool signal_caught;
+
 #endif

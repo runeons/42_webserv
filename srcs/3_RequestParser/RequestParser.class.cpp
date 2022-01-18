@@ -116,7 +116,7 @@ void			RequestParser::start_parsing(void)
 
 void			RequestParser::print_request_info(void)
 {
-	std::cerr	<< C_REQUEST << "[REQUEST]                 : "
+	std::cerr	<< C_REQUEST << "[REQUEST] : "
 				<< "["
 				<< this->get__method()
 				<< " "
@@ -167,8 +167,9 @@ void			RequestParser::check_request_attributs(void)
 		_status_code = 505; // HTTP version not supported
 
 	// check uri length
+	else if (_resource.length() == 0)
+		_status_code = 411; // length required
+
 	else if (_resource.length() > MAX_URI_LENGTH)
 		_status_code = 414; // URI Too Long
-
-
 }

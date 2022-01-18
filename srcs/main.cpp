@@ -6,6 +6,8 @@
 # define SIGNAL_MSG_3 "3     SIGQUIT      create core image    quit program"
 # define SIGNAL_MSG_9 "9     SIGKILL      terminate process    kill program"
 
+bool signal_caught = false;
+
 std::string	get_config_file(const char *filename)
 {
 	std::string file;
@@ -41,12 +43,18 @@ void		clean_comments_config_file(std::string & config_file)
 
 void		handle_signal(int sig)
 {
+	printf("signal: %d\n", sig);
+	signal_caught = false;
+	if (sig == 2 || sig == 3 || sig == 9 || sig == 15)
+		signal_caught = true;
 	if (sig == 2)
 		std::cout << "\r[2] SIGINT: interrupt program" << std::endl;
 	else if (sig == 3)
 		std::cout << "\r[3] SIGQUIT: quit program" << std::endl;
 	else if (sig == 9)
 		std::cout << "\r[9] SIGKILL: kill program" << std::endl;
+	else if (sig == 15)
+		std::cout << "\r[15] SIGTERM: terminate program" << std::endl;
 }
 
 int			main(int ac, char **av)
@@ -54,6 +62,7 @@ int			main(int ac, char **av)
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, handle_signal);
 	signal(SIGKILL, handle_signal);
+	signal(SIGTERM, handle_signal);
 	try
 	{
 		std::string	config_file;
@@ -76,7 +85,7 @@ int			main(int ac, char **av)
 				else
 					config_file = get_config_file(av[1]);
 				clean_comments_config_file(config_file);
-				std::cout << "config_file: " << "[" << config_file << "]" << std::endl;
+				// std::cout << "config_file: " << "[" << config_file << "]" << std::endl;
 			}
 			catch (std::exception & e)
 			{

@@ -25,6 +25,11 @@ std::string		RequestParser::get__body(void) const
 	return (this->_body);
 }
 
+size_t			RequestParser::get__body_size(void) const
+{
+	return (this->_body_size);
+}
+
 // GETTER _status_code
 int		RequestParser::get__status(void) const
 {

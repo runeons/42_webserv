@@ -69,6 +69,7 @@ class Client
 
 		void			check_method(void);
 		void			check_http_version(void);
+		void			check_body_size(void);
 
 		size_t			retrieve_request_content_length(std::string buf_str);
 		int				calculate_total_bytes_expected(std::string buf_str);

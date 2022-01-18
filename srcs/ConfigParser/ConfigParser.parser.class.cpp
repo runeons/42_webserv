@@ -668,9 +668,9 @@ void	ConfigParser::alias(void)
 		init_digest();
 		path();
 		digest(g_tmp);
-		std::cout << "path g_tmp: [" << g_tmp << "]" << std::endl;
+		// std::cout << "path g_tmp: [" << g_tmp << "]" << std::endl;
 		tmp_location.set__alias(g_tmp);
-		std::cout << "path get  : [" << tmp_location.get__alias() << "]" << std::endl;
+		// std::cout << "path get  : [" << tmp_location.get__alias() << "]" << std::endl;
 		OWSON();
 		CHAR(';');
 	}
@@ -795,7 +795,7 @@ void	ConfigParser::return301(void)
 	END_FUN(SUCCESS);
 }
 
-// item_location	= uri / root / alias / index / autoindex / return301 / method / upload
+// item_location	= uri / location_root / alias / index / autoindex / return301 / method / upload
 void	ConfigParser::item_location(void)
 {START_FUN;
 	SAVE_HEAD(0);

@@ -174,8 +174,9 @@ void Server::select_and_treat_connections(void)
 		int socketCount = ::select(_max_fd + 1, &read_fds, &write_fds, NULL, NULL);
 		if (socketCount < 0)
 		{
-			std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "select errno : " << strerror(errno) << std::endl;
-			throw (Exceptions::ServerException("Select failure"));
+			if (signal_caught == true)
+				throw(Exceptions::ServerException("Connexion closed by system"));
+			throw(Exceptions::ServerException("Select failure"));
 		}
 		// Accept new connection - for each server
 		std::map<int, Config>::iterator it_server = _servers_map.begin();
@@ -218,6 +219,8 @@ int		Server::launch(void)
 	{
 		std::cerr << C_ERROR << e.what() <<  C_RES << std::endl;
 		this->stop_server();
+		if (signal_caught)
+			return (0);
 		return (1);
 	}
 	return (0);

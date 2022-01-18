@@ -5,7 +5,7 @@
 
 void			Location::print_info(void) const
 {
-	std::cout << C_SERVER << "[LOCATION]                :" << C_RES << std::endl;
+	std::cout << C_SERVER << "[LOCATION] :" << C_RES << std::endl;
 	std::cout << C_LOCATION << "        uri       " << C_RES << ": " << this->get__uri() << std::endl;
 	std::cout << C_LOCATION << "        root_loc  " << C_RES << ": " << this->get__root_loc() << std::endl;
 	std::cout << C_LOCATION << "        alias     " << C_RES << ": " << this->get__alias() << std::endl;
