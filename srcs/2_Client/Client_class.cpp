@@ -142,6 +142,7 @@ void		Client::apply_location(void)
 	std::string rsc;
 	if (_request_parser == NULL)
 	{
+    printf(TEST);
 		rsc = "/"; // applique une loc par defaut si la requete n'a pas pu etre lue
 		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "applique une loc par defaut si la requete n'a pas pu etre lue" << std::endl;
 	}
