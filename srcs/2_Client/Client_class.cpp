@@ -101,6 +101,7 @@ void	Client::check_request(void)
 {
   // std::cout << C_G_RED << _request.substr(0, _total_bytes_expected) << C_RES << std::endl;
   // std::cout << C_G_GREEN << _request << C_RES << std::endl;
+
 	_request_parser = new RequestParser(_request, _total_bytes_expected + 1); // delete in generate_response :) // TOCHECK
 	_request_parser->print_request_info();
 	_status_code = _request_parser->get__status();
