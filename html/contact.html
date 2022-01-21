@@ -87,9 +87,6 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/upload.html">Upload</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/theo_test">theo_test</a>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -118,29 +115,6 @@
 				<button class="btn btn-primary">Send data with POST request</button>
 			</form>
 		</div>
-		<div class="getpost">
-			<form action="cgi-bin/upload_correc.php" method="post" enctype="multipart/form-data">
-				<div>
-					<label for="file">Sélectionner le fichier à envoyer (correc)</label>
-					<input type="file" id="file" name="file_correc">
-				</div>
-				<div>
-					<input type="submit" name="submit" value="Enter">
-				</div>
-			</form>
-
-      <!-- ANCIENNEMENT : (a tester si nouveau ne fonctionne pas) -->
-      <!-- <form class="subform" enctype="multipart/form-data" action="html/cgi-bin/upload.php" method="post"> -->
-			<!-- <form class="subform" enctype="multipart/form-data" action="html/cgi-bin/upload_correc.php" method="post"> -->
-				<!-- MAX_FILE_SIZE doit précéder le champ input de type file -->
-				<!-- <input type="hidden" name="MAX_FILE_SIZE" value="30000" /> -->
-				<!-- Le nom de l'élément input détermine le nom dans le tableau $_FILES -->
-				<!-- Envoyez ce fichier : <input class="subform" name="userfile" type="file" /> -->
-				<!-- <input type="submit" value="Envoyer le fichier" /> -->
-			<!-- </form> -->
-
-		</div>
-
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
