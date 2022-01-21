@@ -67,6 +67,7 @@ class RequestParser
 		void	start_parsing(void);
 
 		// parsing tools
+    int   whereami(void); // DEBUG
 		int		eat(int to_eat);
 		void	init_digest(void);
 		void	digest(std::string & target);

@@ -207,4 +207,8 @@ main()
 	# printf "%*s${C_GRAY}[ %s ]${C_RES} end\n" $((DEEP)) "" "MAIN"
 }
 
-main
+echo "v3: $3"
+rm -rf /usr/local/Cellar/nginx/1.21.1/html
+ln -s $3 /usr/local/Cellar/nginx/1.21.1/html
+
+main $1 $2 $3

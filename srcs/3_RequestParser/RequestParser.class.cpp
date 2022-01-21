@@ -69,6 +69,14 @@ void	RequestParser::bc_p(void)
 	}
 }
 
+// DEBUG
+int	      RequestParser::whereami(void)
+{
+  // std::cout << "I AM ON [" << C_G_GREEN << this->_request_raw[this->_head] << C_RES << "]" << std::endl;
+  return (0);
+}
+// DEBUG
+
 int				RequestParser::eat(int to_eat)
 {
 	if (this->_head >= static_cast<ssize_t>(this->_bytes_read))

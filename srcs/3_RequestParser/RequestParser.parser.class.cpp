@@ -985,12 +985,13 @@ void	RequestParser::absolute_path(void)
 // tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
 void	RequestParser::tchar(void)
 {
-	// START_FUN;
+	START_FUN;
 	SAVE_HEAD(0);
 	try
 	{
 		for (int i = 0; i < 1; i++)
 		{
+      whereami();
 			try { ALPHA(); break ; }
 			catch (std::exception & e) {}
 			try { DIGIT(); break ; }
@@ -1240,7 +1241,7 @@ void	RequestParser::token(void)
 		for (int i = 0; 1; i++)
 		{
 			try { tchar(); }
-			catch (std::exception & e) { if (i < 1) throw (e); else break ; }
+			catch (std::exception & e) { if (i < 1) throw (e); else { printf(TEST);break ;} }
 		}
 	}
 	catch (std::exception & e)
