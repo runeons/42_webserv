@@ -1241,7 +1241,7 @@ void	RequestParser::token(void)
 		for (int i = 0; 1; i++)
 		{
 			try { tchar(); }
-			catch (std::exception & e) { if (i < 1) throw (e); else { printf(TEST);break ;} }
+			catch (std::exception & e) { if (i < 1) throw (e); else { break ;} }
 		}
 	}
 	catch (std::exception & e)

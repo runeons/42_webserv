@@ -63,6 +63,8 @@ void Client::receive_request(void)
 	{
 		if (_total_bytes_expected == 0) // s'il n'y a pas eu de Content-Length du tout, set _total_bytes_expected puisque envoyé à RequestParser
 			_total_bytes_expected = _bytes_read;
+    else if (_total_bytes_expected > 0)
+      _total_bytes_expected += _bytes_read;
 		if (_remaining_bytes_to_recv > 0)
 			_remaining_bytes_to_recv -= _bytes_read;
 	}
@@ -97,6 +99,8 @@ void	Client::check_body_size(void)
 
 void	Client::check_request(void)
 {
+  // std::cout << C_G_RED << _request.substr(0, _total_bytes_expected) << C_RES << std::endl;
+  // std::cout << C_G_GREEN << _request << C_RES << std::endl;
 	_request_parser = new RequestParser(_request, _total_bytes_expected + 1); // delete in generate_response :) // TOCHECK
 	_request_parser->print_request_info();
 	_status_code = _request_parser->get__status();
