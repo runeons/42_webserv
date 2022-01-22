@@ -222,8 +222,8 @@ std::string		Client::remove_and_store_query(std::string s)
 
 std::string	Client::generate_autoindex(std::string rsc)
 {
-	// std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
-	std::string cmd = "scripts/bin/tree_linux \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
+	std::string cmd = "scripts/bin/tree \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
+	// std::string cmd = "scripts/bin/tree_linux \"" + rsc.substr(0, rsc.size() - 1) + "\" -H '.' -L 1 --noreport --charset utf-8";
 	std::string res = exec_cmd(cmd.c_str(), PATH_AUTOINDEX);
 	if (res == "")
 		_status_code = 500;
