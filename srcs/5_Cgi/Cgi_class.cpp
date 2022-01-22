@@ -10,11 +10,16 @@ void	Cgi::setup_metavariables(void)
 
 void	Cgi::delete_env_arr(void)
 {
-	int i = 0;
+	unsigned long i = 0;
 	if (_env_arr)
 	{
-		while (_env_arr[i])
-			delete _env_arr[i++];
+		// while (_env_arr[i])
+		while (i < _env_map.size())
+		{
+			delete _env_arr[i];
+			i++;
+		}
+		std::cout << C_G_YELLOW << "i: " << i << C_RES << '\n';
 		delete [] _env_arr;
 	}
 }
@@ -22,6 +27,7 @@ void	Cgi::delete_env_arr(void)
 void	Cgi::transform_to_envp(void)
 {
 	char **env = new char*[_env_map.size() + 1];
+	std::cout << C_G_YELLOW << "length of env: " << _env_map.size() + 1 << C_RES << '\n';
 
 	std::map<std::string, std::string>::iterator it = _env_map.begin();
 	std::map<std::string, std::string>::iterator itend = _env_map.end();
