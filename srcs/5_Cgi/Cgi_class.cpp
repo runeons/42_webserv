@@ -11,7 +11,6 @@ void	Cgi::delete_env_arr(void)
 			delete _env_arr[i];
 			i++;
 		}
-		std::cout << C_G_YELLOW << "i: " << i << C_RES << '\n';
 		delete [] _env_arr;
 	}
 }
@@ -19,7 +18,6 @@ void	Cgi::delete_env_arr(void)
 void	Cgi::transform_to_envp(void)
 {
 	char **env = new char*[_env_map.size() + 1];
-	std::cout << C_G_YELLOW << "length of env: " << _env_map.size() + 1 << C_RES << '\n';
 
 	std::map<std::string, std::string>::iterator it = _env_map.begin();
 	std::map<std::string, std::string>::iterator itend = _env_map.end();
@@ -140,7 +138,6 @@ void	Cgi::exec_script(void)
 			ret = read(cgi_fd, buf, BUFS);
 			if (ret == 0)
 				break ;
-			// ret = -1;
 			if (ret == -1)
 				throw (Exceptions::ClientException("Read failure (in CGI) - returned -1"));
 			buf[ret] = 0;

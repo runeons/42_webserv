@@ -90,7 +90,6 @@ void Server::accept_new_connection(int server_socket, Config & config)
 	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1)
 		throw (Exceptions::ServerException("Client socket non blocking option failure (fcntl)"));
 	_clients_map[client_socket] = cl;
-	std::cerr << C_G_RED << "CREATION: " << C_G_WHITE << "_clients_map[" << client_socket << "]" << C_RES << std::endl;
 	std::cerr << C_SERVER << "[SERVER] <" << config.get__host() << ":" << config.get__port() << "> : accepting new connection from socket <" << client_socket << ">" << C_RES << std::endl;
 	FD_SET(client_socket, &_read_fds);
 	if (_max_fd < client_socket)
@@ -147,7 +146,6 @@ void Server::shutdown_client_socket(int client_socket)
 		std::cerr << C_G_RED << "Error: " << C_G_WHITE << " client socket closing failure - quitting program" << C_RES << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	std::cerr << C_G_RED << "DESTRUCTION: " << C_G_WHITE << " delete _clients_map[" << client_socket << "]" << C_RES << std::endl;
 	delete _clients_map[client_socket];
 }
 
