@@ -1,19 +1,6 @@
 
 #include <webserv.hpp>
 
-char	**g_trace = NULL;
-int		g_btsize = 0;
-
-void	RequestParser::bc_s(void)
-{
-	void	*array[1024];
-
-	g_btsize = backtrace(array, 1024);
-	if (g_trace)
-		delete (g_trace);
-	g_trace = backtrace_symbols(array, g_btsize);
-}
-
 void	RequestParser::print_center_line(int fn, int msg)
 {
 	ssize_t i = MAX((int)((int)this->_head - (int)30), 0);
@@ -50,32 +37,6 @@ void	RequestParser::debug_print_line(void)
 	}
 	std::cout << std::endl;
 }
-
-void	RequestParser::bc_p(void)
-{
-	std::cout << "backtrace: " << std::endl;
-	if (g_trace != NULL)
-	{
-		for (int i = 1; i < g_btsize - 8; i++)
-		{
-			// std::cout << g_trace[i] << std::endl;
-			int j = 64 + 13;
-			for (;isdigit(g_trace[i][j]); j++) { }
-			int k = j;
-			for (;g_trace[i][j] && g_trace[i][j - 1] != 'E' && g_trace[i][j] != 'v'; j++) { }
-			g_trace[i][j - 1] = '\0';
-			std::cout << "    " << g_btsize - i - 8 << ": " << &g_trace[i][k] << std::endl;
-		}
-	}
-}
-
-// DEBUG
-int	      RequestParser::whereami(void)
-{
-  // std::cout << "I AM ON [" << C_G_GREEN << this->_request_raw[this->_head] << C_RES << "]" << std::endl;
-  return (0);
-}
-// DEBUG
 
 int				RequestParser::eat(int to_eat)
 {

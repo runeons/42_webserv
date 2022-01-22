@@ -991,7 +991,6 @@ void	RequestParser::tchar(void)
 	{
 		for (int i = 0; i < 1; i++)
 		{
-      whereami();
 			try { ALPHA(); break ; }
 			catch (std::exception & e) {}
 			try { DIGIT(); break ; }

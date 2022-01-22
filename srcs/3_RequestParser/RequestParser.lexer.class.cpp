@@ -7,7 +7,6 @@ void	RequestParser::CHAR(char c)
 {
 	if (eat(c) == FAILURE)
 	{
-		bc_s();
 		throw (Exceptions::LexerException("CHAR expected"));
 	}
 }
@@ -17,7 +16,6 @@ void	RequestParser::CR(void)
 {
 	if (eat(0x0D) == FAILURE)
 	{
-		bc_s();
 		throw (Exceptions::LexerException("CR expected"));
 	}
 }
@@ -27,7 +25,6 @@ void	RequestParser::LF(void)
 {
 	if (eat(0x0A) == FAILURE)
 	{
-		bc_s();
 		throw (Exceptions::LexerException("LF expected"));
 	}
 }
@@ -37,7 +34,6 @@ void	RequestParser::SP(void)
 {
 	if (eat(0x20) == FAILURE)
 	{
-		bc_s();
 		throw (Exceptions::LexerException("SP expected"));
 	}
 }
@@ -47,7 +43,6 @@ void	RequestParser::HTAB(void)
 {
 	if (eat(0x09) == FAILURE)
 	{
-		bc_s();
 		throw (Exceptions::LexerException("HTAB expected"));
 	}
 }
@@ -62,7 +57,7 @@ void	RequestParser::RANGE(char start, char end)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (Exceptions::LexerException("RANGE expected"));
+	throw (Exceptions::LexerException("RANGE expected"));
 }
 
 
@@ -79,7 +74,7 @@ void	RequestParser::ALPHA(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (Exceptions::LexerException("ALPHA expected"));
+	throw (Exceptions::LexerException("ALPHA expected"));
 }
 
 // DIGIT = 0x30-39
@@ -90,7 +85,7 @@ void	RequestParser::DIGIT(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (Exceptions::LexerException("DIGIT expected"));
+	throw (Exceptions::LexerException("DIGIT expected"));
 }
 
 // HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
@@ -102,7 +97,7 @@ void	RequestParser::HEXDIG(void)
 			if (eat(i) == SUCCESS)
 				return ;
 		}
-		bc_s(); throw (Exceptions::LexerException("HEXDIG expected"));
+		throw (Exceptions::LexerException("HEXDIG expected"));
 	}
 }
 
@@ -114,7 +109,7 @@ void	RequestParser::OCTET(void)
 		if (eat(i) == SUCCESS)
 			return ;
 	}
-	bc_s(); throw (Exceptions::LexerException("OCTET expected"));
+	throw (Exceptions::LexerException("OCTET expected"));
 }
 
 // VCHAR = 0x21-7E
@@ -126,7 +121,7 @@ void	RequestParser::VCHAR(void)
 			return ;
 	}
 	// std::cout << "[ FAIL VCHAR ] head: " << this->_head << " [" << static_cast<int>(this->_request_raw[this->_head]) << "]" << " \'" << convchar(this->_request_raw[this->_head]) << "\'" << std::endl;
-	bc_s(); throw (Exceptions::LexerException("VCHAR expected"));
+	throw (Exceptions::LexerException("VCHAR expected"));
 }
 
 // field_char = 0x21-7E
@@ -142,7 +137,7 @@ void	RequestParser::field_char(void)
 	if (eat(' ') == SUCCESS)
 		return ;
 	// std::cout << "[ FAIL VCHAR ] head: " << this->_head << " [" << static_cast<int>(this->_request_raw[this->_head]) << "]" << " \'" << convchar(this->_request_raw[this->_head]) << "\'" << std::endl;
-	bc_s(); throw (Exceptions::LexerException("VCHAR expected"));
+	throw (Exceptions::LexerException("VCHAR expected"));
 }
 
 // obs_text = 0x80-FF

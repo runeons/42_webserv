@@ -50,9 +50,6 @@ class RequestParser
 		// PRIVATE MEMBERS FUNCTION : PRIMF
 		RequestParser(void);  // constructor
 
-		// debug
-		void	bc_s(void);
-		void	bc_p(void);
 		void	print_center_line(int fn, int msg);
 		void	debug_print_line(void);
 
@@ -67,7 +64,6 @@ class RequestParser
 		void	start_parsing(void);
 
 		// parsing tools
-    int   whereami(void); // DEBUG
 		int		eat(int to_eat);
 		void	init_digest(void);
 		void	digest(std::string & target);
@@ -148,16 +144,16 @@ class RequestParser
 		std::string							get__resource(void) const;
 		std::string							get__http_version(void) const;
 		std::string							get__body(void) const;
-		size_t								get__body_size(void) const;
-		int									get__status(void) const;
+		size_t									get__body_size(void) const;
+		int											get__status(void) const;
 		std::map<std::string, std::string>	get__header_fields(void) const;
 		// PUBLIC MEMBERS ATRIBUTE : PUMA
 		std::vector<std::string>	_methods_implemented;
 		std::vector<std::string>	_methods_unimplemented;
 
 		// PUBLIC MEMBERS FUNCTION : PUMF
-		void			print_request_info(void);
-		std::string		get__header_value(std::string header_name);
+		void										print_request_info(void);
+		std::string							get__header_value(std::string header_name);
 };
 
 std::ostream	&operator<<(std::ostream &o, const RequestParser &i);
@@ -258,4 +254,3 @@ Via                      ; Section 14.45
 Warning
 
 */
-

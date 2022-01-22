@@ -79,7 +79,7 @@ int			main(int ac, char **av)
 				if (ac < 2)
 				{
 					std::cerr << C_G_MAGENTA << "warning: " << C_G_WHITE << "no config file provided - using conf/example.conf." << C_RES << std::endl;
-					std::string default_conf = "conf/example.conf";
+					std::string default_conf = "conf/default.conf";
 					config_file = get_config_file(default_conf.c_str());
 				}
 				else
