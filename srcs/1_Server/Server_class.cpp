@@ -17,7 +17,6 @@ void		Server::stop_one_server(int server_socket)
 	// TO DO : close all clients too ? close only port with issue ?
 	std::cerr << C_HIDDEN << "Server on socket " << server_socket << " shut down" <<  C_RES << std::endl;
 	int ret = close(server_socket);
-	// ret == -1;
 	if (ret == -1)
 	{
 		std::cerr << C_G_RED << "Error: " << C_G_WHITE << " server socket closing failure - quitting program" << C_RES << std::endl;
@@ -34,14 +33,10 @@ int		Server::create_server_socket()
 
 	server_socket = ::socket(AF_INET, SOCK_STREAM, 0);
 	int ret = ::setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
-	// ret = -1; // CHECKER 19/08
 	if (ret < 0)
 		throw (Exceptions::ServerException("set socket option"));
-	// server_socket = -1; CHECKED 19/08
 	if (server_socket == -1)
 		throw (Exceptions::ServerException("Server socket not created"));
-	// if (fcntl(server_socket, F_SETFL, O_NONBLOCK) == -1) // A ajouter ou pas ? REMAINING
-		// throw (Exceptions::ServerException("Server socket non blocking option failure (fcntl)"));
 	return (server_socket);
 }
 
@@ -93,7 +88,7 @@ void Server::accept_new_connection(int server_socket, Config & config)
 
 	cl->set__socket(client_socket);
 	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1)
-		throw (Exceptions::ServerException("Client socket non blocking option failure (fcntl)")); // TOCHECK to move in Client ?
+		throw (Exceptions::ServerException("Client socket non blocking option failure (fcntl)"));
 	_clients_map[client_socket] = cl;
 	std::cerr << C_G_RED << "CREATION: " << C_G_WHITE << "_clients_map[" << client_socket << "]" << C_RES << std::endl;
 	std::cerr << C_SERVER << "[SERVER] <" << config.get__host() << ":" << config.get__port() << "> : accepting new connection from socket <" << client_socket << ">" << C_RES << std::endl;
@@ -147,23 +142,20 @@ void Server::shutdown_client_socket(int client_socket)
 	if (_max_fd == client_socket)
 		_max_fd--;
 	int ret = close(client_socket);
-	// ret = -1; // CHECKED 19/08
 	if (ret == -1)
 	{
 		std::cerr << C_G_RED << "Error: " << C_G_WHITE << " client socket closing failure - quitting program" << C_RES << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	std::cerr << C_G_RED << "DESTRUCTION: " << C_G_WHITE << " delete _clients_map[" << client_socket << "]" << C_RES << std::endl;
-
 	delete _clients_map[client_socket];
 }
-
 
 void Server::prepare_and_send_response(int client_socket)
 {
 	std::cerr << C_SERVER << "[SERVER] <" << _clients_map[client_socket]->get__config().get__host() << ":" << _clients_map[client_socket]->get__config().get__port() << "> : writing on already connected socket <" << client_socket << ">" << C_RES << std::endl;
 	_clients_map[client_socket]->send_response();
-	if (_clients_map[client_socket]->get__remaining_bytes_to_send() <= 0) // == 0 TOCHECK
+	if (_clients_map[client_socket]->get__remaining_bytes_to_send() <= 0)
 		shutdown_client_socket(client_socket);
 }
 

@@ -32,20 +32,14 @@ Server::Server(const Server& src)
 // Destructor
 Server::~Server(void)
 {
-	// delete _config;
+	// std::cout << C_HIDDEN << "...in Server destruction..." << C_RES << std::endl;
+	// std::map<int, Client *>::iterator it;
+	// for (it = _clients_map.begin(); it != _clients_map.end(); it++) // delete client pour chaque socket existante
+	// {
+		// std::cout << C_ERROR << "_clients_map socket " << it->first << " @ : " << it->second << " ===> " << it->second->get__socket() << C_RES << std::endl;
+		// delete it->second;
+	// }
 	// TO DO delete all clients
 	std::cout << C_HIDDEN << "...Server destruction..." << C_RES << std::endl;
 	return;
-}
-
-// Assignation operator
-Server &	Server::operator=(const Server& rhs)
-{
-	std::cout << C_HIDDEN << "Server Assignation operator called" << C_RES << std::endl;
-	if (this != &rhs)
-	{
-		// TO DO
-		;
-	}
-	return (*this);
 }

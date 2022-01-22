@@ -121,7 +121,6 @@ void	Response::DELETE_handle(void)
 	{
 		if (user_perm_to_write(_translated_path))
 		{
-			// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "Permitted to delete (S_IWUSR)" << std::endl;
 			if (::remove(_translated_path.c_str()) == -1)
 				_status_code = 403;
 		}
@@ -129,7 +128,6 @@ void	Response::DELETE_handle(void)
 			_status_code = 403;
 	}
 	DELETE_create_body();
-	// AJOUTER CGI pour les .pl si methode DELETE ??
 }
 
 // ********************************************* POST create body *********************************************
@@ -162,7 +160,6 @@ void	Response::POST_handle(void)
 	}
 	else
 	{
-		// copier-coller de GET, pourrait placer en amont pour unifier => A VERIFIER, je n'ai jamais testé ce CGI avec POST
 		if (get_extension(_translated_path) == "pl")
 		{
 			std::cout << C_OTHER << "Let's start with POST extension cgi !" << C_RES << std::endl;

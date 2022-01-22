@@ -1,19 +1,11 @@
 
 # include <webserv.hpp>
 
-void	Cgi::setup_metavariables(void)
-{
-
-
-
-}
-
 void	Cgi::delete_env_arr(void)
 {
 	unsigned long i = 0;
 	if (_env_arr)
 	{
-		// while (_env_arr[i])
 		while (i < _env_map.size())
 		{
 			delete _env_arr[i];
@@ -57,7 +49,7 @@ void	Cgi::exec_script(void)
 
 	std::string script = _env_map["SCRIPT_NAME"];
 	char *av[3] = {
-		(char *)_bin.c_str(), //TODO casts C to change
+		(char *)_bin.c_str(),
 		(char *)script.c_str(),
 		(char *)0
 	};
@@ -108,7 +100,7 @@ void	Cgi::exec_script(void)
 		// => quand le parent va ecrire, il ecrira sur STDOUT
 		// => quand le parent va lire, il lira sur STDIN
 		close(pipe_fd[0]);					// Close unused read side
-		// TODO - DONE - ADDED : si body => write body in pipe_fd[1]
+		// si body => write body in pipe_fd[1]
 		std::string body = _request.get__body();
 		if (body.size())
 		{
@@ -156,15 +148,12 @@ void	Cgi::exec_script(void)
 		}
 		// std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "full_buf: [" << full_buf << "]" << std::endl;
 		_full_buf = full_buf;
-		// TO DO : if body: treat header + body
 		close(cgi_fd);
 	}
 }
 
 void	Cgi::launch(void)
 {
-	setup_metavariables();
 	transform_to_envp();
 	exec_script(); // get response and/or body
-
 }

@@ -21,8 +21,6 @@ Client::Client(Config & config) : _config(config)
 	_remaining_bytes_to_send = 0;
 	_total_bytes_to_send = 0;
 	memset(_chunk, 0, MAX_RCV);	//clear the variable
-
-	// _parameters_map = ();
 	return ;
 }
 

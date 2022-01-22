@@ -22,7 +22,6 @@ class Server
 		int									_max_fd;
 
 	public:
-		// Server(const Config & config);
 		Server(std::vector<Config> config_vec);
 		Server(const Server & src);
 		virtual ~Server();
@@ -42,7 +41,6 @@ class Server
 		void		select_and_treat_connections();
 		int			launch();
 
-		Server		&operator=(const Server & src);
 };
 
 #endif

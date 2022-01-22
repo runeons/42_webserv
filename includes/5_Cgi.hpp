@@ -46,7 +46,6 @@ class Cgi
 		void								set__applied_location(const Location & applied_location);
 		Cgi									&operator=(const Cgi & src);
 
-		void	setup_metavariables(void);
 		void	delete_env_arr(void);
 		void	transform_to_envp(void);
 		void	exec_script(void);

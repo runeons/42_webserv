@@ -29,19 +29,10 @@ int		Client::calculate_total_bytes_expected(std::string buf_str)
 	total_bytes_expected = end_headers_pos + delim.length() + content_length;
 	return (total_bytes_expected);
 }
-//
-//  content_length | \r\n\r\n |
-//  ---------------------------
-// |             O |        O | continue to recv (until _remaining_bytes_to_recv == 0)
-// |             O |        X |
-// |             X |        O |
-// |             X |        X |
-// |               |          |
 
 void Client::receive_request(void)
 {
 	_bytes_read = ::recv(_socket, _chunk, MAX_RCV - 1, 0);
-	// _bytes_read = -1; CHECKED 19/08
 	if (_bytes_read <= 0) // 0 aussi car grace a select, si on rentre ici c'est qu'il y a qqch a envoyer
 	{
 		_status_code = 500;
@@ -102,7 +93,7 @@ void	Client::check_request(void)
   // std::cout << C_G_RED << _request.substr(0, _total_bytes_expected) << C_RES << std::endl;
   // std::cout << C_G_GREEN << _request << C_RES << std::endl;
 
-	_request_parser = new RequestParser(_request, _total_bytes_expected + 1); // delete in generate_response :) // TOCHECK
+	_request_parser = new RequestParser(_request, _total_bytes_expected + 1);
 	_request_parser->print_request_info();
 	_status_code = _request_parser->get__status();
 	if (is_response_successful())
@@ -147,9 +138,7 @@ void		Client::apply_location(void)
 	std::string rsc;
 	if (_request_parser == NULL)
 	{
-    printf(TEST);
 		rsc = "/"; // applique une loc par defaut si la requete n'a pas pu etre lue
-		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "applique une loc par defaut si la requete n'a pas pu etre lue" << std::endl;
 	}
 	else
 		rsc = _request_parser->get__resource();
@@ -171,7 +160,7 @@ void		Client::apply_location(void)
 		}
 		std::string sub = rsc.substr(0, rsc.size() - 1);
 		size_t	pos_last_slash = sub.rfind('/');
-		if (pos_last_slash == std::string::npos) // TODO exception - should be handled in RequestParser anyway ??
+		if (pos_last_slash == std::string::npos)
 		{
 			std::cerr << C_G_RED << "Error: " << C_G_WHITE << " location not found" << C_RES << std::endl;
 			if (is_response_successful()) // pour eviter de changer le status_code si bad request ou precedent
@@ -186,7 +175,6 @@ void		Client::apply_location(void)
 std::string		Client::apply_alias(std::string s)
 {
 	// Si cette location a un alias, je vais remplacer le debut de l'URL "/URI/" par "/alias/", tout simplement
-	// TO CHECK : alias OU root ? Un seul des deux possibles dans la config ?
 	if (_applied_location->get__alias().size())
 	{
 		s.erase(0, _applied_location->get__uri().size());
@@ -214,11 +202,8 @@ std::string		Client::decode_url(std::string & s)
 		else
 		{
 			sscanf(s.substr(i + 1, 2).c_str(), "%x", &ii);
-			// std::cerr << C_DEBUG << "[ DEBUG ii ] " << C_RES << ii << std::endl;
 			ch = static_cast<char>(ii);
-			// std::cerr << C_DEBUG << "[ DEBUG ch ] " << C_RES << ch << std::endl;
 			ret += ch;
-			// std::cerr << C_DEBUG << "[ DEBUG ret ] " << C_RES << ret << std::endl;
 			i = i + 2;
 		}
 	}
@@ -270,8 +255,6 @@ std::string		Client::apply_index_or_autoindex(std::string rsc)
 	{
 		_page_content = generate_autoindex(rsc);
 
-		// \t<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\">\n\t\t<div class=\"container-fluid\">\n\t\t\t<a class=\"navbar-brand\" href=\"/\">Home</a>\n\t\t\t<button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n\t\t\t\t<span class=\"navbar-toggler-icon\"></span>\n\t\t\t</button>\n\t\t\t<div class=\"collapse navbar-collapse\" id=\"navbarNav\">\n\t\t\t\t<ul class=\"navbar-nav\">\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link active\" aria-current=\"page\" href=\"/contact.html\">Contact</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/documents/\">Documents</a>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/upload.html\">Upload</a>\n\t\t\t\t\t\t<a class=\"nav-link\" href=\"/theo_test\">theo_test</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</div>\n\t</nav>\n
-
 		insert_html(_page_content, std::string("<head>\n "), std::string("<link rel=\"icon\" href=\"/images/favicon.ico\" />\n <link rel<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">\n"));
 		insert_html(_page_content, std::string("<body>\n"), std::string("<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark\"><div class=\"container-fluid\"><a class=\"navbar-brand\" href=\"/\">Home</a><button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarNav\" aria-controls=\"navbarNav\" aria-expanded=\"false\" aria-label=\"Toggle navigation\"><span class=\"navbar-toggler-icon\"></span></button></div></nav>"));
 		insert_html(_page_content, std::string("Tokoro\n\t</p>\n"), std::string("\t<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\" crossorigin=\"anonymous\"></script>"));
@@ -304,7 +287,7 @@ void		Client::translate_path(void)
 	std::string rsc = _request_parser->get__resource();
 
 	rsc = apply_alias(rsc);
-	rsc = decode_url(rsc); // TO CHECK avant ? gérer les accents dans les alias et fichiers de conf ? Too much I think
+	rsc = decode_url(rsc);
 	rsc = remove_and_store_query(rsc);
 	rsc = _applied_location->get__root_loc() + rsc;
 	if (rsc[rsc.size() - 1] == '/')
@@ -312,7 +295,6 @@ void		Client::translate_path(void)
 	_translated_path = rsc;
 	if (!_query_string.empty())
 		parse_parameters();
-	// _request.set__resource(rsc);
 	return;
 }
 
@@ -345,7 +327,6 @@ void Client::read_resource(void)
 
 void Client::generate_response(void)
 {
-	// Attention : si Location nulle ? Impossible car au moins "/", c'est ça ? TOCHECK
 	_response = new Response(_config, *_applied_location, _status_code, _page_content, _translated_path, *_request_parser, _query_string);
 	_response->generate();
 	_total_bytes_to_send = _response->getResponse().length() + 1;
@@ -365,7 +346,6 @@ void Client::send_response(void)
 	if (_remaining_bytes_to_send == 0)
 		_remaining_bytes_to_send = _total_bytes_to_send;
 	bytes_sent = ::send(_socket, &_response_vector[0], _response_vector.size(), 0);
-	// bytes_sent = -1; // CHECKED ON 19/08 : cannot really check because send has been excecuted anyway
 	if (bytes_sent <= 0) // 0 aussi car grace a select, si on rentre ici c'est qu'il y a qqch a envoyer
 		throw (Exceptions::ClientException("Client failed to send response"));
 	_response_vector.erase(_response_vector.begin(), _response_vector.begin() + bytes_sent);
