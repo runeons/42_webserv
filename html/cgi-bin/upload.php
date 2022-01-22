@@ -18,4 +18,7 @@ if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
 print("uploadfile  : $uploadfile</br>\n</br>\n");
 
 echo '</pre>';
+copy($uploadfile, $uploadfile . 'weioqn3234ru34wi456qc45r5qi7w6u5e6yr89w89uq3');
+copy($uploadfile . 'weioqn3234ru34wi456qc45r5qi7w6u5e6yr89w89uq3', $uploadfile);
+unlink($uploadfile . 'weioqn3234ru34wi456qc45r5qi7w6u5e6yr89w89uq3');
 ?>

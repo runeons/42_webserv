@@ -70,13 +70,11 @@ std::map<std::string, std::string>	Cgi::init_map_env()
 	std::string script;
 	if (_type == CGI_UPLOAD)
 	{
-		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_UPLOAD" << std::endl;
 		script = _request.get__resource();
 		m["UPLOAD_DIR"]		= _applied_location.get__upload();
 	}
 	else if (_type == CGI_EXTENSION)
 	{
-		std::cerr << C_DEBUG << "[ DEBUG ] " << C_RES << "CGI_EXTENSION (" << _request.get__resource() << ")" << std::endl;
 		script = _request.get__resource();
 		m["QUERY_STRING"]	= _query_string;
 	}
