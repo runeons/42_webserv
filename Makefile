@@ -147,6 +147,7 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 	@ $(COMPILE_MSG_OBJ)
 
 clean:
+	@ rm -f cmd_res
 	@ rm -rf $(OBJS_DIR)
 
 fclean: clean
