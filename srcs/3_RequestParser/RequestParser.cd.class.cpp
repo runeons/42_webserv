@@ -14,14 +14,11 @@ RequestParser::RequestParser(std::string request_raw, ssize_t bytes_read) // par
 	_methods_implemented = this->init_methods_implemented();
 	_methods_unimplemented = this->init_methods_unimplemented();
 	_status_code = 200;
-	// _resource = "";
 	_error.msg = "";
 	_error.head = -1;
 
 	this->start_parsing();
 	this->check_request_attributs();
-	// std::cout << "_request_raw: " << std::endl;
-	// std::cout << this->_request_raw << std::endl;
 }
 
 RequestParser::RequestParser(RequestParser const &src)  // constructor by copy

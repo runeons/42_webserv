@@ -5,7 +5,6 @@
 
 void		Server::stop_server()
 {
-	// TO DO : close all clients too ? close only port with issue ?
 	std::cerr << C_HIDDEN << "Server shut down (close all servers_sockets)" <<  C_RES << std::endl;
 	std::map<int, Config>::iterator it = _servers_map.begin();
 	for (; it != _servers_map.end(); it++)
@@ -14,7 +13,6 @@ void		Server::stop_server()
 
 void		Server::stop_one_server(int server_socket)
 {
-	// TO DO : close all clients too ? close only port with issue ?
 	std::cerr << C_HIDDEN << "Server on socket " << server_socket << " shut down" <<  C_RES << std::endl;
 	int ret = close(server_socket);
 	if (ret == -1)

@@ -7,18 +7,6 @@ Config::Config(void)
 	// std::cout << C_HIDDEN << "Config creation..." << C_RES << std::endl;
 
 	this->clear();
-	// char hostname[1024];
-	//
-	// gethostname(hostname, 1023);
-	// _host = "127.0.0.1";
-	// _port = 8000;
-	// _server_name = "webby";
-	// _host_name = hostname;
-	// _root_dir = "./html";
-	// _max_body_size = 1000000;
-	// _error_pages = init_map_error_pages();
-	// _locations = init_map_locations();
-
 	return ;
 }
 
