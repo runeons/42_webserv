@@ -1,14 +1,23 @@
 # 42 Webserv
 
 #### Overview
+⭐ C++ first real-life project  
 This is a 42 project whose aim it to write a C++ HTTP server from scratch.
 #### Introduced concepts
-⭐ HTTP communication   
-⭐ select/socket/listen suite  
-⭐   
-⭐   
-⭐   
-⭐   
+⭐ HTTP communication functions
+
+server : 
+    socket --> bind --> listen --> accept --> send/recv
+⭐ select() -> asynchronous communication
+⭐ HTTP RFC reading 
+⭐ HTTP status codes  
+⭐ HTTP headers + body  
+    - request parsing  
+    - response writing  
+⭐ MIME type detection  
+⭐ PHP CGI environment variables  
+⭐ select/socket/listen suite    
+⭐ select/socket/listen suite     
 ⭐   
 ⭐   
 ⭐   
