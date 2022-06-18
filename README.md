@@ -14,9 +14,9 @@ This is a 42 project whose aim it to write a C++ HTTP server from scratch.
 ⭐   
 #### Description
 - Write an HTTP server in C++ that enables:
-    - files upload
     - GET, POST, DELETE methods
     - multiple ports listening
+    - files upload
     - CGI execution
 - Read configuration file, that can set up:
     - host and port
