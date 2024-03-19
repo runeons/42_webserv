@@ -39,5 +39,5 @@ On web browser :
     
 #### Authors
 
-- [@tsantoni](https://www.github.com/voltaire-stn)
+- [@tsantoni](https://www.github.com/runeons)
 - [@tharchen](https://www.github.com/Bressack)
